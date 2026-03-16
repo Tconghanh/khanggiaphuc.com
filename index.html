@@ -22,7 +22,6 @@
         .nav-link:hover::after { width: 100%; }
         .nav-link:hover { color: #0071BC; }
         
-        /* Swiper Content Animation */
         .swiper-slide-active .slide-content { animation: fadeInUp 1s both 0.3s; }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
@@ -32,11 +31,11 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <!-- HEADER (Đã bỏ Top Bar) -->
+    <!-- HEADER -->
     <header class="sticky top-0 z-[100] glass-header shadow-md">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             
-            <!-- LOGO -->
+            <!-- LOGO (Đảm bảo bạn đã upload logo.png lên GitHub) -->
             <a href="#home" class="flex items-center">
                 <img src="logo.png" alt="KGPTelecom Logo" class="h-14 md:h-16 w-auto object-contain">
             </a>
@@ -64,95 +63,95 @@
         </div>
     </header>
 
-    <!-- MAIN SLIDER (3 Slides Mới) -->
+    <!-- MAIN SLIDER -->
     <section id="home" class="swiper heroSwiper h-[550px] md:h-[750px]">
         <div class="swiper-wrapper">
             
-            <!-- SLIDE 1: Nhà thầu điện nhẹ -->
+            <!-- SLIDE 1: Nhà thầu điện nhẹ uy tín -->
             <div class="swiper-slide relative">
-                <img src="https://images.unsplash.com/photo-1558467523-46113f1fef72?auto=format&fit=crop&w=1600" class="w-full h-full object-cover">
+                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc51?auto=format&fit=crop&w=1600&q=80" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/50 flex items-center">
                     <div class="container mx-auto px-6 text-white slide-content">
-                        <span class="bg-kgp-blue text-xs font-bold px-4 py-1 rounded-full mb-4 inline-block uppercase tracking-widest">Engineering & Infrastructure</span>
+                        <span class="bg-kgp-blue text-xs font-bold px-4 py-1 rounded-full mb-4 inline-block uppercase tracking-widest">Engineering & Solutions</span>
                         <h1 class="text-5xl md:text-7xl font-black mb-4 leading-tight uppercase">NHÀ THẦU ĐIỆN NHẸ<br><span class="text-[#F58220]">UY TÍN HÀNG ĐẦU</span></h1>
-                        <p class="text-lg md:text-xl mb-8 max-w-2xl text-gray-200">Tư vấn, thiết kế và thi công hệ thống hạ tầng mạng, âm thanh công cộng và tổng đài chuyên nghiệp.</p>
+                        <p class="text-lg md:text-xl mb-8 max-w-2xl text-gray-200 font-medium">Chuyên tư vấn, thiết kế và thi công hệ thống hạ tầng mạng, điện nhẹ, âm thanh công cộng cho doanh nghiệp.</p>
                         <div class="flex space-x-4">
-                            <a href="#projects" class="bg-[#0071BC] px-8 py-4 rounded-md font-bold hover:bg-blue-700 transition uppercase shadow-xl">Dự án tiêu biểu</a>
-                            <a href="#contact" class="border-2 border-white px-8 py-4 rounded-md font-bold hover:bg-white hover:text-black transition uppercase">Liên hệ tư vấn</a>
+                            <a href="#projects" class="bg-[#0071BC] px-8 py-4 rounded-md font-bold hover:bg-blue-700 transition uppercase shadow-xl">Dự án của chúng tôi</a>
+                            <a href="#contact" class="border-2 border-white px-8 py-4 rounded-md font-bold hover:bg-white hover:text-black transition uppercase">Báo giá ngay</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SLIDE 2: Phân phối Camera -->
+            <!-- SLIDE 2: Đơn vị phân phối camera chính hãng -->
             <div class="swiper-slide relative">
-                <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=1600" class="w-full h-full object-cover">
+                <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=1600&q=80" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/60 flex items-center">
                     <div class="container mx-auto px-6 text-white slide-content">
-                        <span class="bg-kgp-orange text-xs font-bold px-4 py-1 rounded-full mb-4 inline-block uppercase tracking-widest">Official Distributor</span>
+                        <span class="bg-kgp-orange text-xs font-bold px-4 py-1 rounded-full mb-4 inline-block uppercase tracking-widest">Official Partner</span>
                         <h2 class="text-5xl md:text-7xl font-black mb-4 leading-tight uppercase">PHÂN PHỐI CAMERA<br><span class="text-white">CHÍNH HÃNG 100%</span></h2>
-                        <p class="text-lg md:text-xl mb-8 max-w-2xl text-orange-100">Đối tác chiến lược của Hikvision, Dahua, Ezviz. Cam kết chất lượng và chế độ bảo hành vượt trội.</p>
-                        <a href="#products" class="bg-[#F58220] px-10 py-4 rounded-md font-bold hover:bg-orange-600 transition uppercase shadow-xl">Xem bảng giá</a>
+                        <p class="text-lg md:text-xl mb-8 max-w-2xl text-orange-100 font-medium">Đối tác chiến lược của Hikvision, Dahua, Ezviz. Giải pháp giám sát an ninh toàn diện cho gia đình và công ty.</p>
+                        <a href="#products" class="bg-[#F58220] px-10 py-4 rounded-md font-bold hover:bg-orange-600 transition uppercase shadow-xl">Danh mục sản phẩm</a>
                     </div>
                 </div>
             </div>
 
-            <!-- SLIDE 3: Smart Home -->
+            <!-- SLIDE 3: Nhà thông minh - Smart Home -->
             <div class="swiper-slide relative">
-                <img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1600" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-center text-center w-full">
+                <img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1600&q=80" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-center text-center w-full">
                     <div class="container mx-auto px-6 text-white slide-content">
-                        <span class="bg-green-600 text-xs font-bold px-4 py-1 rounded-full mb-4 inline-block uppercase tracking-widest">Modern Living</span>
+                        <span class="bg-green-600 text-xs font-bold px-4 py-1 rounded-full mb-4 inline-block uppercase tracking-widest">Smart Living</span>
                         <h2 class="text-5xl md:text-7xl font-black mb-4 leading-tight uppercase">NHÀ THÔNG MINH<br><span class="text-[#F58220]">SMART HOME</span></h2>
-                        <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto">Kiến tạo không gian sống tiện nghi với các giải pháp điều khiển tự động và an ninh thông minh.</p>
-                        <a href="tel:0844900099" class="bg-white text-kgp-blue px-10 py-4 rounded-md font-bold hover:bg-gray-100 transition uppercase">Trải nghiệm ngay</a>
+                        <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto font-medium">Kiến tạo cuộc sống tiện nghi với hệ thống điều khiển tự động thông minh và hiện đại nhất hiện nay.</p>
+                        <a href="tel:0844900099" class="bg-white text-kgp-blue px-10 py-4 rounded-md font-bold hover:bg-gray-100 transition uppercase shadow-xl">Tư vấn miễn phí</a>
                     </div>
                 </div>
             </div>
 
         </div>
-        <div class="swiper-button-next !text-white"></div>
-        <div class="swiper-button-prev !text-white"></div>
+        <div class="swiper-button-next !text-white !w-12 !h-12 bg-black/20 rounded-full hover:bg-black/50 transition duration-300"></div>
+        <div class="swiper-button-prev !text-white !w-12 !h-12 bg-black/20 rounded-full hover:bg-black/50 transition duration-300"></div>
         <div class="swiper-pagination"></div>
     </section>
 
     <!-- Section Tin tức -->
     <section id="news" class="py-24 bg-white">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-black text-[#0071BC] uppercase mb-12 border-l-8 border-[#F58220] pl-6 italic" data-aos="fade-right">Tin tức & Sự kiện</h2>
+            <h2 class="text-3xl font-black text-[#0071BC] uppercase mb-12 border-l-8 border-[#F58220] pl-6 italic" data-aos="fade-right">Tin tức & Công nghệ</h2>
             <div class="grid md:grid-cols-3 gap-10">
                 <div class="group cursor-pointer" data-aos="fade-up">
                     <div class="overflow-hidden rounded-2xl mb-4 h-56 shadow-md"><img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=600" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"></div>
-                    <h3 class="font-bold text-xl group-hover:text-[#0071BC]">Giải pháp hạ tầng điện nhẹ cho văn phòng</h3>
+                    <h3 class="font-bold text-xl group-hover:text-[#0071BC] transition">Hạ tầng điện nhẹ: Xương sống của văn phòng thông minh</h3>
                 </div>
                 <div class="group cursor-pointer" data-aos="fade-up" data-aos-delay="100">
                     <div class="overflow-hidden rounded-2xl mb-4 h-56 shadow-md"><img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"></div>
-                    <h3 class="font-bold text-xl group-hover:text-[#0071BC]">Lợi ích khi lắp đặt hệ thống Smart Home</h3>
+                    <h3 class="font-bold text-xl group-hover:text-[#0071BC] transition">Nâng tầm phong cách sống với giải pháp Smart Home</h3>
                 </div>
                 <div class="group cursor-pointer" data-aos="fade-up" data-aos-delay="200">
                     <div class="overflow-hidden rounded-2xl mb-4 h-56 shadow-md"><img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600" class="w-full h-full object-cover group-hover:scale-110 transition duration-500"></div>
-                    <h3 class="font-bold text-xl group-hover:text-[#0071BC]">Công nghệ Camera AI mới nhất 2024</h3>
+                    <h3 class="font-bold text-xl group-hover:text-[#0071BC] transition">Hikvision giới thiệu dòng Camera AI mới nhất tại Việt Nam</h3>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- FOOTER -->
-    <footer id="contact" class="bg-gray-50 pt-24 pb-12 border-t">
+    <footer id="contact" class="bg-gray-50 pt-24 pb-12 border-t border-gray-200">
         <div class="container mx-auto px-4 grid lg:grid-cols-3 gap-16">
             <div>
                 <img src="logo.png" alt="KGPTelecom" class="h-16 mb-8">
                 <p class="text-gray-600 leading-relaxed italic mb-8">
-                    "Khang Gia Phúc - Đối tác tin cậy cho mọi giải pháp công nghệ. Chúng tôi xây dựng giá trị bằng sự tận tâm và chất lượng."
+                    "Khang Gia Phúc - Kiến tạo giải pháp, dựng xây niềm tin. Chúng tôi tự hào là đơn vị đồng hành cùng sự an tâm của khách hàng."
                 </p>
                 <div class="flex space-x-4">
-                    <a href="#" class="w-10 h-10 bg-white border rounded-full flex items-center justify-center text-[#0071BC] hover:bg-[#0071BC] hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="w-10 h-10 bg-white border rounded-full flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-[#0071BC] hover:bg-[#0071BC] hover:text-white transition shadow-sm"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white transition shadow-sm"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
 
             <div class="space-y-6">
-                <h4 class="text-xl font-black text-[#0071BC] uppercase border-b-2 border-[#F58220] inline-block mb-4 italic">Liên hệ hệ thống</h4>
+                <h4 class="text-xl font-black text-[#0071BC] uppercase border-b-2 border-[#F58220] inline-block mb-4 italic">Thông tin liên hệ</h4>
                 <div class="space-y-4">
                     <p class="text-sm flex items-start text-gray-700">
                         <i class="fas fa-building mt-1 mr-4 text-[#F58220]"></i>
@@ -160,7 +159,7 @@
                     </p>
                     <p class="text-sm flex items-start text-gray-700">
                         <i class="fas fa-store mt-1 mr-4 text-[#F58220]"></i>
-                        <span><strong>Cửa hàng & Kho:</strong> 39/6/C1 Đường 22, Phường Hiệp Bình, TP. Thủ Đức, HCM</span>
+                        <span><strong>Cửa hàng & Kho:</strong> 39/6/C1 Đường 22, Hiệp Bình, TP. Thủ Đức, HCM</span>
                     </p>
                     <p class="text-sm flex items-center text-gray-700">
                         <i class="fas fa-phone-alt mr-4 text-[#F58220]"></i>
@@ -176,13 +175,13 @@
             <div class="rounded-3xl overflow-hidden shadow-xl border-4 border-white h-80 relative group">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.732958742299!2d106.726207!3d10.831776!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752700300a263d%3A0x6739f759695d6666!2zMzksIDYvQzEgxJDGsOG7nW5nIDIyLCBIaeG7h3AgQsOsbmggQ2jDoW5oLCBUaOG7pyDEkOG7YywgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1700000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 <div class="absolute inset-x-4 bottom-4 bg-white/95 p-3 rounded-xl text-[10px] font-bold shadow-lg opacity-0 group-hover:opacity-100 transition duration-300">
-                    <a href="https://maps.app.goo.gl/T7NMDc4hxKrn1tNs9" target="_blank" class="text-[#0071BC] flex items-center justify-center">
-                        MỞ BẢN ĐỒ CHI TIẾT <i class="fas fa-external-link-alt ml-2 text-[8px]"></i>
+                    <a href="https://maps.app.goo.gl/T7NMDc4hxKrn1tNs9" target="_blank" class="text-[#0071BC] flex items-center justify-center uppercase">
+                        Xem trên Google Maps <i class="fas fa-external-link-alt ml-2 text-[8px]"></i>
                     </a>
                 </div>
             </div>
         </div>
-        <div class="mt-20 text-center text-gray-400 text-xs border-t pt-10 uppercase tracking-widest font-bold">
+        <div class="mt-20 text-center text-gray-400 text-xs border-t border-gray-200 pt-10 uppercase tracking-widest font-bold">
             &copy; 2024 CÔNG TY TNHH KHANG GIA PHÚC | KGPTELECOM.VN
         </div>
     </footer>
@@ -191,11 +190,15 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
+        // Khởi tạo AOS (Hiệu ứng khi cuộn trang)
         AOS.init({ duration: 1000, once: true });
+
+        // Khởi tạo Swiper (Slider đầu trang)
         new Swiper(".heroSwiper", {
             loop: true,
             effect: "fade",
-            autoplay: { delay: 6000 },
+            fadeEffect: { crossFade: true },
+            autoplay: { delay: 6000, disableOnInteraction: false },
             navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
             pagination: { el: ".swiper-pagination", clickable: true },
         });
