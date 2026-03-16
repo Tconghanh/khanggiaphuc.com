@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KGPTelecom - Nhà Thầu Điện Nhẹ & Giải Pháp Công Nghệ Toàn Diện</title>
+    <title>KGPTelecom - Công nghệ trong tầm tay</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -22,8 +22,15 @@
         .nav-link:hover::after { width: 100%; }
         .nav-link:hover { color: #0071BC; }
         
-        .product-card:hover img { transform: scale(1.1); }
-        .project-card:hover .project-overlay { opacity: 1; transform: translateY(0); }
+        #mobile-menu-overlay { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .mobile-menu-open { transform: translateX(0) !important; }
+        
+        .swiper-slide-active .slide-content { animation: fadeInUp 1s both 0.5s; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .price-tag { color: #e11d48; font-weight: 800; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -35,6 +42,7 @@
                 <img src="logo.png" alt="KGPTelecom Logo" class="h-12 md:h-16 w-auto object-contain">
             </a>
 
+            <!-- Desktop Menu -->
             <nav class="hidden lg:flex space-x-6 uppercase">
                 <a href="#home" class="nav-link">Trang chủ</a>
                 <a href="#products" class="nav-link">Sản phẩm</a>
@@ -44,35 +52,51 @@
                 <a href="#contact" class="nav-link">Liên hệ</a>
             </nav>
 
-            <div class="flex items-center">
-                <a href="https://zalo.me/0844900099" target="_blank" class="bg-[#0068FF] text-white px-5 py-2.5 rounded-full font-bold hover:bg-blue-700 transition shadow-lg flex items-center group">
-                    <span class="mr-2 hidden sm:inline uppercase text-sm">Chat Zalo</span>
-                    <i class="fab fa-whatsapp text-xl group-hover:rotate-12 transition"></i>
+            <div class="flex items-center space-x-4">
+                <a href="https://zalo.me/0844900099" target="_blank" class="hidden sm:flex bg-[#0068FF] text-white px-5 py-2.5 rounded-full font-bold hover:bg-blue-700 transition shadow-lg items-center group">
+                    <span class="mr-2 uppercase text-sm">Chat Zalo</span>
+                    <i class="fab fa-whatsapp text-xl"></i>
                 </a>
+                <button onclick="toggleMobileMenu()" class="lg:hidden text-3xl text-kgp-blue p-2">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- HERO SLIDER -->
-    <section id="home" class="swiper heroSwiper h-[500px] md:h-[700px]">
+    <!-- MOBILE MENU -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 z-[110] bg-black/95 text-white translate-x-full flex flex-col items-center justify-center space-y-8 uppercase font-bold text-xl">
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-4xl text-kgp-orange"><i class="fas fa-times"></i></button>
+        <a href="#home" onclick="toggleMobileMenu()">Trang chủ</a>
+        <a href="#products" onclick="toggleMobileMenu()">Sản phẩm</a>
+        <a href="#projects" onclick="toggleMobileMenu()">Dự án</a>
+        <a href="#services" onclick="toggleMobileMenu()">Dịch vụ</a>
+        <a href="#profile" onclick="toggleMobileMenu()">Hồ sơ năng lực</a>
+        <a href="#contact" onclick="toggleMobileMenu()">Liên hệ</a>
+        <a href="https://zalo.me/0844900099" class="bg-[#0068FF] px-8 py-3 rounded-full text-sm uppercase">Chat Zalo Ngay</a>
+    </div>
+
+    <!-- MAIN SLIDER -->
+    <section id="home" class="swiper heroSwiper h-[550px] md:h-[800px]">
         <div class="swiper-wrapper">
             <div class="swiper-slide relative">
-                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc51?auto=format&fit=crop&w=1600" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-black/50 flex items-center">
-                    <div class="container mx-auto px-6 text-white" data-aos="fade-right">
-                        <h1 class="text-4xl md:text-7xl font-black mb-4 uppercase">NHÀ THẦU ĐIỆN NHẸ<br><span class="text-[#F58220]">UY TÍN HÀNG ĐẦU</span></h1>
-                        <p class="text-lg md:text-xl mb-8 max-w-2xl text-gray-200 font-medium">Khang Gia Phúc - Chuyên giải pháp hạ tầng mạng, âm thanh công cộng và an ninh tòa nhà.</p>
-                        <a href="#projects" class="bg-[#0071BC] px-8 py-4 rounded-md font-bold hover:bg-blue-700 transition uppercase shadow-xl">Dự án tiêu biểu</a>
+                <img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1600&q=80" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/40 flex items-center">
+                    <div class="container mx-auto px-6 text-white slide-content">
+                        <span class="bg-kgp-orange text-xs font-bold px-4 py-1 rounded-full mb-4 inline-block uppercase tracking-widest">Smart Living Solutions</span>
+                        <h1 class="text-5xl md:text-7xl font-black mb-4 uppercase leading-tight">NHÀ THÔNG MINH<br><span class="text-[#F58220]">SMART HOME</span></h1>
+                        <p class="text-lg md:text-xl mb-8 max-w-2xl text-gray-100 font-medium">Giải pháp điều khiển tự động và an ninh thông minh cho ngôi nhà hiện đại.</p>
+                        <a href="#contact" class="bg-[#F58220] px-8 py-4 rounded-md font-bold hover:bg-orange-600 transition uppercase shadow-xl">Tư vấn giải pháp</a>
                     </div>
                 </div>
             </div>
             <div class="swiper-slide relative">
-                <img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1600" class="w-full h-full object-cover">
+                <img src="https://images.unsplash.com/photo-1551703599-6b3e8379aa8c?auto=format&fit=crop&w=1600&q=80" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black/60 flex items-center text-center w-full">
-                    <div class="container mx-auto px-6 text-white" data-aos="zoom-in">
-                        <h2 class="text-4xl md:text-7xl font-black mb-4 uppercase text-[#F58220]">SMART HOME</h2>
-                        <p class="text-2xl mb-10 font-bold uppercase tracking-widest">Công Nghệ Trong Tầm Tay</p>
-                        <a href="#products" class="bg-white text-kgp-blue px-10 py-4 rounded-md font-bold hover:bg-gray-100 transition uppercase shadow-xl">Khám phá ngay</a>
+                    <div class="container mx-auto px-6 text-white slide-content">
+                        <h2 class="text-5xl md:text-7xl font-black mb-4 uppercase leading-tight">PHÂN PHỐI THIẾT BỊ<br><span class="text-white">VIỄN THÔNG CHÍNH HÃNG</span></h2>
+                        <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto text-blue-100 font-medium">Camera, thiết bị mạng, khóa từ và linh kiện PC từ các thương hiệu hàng đầu.</p>
+                        <a href="#products" class="bg-[#0071BC] px-10 py-4 rounded-md font-bold hover:bg-blue-700 transition uppercase shadow-xl">Xem sản phẩm</a>
                     </div>
                 </div>
             </div>
@@ -80,178 +104,144 @@
         <div class="swiper-pagination"></div>
     </section>
 
-    <!-- SECTION: SẢN PHẨM (20 sản phẩm) -->
+    <!-- SECTION: SẢN PHẨM (Tổng hợp từ KGP & Vuhoangtelecom) -->
     <section id="products" class="py-24 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-black text-kgp-blue uppercase italic" data-aos="fade-up">Danh mục sản phẩm</h2>
+                <h2 class="text-4xl font-black text-kgp-blue uppercase italic" data-aos="fade-up">Sản phẩm khuyến mãi</h2>
                 <div class="w-24 h-1.5 bg-kgp-orange mx-auto mt-4"></div>
             </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                <!-- Camera items (8) -->
-                <script>
-                    const products = [
-                        { name: "Camera IP Hikvision 4MP", cat: "Camera", img: "https://images.unsplash.com/photo-1524143878510-e3b8d6312402?w=400" },
-                        { name: "Camera PTZ Dahua 4K", cat: "Camera", img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400" },
-                        { name: "Ezviz C6N Smart Wifi", cat: "Camera", img: "https://images.unsplash.com/photo-1551703599-6b3e8379aa8c?w=400" },
-                        { name: "Camera IMOU 360 Độ", cat: "Camera", img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400" },
-                        { name: "Đầu ghi Hikvision 8 Kênh", cat: "Camera", img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc51?w=400" },
-                        { name: "Camera thân Dahua IP", cat: "Camera", img: "https://images.unsplash.com/photo-1524143878510-e3b8d6312402?w=400" },
-                        { name: "Ezviz Ngoài Trời Pro", cat: "Camera", img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400" },
-                        { name: "Combo 4 Camera Giá Rẻ", cat: "Camera", img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400" },
-                        // Smart Locks (6)
-                        { name: "Khóa Kassler KL-600", cat: "Khóa Từ", img: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400" },
-                        { name: "Khóa Kaadas K9", cat: "Khóa Từ", img: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400" },
-                        { name: "Samsung SHP-DP728", cat: "Khóa Từ", img: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400" },
-                        { name: "Khóa Vân Tay Philips", cat: "Khóa Từ", img: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400" },
-                        { name: "Khóa Adel Cao Cấp", cat: "Khóa Từ", img: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400" },
-                        { name: "Khóa Cửa Nhôm Xingfa", cat: "Khóa Từ", img: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400" },
-                        // Laptops/Components (6)
-                        { name: "Laptop Dell Latitude 7420", cat: "Laptop", img: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400" },
-                        { name: "HP Pavilion 15 Core i5", cat: "Laptop", img: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400" },
-                        { name: "Asus Vivobook 14", cat: "Laptop", img: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400" },
-                        { name: "Macbook Air M2 2024", cat: "Laptop", img: "https://images.unsplash.com/photo-1517336714460-d51b77037b4a?w=400" },
-                        { name: "SSD Samsung 980 500GB", cat: "Linh kiện", img: "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=400" },
-                        { name: "Ram Corsair 16GB DDR4", cat: "Linh kiện", img: "https://images.unsplash.com/photo-1591489378430-ef2f4c626b35?w=400" }
-                    ];
-
-                    products.forEach(p => {
-                        document.write(`
-                            <div class="product-card bg-gray-50 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group" data-aos="fade-up">
-                                <div class="relative overflow-hidden h-40">
-                                    <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover transition-transform duration-500">
-                                    <div class="absolute top-2 right-2 bg-kgp-blue text-white text-[10px] px-2 py-1 rounded font-bold uppercase">${p.cat}</div>
-                                </div>
-                                <div class="p-4 text-center">
-                                    <h4 class="font-bold text-sm text-gray-800 line-clamp-2 min-h-[40px]">${p.name}</h4>
-                                    <p class="text-red-600 font-bold mt-2 text-xs">Giá: Liên hệ</p>
-                                    <a href="https://zalo.me/0844900099" class="mt-3 block text-[10px] font-bold text-kgp-blue border border-kgp-blue py-1.5 rounded hover:bg-kgp-blue hover:text-white transition">TƯ VẤN NGAY</a>
-                                </div>
-                            </div>
-                        `);
-                    });
-                </script>
-            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6" id="product-list"></div>
         </div>
     </section>
 
-    <!-- SECTION: DỰ ÁN HOÀN THÀNH -->
+    <!-- SECTION: DỰ ÁN -->
     <section id="projects" class="py-24 bg-gray-100">
         <div class="container mx-auto px-4">
-            <div class="flex justify-between items-end mb-16">
-                <div>
-                    <h2 class="text-4xl font-black text-kgp-blue uppercase italic">Dự án hoàn thành</h2>
-                    <p class="text-gray-500 mt-2">Khẳng định chất lượng qua hàng trăm công trình tiêu biểu</p>
-                </div>
-            </div>
-
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Dự án list -->
-                <script>
-                    const projects = [
-                        { title: "Nhà thầu điện nhẹ FVC Long An", desc: "Thi công hệ thống điện, mạng, chống sét cho xưởng sản xuất FVC." },
-                        { title: "Biệt thự Phú Hữu - TP. Thủ Đức", desc: "Thi công hệ thống mạng wifi và camera giám sát thông minh." },
-                        { title: "Dự án Lavida Plus - Quận 7", desc: "Hệ thống âm thanh thông báo, hạ tầng mạng wifi và camera an ninh." },
-                        { title: "Tòa nhà C-Holding - Bình Dương", desc: "Thi công server, mạng LAN chuyên dụng và camera tòa nhà văn phòng." },
-                        { title: "Chung cư Orchid Park - Nhà Bè", desc: "Hệ thống âm thanh thông báo và camera giám sát toàn tòa nhà." },
-                        { title: "Chuỗi Bánh Mì 362 - HCM", desc: "Triển khai lắp đặt camera đồng bộ cho toàn chuỗi cửa hàng tại HCM." },
-                        { title: "Chung cư Khánh Hội - Quận 4", desc: "Thi công hệ thống camera giám sát an ninh hầm xe công suất lớn." },
-                        { title: "Nhà máy May Đồng Nai", desc: "Thi công hạ tầng mạng LAN và tổng đài IP cho 3 phân xưởng lớn." },
-                        { title: "Showroom Mercedes HCM", desc: "Giải pháp wifi marketing và camera AI nhận diện khách hàng." },
-                        { title: "Trường Quốc tế Thủ Đức", desc: "Lắp đặt hệ thống âm thanh giảng đường và mạng wifi chịu tải cao." }
-                    ];
-
-                    projects.forEach((proj, index) => {
-                        document.write(`
-                            <div class="bg-white rounded-2xl overflow-hidden shadow-lg group relative h-64" data-aos="zoom-in" data-aos-delay="${index * 50}">
-                                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-6 flex flex-col justify-end">
-                                    <h4 class="text-white font-bold text-lg mb-2">${proj.title}</h4>
-                                    <p class="text-gray-300 text-xs leading-relaxed opacity-0 group-hover:opacity-100 transition duration-500 transform translate-y-4 group-hover:translate-y-0">${proj.desc}</p>
-                                </div>
-                            </div>
-                        `);
-                    });
-                </script>
-            </div>
+            <h2 class="text-4xl font-black text-kgp-blue uppercase italic mb-12 border-l-8 border-kgp-orange pl-6" data-aos="fade-right">Dự án tiêu biểu</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="project-list"></div>
         </div>
     </section>
 
     <!-- SECTION: HỒ SƠ NĂNG LỰC -->
-    <section id="profile" class="py-24 bg-kgp-blue text-white overflow-hidden relative">
-        <div class="absolute right-0 top-0 opacity-10 pointer-events-none">
-            <i class="fas fa-file-contract text-[300px]"></i>
-        </div>
-        <div class="container mx-auto px-4 text-center relative z-10">
-            <h2 class="text-4xl font-black mb-6 uppercase tracking-wider" data-aos="fade-up">Hồ Sơ Năng Lực</h2>
-            <p class="max-w-2xl mx-auto mb-12 text-blue-100" data-aos="fade-up" data-aos-delay="100">
-                Khám phá đầy đủ năng lực thi công, các đối tác chiến lược và quy trình làm việc chuyên nghiệp của KGPTelecom qua bản Profile chi tiết.
-            </p>
-            <div class="flex flex-col items-center" data-aos="zoom-in">
-                <div class="mb-10 w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden border-4 border-white/20">
-                    <img src="https://images.unsplash.com/photo-1586769852044-692d6e692453?auto=format&fit=crop&w=600" class="w-full" alt="Company Profile">
-                </div>
-                <a href="https://www.canva.com/design/DAGykeEt8hU/L0-V9Mi13ArenR_1mJLtjA/edit?utm_content=DAGykeEt8hU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank" class="bg-kgp-orange text-white px-10 py-5 rounded-full font-black text-lg hover:bg-orange-600 transition shadow-2xl animate-pulse flex items-center">
-                    <i class="fas fa-download mr-3"></i> XEM HỒ SƠ NĂNG LỰC TRỰC TUYẾN
-                </a>
-            </div>
+    <section id="profile" class="py-24 bg-kgp-blue text-white text-center">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-black mb-6 uppercase" data-aos="fade-up">Hồ Sơ Năng Lực</h2>
+            <p class="max-w-2xl mx-auto mb-10 text-blue-100">Khám phá chi tiết năng lực thi công của KGPTelecom.</p>
+            <a href="https://www.canva.com/design/DAGykeEt8hU/L0-V9Mi13ArenR_1mJLtjA/edit?utm_content=DAGykeEt8hU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank" class="bg-kgp-orange px-10 py-5 rounded-full font-black text-lg hover:bg-orange-600 transition shadow-2xl inline-flex items-center uppercase">
+                <i class="fas fa-file-contract mr-3"></i> Xem Hồ Sơ Năng Lực
+            </a>
         </div>
     </section>
 
     <!-- FOOTER -->
-    <footer id="contact" class="bg-white pt-24 pb-12 border-t">
+    <footer id="contact" class="bg-white pt-24 pb-12 border-t font-medium">
         <div class="container mx-auto px-4 grid lg:grid-cols-3 gap-16">
-            <div data-aos="fade-up">
+            <div>
                 <img src="logo.png" alt="KGPTelecom" class="h-16 mb-8">
-                <p class="text-gray-600 italic">"Kiến tạo giải pháp công nghệ hiện đại cho doanh nghiệp và gia đình Việt."</p>
+                <p class="text-gray-600 italic">"Công nghệ trong tầm tay - Đối tác tin cậy của mọi công trình."</p>
                 <div class="flex space-x-5 mt-8">
-                    <a href="#" class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-kgp-blue hover:bg-kgp-blue hover:text-white transition shadow-sm"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white transition shadow-sm"><i class="fab fa-youtube"></i></a>
-                    <a href="https://zalo.me/0844900099" class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-blue-500 hover:bg-blue-500 hover:text-white transition shadow-sm"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-kgp-blue hover:bg-kgp-blue hover:text-white transition shadow-sm"><i class="fab fa-facebook-f text-xl"></i></a>
+                    <a href="#" class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-red-600 hover:bg-red-600 hover:text-white transition shadow-sm"><i class="fab fa-youtube text-xl"></i></a>
                 </div>
             </div>
-
-            <div class="space-y-6" data-aos="fade-up" data-aos-delay="100">
-                <h4 class="text-xl font-black text-kgp-blue uppercase border-b-2 border-kgp-orange inline-block mb-4">Hệ thống cơ sở</h4>
-                <p class="text-sm flex items-start text-gray-700">
-                    <i class="fas fa-building mt-1 mr-4 text-kgp-orange"></i>
-                    <span><strong>Trụ sở:</strong> 7-9 Tôn Đức Thắng, P. Bến Nghé, Q.1, TP. HCM</span>
-                </p>
-                <p class="text-sm flex items-start text-gray-700">
-                    <i class="fas fa-store mt-1 mr-4 text-kgp-orange"></i>
-                    <span><strong>Kho & CH:</strong> 39/6/C1 Đường 22, Hiệp Bình, Thủ Đức, HCM</span>
-                </p>
-                <p class="text-sm flex items-center text-gray-700">
-                    <i class="fas fa-phone-alt mr-4 text-kgp-orange"></i>
-                    <span><strong>Hotline:</strong> 0844 900 099</span>
-                </p>
-                <p class="text-sm flex items-center text-gray-700">
-                    <i class="fas fa-envelope mr-4 text-kgp-orange"></i>
-                    <span>info@khanggiaphuc.com</span>
-                </p>
+            <div class="space-y-6 text-sm text-gray-700">
+                <h4 class="text-xl font-black text-kgp-blue uppercase border-b-2 border-kgp-orange inline-block mb-4 italic">Liên hệ KGP</h4>
+                <p class="flex items-start"><i class="fas fa-building mt-1 mr-4 text-kgp-orange"></i> <strong>Trụ sở:</strong> 7-9 Tôn Đức Thắng, P. Bến Nghé, Q.1, TP. HCM</p>
+                <p class="flex items-start"><i class="fas fa-store mt-1 mr-4 text-kgp-orange"></i> <strong>Cửa hàng:</strong> 39/6/C1 Đường 22, Hiệp Bình, Thủ Đức, HCM</p>
+                <p class="flex items-center"><i class="fas fa-phone-alt mr-4 text-kgp-orange"></i> <strong>Hotline:</strong> 0844 900 099</p>
+                <p class="flex items-center"><i class="fas fa-envelope mr-4 text-kgp-orange"></i> <strong>Email:</strong> info@khanggiaphuc.com</p>
             </div>
-
-            <div class="rounded-3xl overflow-hidden shadow-2xl h-80 relative" data-aos="fade-up" data-aos-delay="200">
+            <div class="rounded-3xl overflow-hidden shadow-2xl h-80">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.732958742299!2d106.726207!3d10.831776!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752700300a263d%3A0x6739f759695d6666!2zMzksIDYvQzEgxJDGsOG7nW5nIDIyLCBIaeG7h3AgQsOsbmggQ2jDoW5oLCBUaOG7pyDEkOG7YywgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3 Nam!5e0!3m2!1svi!2s!4v1700000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
         </div>
-        <div class="mt-20 text-center text-gray-400 text-xs border-t pt-10 uppercase tracking-widest font-bold">
+        <div class="mt-20 text-center text-gray-400 text-xs border-t pt-10 uppercase tracking-widest font-bold font-sans">
             &copy; 2024 CÔNG TY TNHH KHANG GIA PHÚC | KGPTELECOM.VN
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         AOS.init({ duration: 1000, once: true });
+        
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu-overlay');
+            menu.classList.toggle('mobile-menu-open');
+            document.body.style.overflow = menu.classList.contains('mobile-menu-open') ? 'hidden' : 'auto';
+        }
+
         new Swiper(".heroSwiper", {
             loop: true,
             effect: "fade",
-            autoplay: { delay: 6000, disableOnInteraction: false },
+            autoplay: { delay: 6000 },
             pagination: { el: ".swiper-pagination", clickable: true },
         });
+
+        // DANH SÁCH SẢN PHẨM TỔNG HỢP CÓ GIÁ
+        const products = [
+            // Sản phẩm từ Vuhoangtelecom
+            { name: "Camera Wifi Ezviz H6c Pro 2K+ (4MP) AI", price: "750.000đ", cat: "Ezviz", img: "https://vuhoangtelecom.vn/wp-content/uploads/2023/10/ezviz-h6c-pro-2k.jpg" },
+            { name: "Camera Hikvision ColorVu DS-2CE10DF0T-F", price: "920.000đ", cat: "Hikvision", img: "https://vuhoangtelecom.vn/wp-content/uploads/2021/04/ds-2ce10df0t-f.jpg" },
+            { name: "Camera Dahua Wifi DH-IPC-HFW1230DT-STW", price: "1.150.000đ", cat: "Dahua", img: "https://vuhoangtelecom.vn/wp-content/uploads/2022/07/dh-ipc-hfw1230dt-stw.jpg" },
+            { name: "Ổ cứng WD Purple 1TB chuyên dụng Camera", price: "1.190.000đ", cat: "Phụ kiện", img: "https://vuhoangtelecom.vn/wp-content/uploads/2019/03/o-cung-wd-purple-1tb.jpg" },
+            { name: "Camera Hilook THC-B120-P 2.0MP", price: "390.000đ", cat: "Hilook", img: "https://vuhoangtelecom.vn/wp-content/uploads/2019/11/thc-b120-p.jpg" },
+            
+            // Sản phẩm từ Khang Gia Phúc
+            { name: "Camera Ezviz C6N 2MP Smart Wifi", price: "550.000đ", cat: "Ezviz", img: "https://khanggiaphuc.com/wp-content/uploads/2020/07/ezviz-c6n.jpg" },
+            { name: "Khóa Kassler KL-600 Gold Luxury", price: "6.500.000đ", cat: "Kassler", img: "https://khanggiaphuc.com/wp-content/uploads/2021/04/KL-600-GOLD.jpg" },
+            { name: "Camera Imou Ranger 2 (A22EP) 1080P", price: "590.000đ", cat: "Imou", img: "https://khanggiaphuc.com/wp-content/uploads/2020/09/imou-ranger-2.jpg" },
+            { name: "Khóa Bosch ID30B (Bluetooth/Vân tay)", price: "10.800.000đ", cat: "Bosch", img: "https://khanggiaphuc.com/wp-content/uploads/2021/04/BOSCH-ID30B.jpg" },
+            { name: "Thiết bị mạng Ruijie RG-RAP2200(E)", price: "2.350.000đ", cat: "Ruijie", img: "https://khanggiaphuc.com/wp-content/uploads/2021/05/RG-RAP2200E.jpg" },
+            { name: "Camera Dahua DH-HAC-HFW1200RP-S4", price: "680.000đ", cat: "Dahua", img: "https://khanggiaphuc.com/wp-content/uploads/2021/05/1200RP-S4.jpg" },
+            { name: "Laptop Dell Vostro 3510 Core i5-1135G7", price: "14.500.000đ", cat: "Dell", img: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400" },
+            { name: "Đầu ghi Hikvision DS-7204HGHI-K1", price: "1.250.000đ", cat: "Hikvision", img: "https://khanggiaphuc.com/wp-content/uploads/2021/05/7204HGHI-K1.jpg" },
+            { name: "Camera Wifi Ezviz C3N (Full Color)", price: "1.050.000đ", cat: "Ezviz", img: "https://khanggiaphuc.com/wp-content/uploads/2021/05/C3N.jpg" },
+            { name: "Khóa Dessmann G800-II Luxury", price: "15.900.000đ", cat: "Dessmann", img: "https://khanggiaphuc.com/wp-content/uploads/2021/04/G800-II.jpg" },
+            { name: "Bộ phát Wifi Draytek Vigor 2927", price: "3.450.000đ", cat: "Draytek", img: "https://khanggiaphuc.com/wp-content/uploads/2021/05/Vigor2927.jpg" },
+            { name: "Camera Imou Bullet 2C (F22P)", price: "850.000đ", cat: "Imou", img: "https://khanggiaphuc.com/wp-content/uploads/2021/05/F22P.jpg" },
+            { name: "Switch PoE Ruijie RG-ES205GC-P", price: "1.650.000đ", cat: "Ruijie", img: "https://khanggiaphuc.com/wp-content/uploads/2021/05/ES205GC-P.jpg" },
+            { name: "Khóa Kaadas K9 (Màu Đồng Đỏ)", price: "8.900.000đ", cat: "Kaadas", img: "https://khanggiaphuc.com/wp-content/uploads/2021/04/Kaadas-K9.jpg" },
+            { name: "Khóa vân tay cửa nhôm Kassler KL-599", price: "5.200.000đ", cat: "Kassler", img: "https://khanggiaphuc.com/wp-content/uploads/2021/04/KL-599.jpg" }
+        ];
+
+        const projects = [
+            { title: "Dự án FVC Long An", desc: "Thi công hệ thống điện, mạng, chống sét xưởng FVC." },
+            { title: "Biệt thự Thủ Đức", desc: "Hệ thống camera an ninh và mạng wifi cao cấp." },
+            { title: "Lavida Plus - Quận 7", desc: "Hệ thống âm thanh thông báo và camera trọn gói." },
+            { title: "C-Holding Bình Dương", desc: "Hệ thống server và hạ tầng mạng văn phòng." },
+            { title: "Orchid Park - Nhà Bè", desc: "Hệ thống âm thanh tòa nhà và an ninh cư dân." },
+            { title: "Chuỗi Bánh Mì 362", desc: "Lắp đặt camera đồng bộ hệ thống cửa hàng HCM." },
+            { title: "Chung cư Khánh Hội", desc: "Thi công camera giám sát hầm xe công suất lớn." },
+            { title: "Nhà máy May Đồng Nai", desc: "Hạ tầng mạng LAN và tổng đài IP công nghiệp." },
+            { title: "Mercedes Showroom", desc: "Giải pháp wifi marketing và camera AI nhận diện." },
+            { title: "Trường Quốc tế HCM", desc: "Hệ thống âm thanh giảng đường & wifi chịu tải cao." }
+        ];
+
+        document.getElementById('product-list').innerHTML = products.map(p => `
+            <div class="product-card bg-gray-50 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group" data-aos="fade-up">
+                <div class="relative overflow-hidden h-40">
+                    <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover transition-transform duration-500">
+                    <div class="absolute top-2 right-2 bg-kgp-blue text-white text-[9px] px-2 py-1 rounded font-bold uppercase">${p.cat}</div>
+                </div>
+                <div class="p-4 text-center">
+                    <h4 class="font-bold text-[11px] text-gray-800 line-clamp-2 min-h-[32px]">${p.name}</h4>
+                    <p class="price-tag mt-2 text-[12px] italic uppercase tracking-tighter">Giá: ${p.price}</p>
+                    <a href="https://zalo.me/0844900099" target="_blank" class="mt-3 block text-[10px] font-bold text-kgp-blue border border-kgp-blue py-1.5 rounded hover:bg-kgp-blue hover:text-white transition uppercase italic">Tư vấn Zalo</a>
+                </div>
+            </div>
+        `).join('');
+
+        document.getElementById('project-list').innerHTML = projects.map(proj => `
+            <div class="bg-white rounded-2xl overflow-hidden shadow-lg group relative h-64" data-aos="zoom-in">
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent p-6 flex flex-col justify-end text-white text-left">
+                    <h4 class="font-bold text-lg mb-1">${proj.title}</h4>
+                    <p class="text-gray-300 text-xs leading-relaxed opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0">${proj.desc}</p>
+                </div>
+            </div>
+        `).join('');
     </script>
 </body>
 </html>
