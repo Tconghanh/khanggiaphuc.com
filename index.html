@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGPTelecom - Công Nghệ Trong Tầm Tay | Hệ Thống An Ninh & Linh Kiện PC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .text-kgp-blue { color: #0071BC; }
+        .bg-kgp-blue { background-color: #0071BC; }
+        .text-kgp-orange { color: #F58220; }
+        .bg-kgp-orange { background-color: #F58220; }
+        .border-kgp-orange { border-color: #F58220; }
+        
+        .nav-link { position: relative; transition: 0.3s; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: #F58220; transition: 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+        .glass-header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- TOP BAR -->
+    <div class="bg-kgp-blue text-white py-1 text-sm hidden md:block">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div><i class="fas fa-map-marker-alt mr-2"></i> 7-9 Tôn Đức Thắng, P. Bến Nghé, Q.1, HCM</div>
+            <div><i class="fas fa-envelope mr-2"></i> info@kgptelecom.com | <i class="fas fa-clock mr-2"></i> 08:00 - 18:00</div>
+        </div>
+    </div>
+
+    <!-- HEADER & MENU -->
+    <header class="sticky top-0 z-[100] glass-header shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center">
+                <!-- LOGO NGANG CỦA BẠN -->
+                <img src="https://i.imgur.com/KqW99eB.png" alt="KGPTelecom Logo" class="h-12 md:h-14">
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden lg:flex space-x-6 xl:space-x-8 font-bold text-sm text-gray-700">
+                <a href="#home" class="nav-link hover:text-kgp-blue uppercase">Trang chủ</a>
+                <a href="#news" class="nav-link hover:text-kgp-blue uppercase">Tin tức</a>
+                <a href="#products" class="nav-link hover:text-kgp-blue uppercase">Sản phẩm</a>
+                <a href="#projects" class="nav-link hover:text-kgp-blue uppercase">Dự án</a>
+                <a href="#services" class="nav-link hover:text-kgp-blue uppercase">Dịch vụ</a>
+                <a href="#documents" class="nav-link hover:text-kgp-blue uppercase">Tài liệu</a>
+                <a href="#contact" class="nav-link hover:text-kgp-blue uppercase border-l pl-6 border-gray-300">Liên hệ</a>
+            </nav>
+
+            <a href="tel:0844900099" class="bg-kgp-orange text-white px-4 py-2 rounded-lg font-bold hover:scale-105 transition flex items-center">
+                <i class="fas fa-phone-alt mr-2"></i> 0844 900 099
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO SLIDER (Trang Chủ) -->
+    <section id="home" class="swiper heroSwiper h-[500px] md:h-[650px]">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide relative">
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1600" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
+                    <div class="container mx-auto px-6 text-white">
+                        <h2 class="text-4xl md:text-6xl font-bold mb-4" data-aos="fade-up">Giải Pháp An Ninh<br><span class="text-kgp-orange">Toàn Diện</span></h2>
+                        <p class="text-lg md:text-xl mb-8 max-w-xl" data-aos="fade-up" data-aos-delay="200">KGPTelecom cung cấp hệ thống Camera AI thông minh, bảo vệ ngôi nhà và doanh nghiệp của bạn 24/7.</p>
+                        <div class="flex space-x-4" data-aos="fade-up" data-aos-delay="400">
+                            <a href="#products" class="bg-kgp-blue px-8 py-3 rounded-md font-bold hover:bg-blue-700 transition">Khám phá sản phẩm</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide relative">
+                <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1600" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-center">
+                    <div class="container mx-auto px-6 text-white">
+                        <h2 class="text-4xl md:text-6xl font-bold mb-4">Linh Kiện Máy Tính<br>Chính Hãng</h2>
+                        <p class="text-lg mb-8 italic text-kgp-orange font-bold text-2xl">"Công nghệ trong tầm tay"</p>
+                        <a href="#contact" class="border-2 border-white px-8 py-3 rounded-md font-bold hover:bg-white hover:text-black transition">Nhận tư vấn ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+    </section>
+
+    <!-- TIN TỨC (News) -->
+    <section id="news" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl font-bold border-l-4 border-kgp-orange pl-4">TIN TỨC & CÔNG NGHỆ</h2>
+                    <p class="text-gray-500 mt-2">Cập nhật xu hướng công nghệ an ninh mới nhất</p>
+                </div>
+                <a href="#" class="text-kgp-blue font-bold hover:underline">Xem tất cả <i class="fas fa-arrow-right ml-1 text-sm"></i></a>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="group cursor-pointer" data-aos="fade-up">
+                    <div class="overflow-hidden rounded-xl mb-4 h-52">
+                        <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=500" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <span class="text-kgp-orange text-xs font-bold uppercase">Công nghệ AI</span>
+                    <h3 class="font-bold text-xl mt-2 group-hover:text-kgp-blue transition leading-tight">Camera AI nhận diện khuôn mặt: Bước đột phá trong an ninh tòa nhà</h3>
+                    <p class="text-gray-500 text-sm mt-3 line-clamp-2">Công nghệ AI mới cho phép hệ thống camera phân biệt người lạ và người quen với độ chính xác 99.9%...</p>
+                </div>
+                <div class="group cursor-pointer" data-aos="fade-up" data-aos-delay="100">
+                    <div class="overflow-hidden rounded-xl mb-4 h-52">
+                        <img src="https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=500" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <span class="text-kgp-orange text-xs font-bold uppercase">Hướng dẫn</span>
+                    <h3 class="font-bold text-xl mt-2 group-hover:text-kgp-blue transition leading-tight">Cách chọn cấu hình PC đồ họa tối ưu nhất năm 2024</h3>
+                    <p class="text-gray-500 text-sm mt-3 line-clamp-2">Nên chọn RTX 40 series hay chờ đợi? Cùng KGPTelecom phân tích hiệu năng thực tế của các dòng card mới nhất...</p>
+                </div>
+                <div class="group cursor-pointer" data-aos="fade-up" data-aos-delay="200">
+                    <div class="overflow-hidden rounded-xl mb-4 h-52">
+                        <img src="https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=500" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    </div>
+                    <span class="text-kgp-orange text-xs font-bold uppercase">Sự kiện</span>
+                    <h3 class="font-bold text-xl mt-2 group-hover:text-kgp-blue transition leading-tight">KGPTelecom trở thành đối tác chiến lược của Hikvision Việt Nam</h3>
+                    <p class="text-gray-500 text-sm mt-3 line-clamp-2">Sự kiện đánh dấu bước phát triển mới, cam kết cung cấp sản phẩm chính hãng với giá tốt nhất thị trường...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SẢN PHẨM (Products) -->
+    <section id="products" class="py-20 bg-gray-50 shadow-inner">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-4">SẢN PHẨM CHỦ LỰC</h2>
+            <div class="w-20 h-1 bg-kgp-orange mx-auto mb-12"></div>
+            
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Product item -->
+                <div class="bg-white p-4 rounded-xl shadow-sm hover:shadow-xl transition group border border-transparent hover:border-kgp-blue/20">
+                    <div class="relative mb-4 overflow-hidden rounded-lg h-48">
+                        <img src="https://images.unsplash.com/photo-1524143878510-e3b8d6312402?auto=format&fit=crop&w=400" class="w-full h-full object-cover group-hover:scale-110 transition">
+                        <div class="absolute inset-0 bg-kgp-blue/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
+                            <button class="bg-white text-kgp-blue px-4 py-2 rounded-full text-xs font-bold">XEM CHI TIẾT</button>
+                        </div>
+                    </div>
+                    <h4 class="font-bold mb-2 group-hover:text-kgp-blue">Camera Dahua 4MP Full-Color</h4>
+                    <p class="text-red-600 font-bold">Liên hệ báo giá</p>
+                </div>
+                <!-- Copy 3 cái tương tự cho linh kiện máy tính... -->
+                <div class="bg-white p-4 rounded-xl shadow-sm hover:shadow-xl transition group border border-transparent hover:border-kgp-blue/20">
+                    <div class="relative mb-4 overflow-hidden rounded-lg h-48">
+                        <img src="https://images.unsplash.com/photo-1591489378430-ef2f4c626b35?auto=format&fit=crop&w=400" class="w-full h-full object-cover group-hover:scale-110 transition">
+                    </div>
+                    <h4 class="font-bold mb-2 group-hover:text-kgp-blue">VGA ASUS ROG Strix 4070</h4>
+                    <p class="text-red-600 font-bold text-sm">Chính hãng bảo hành 36T</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm hover:shadow-xl transition group border border-transparent hover:border-kgp-blue/20">
+                    <div class="relative mb-4 overflow-hidden rounded-lg h-48">
+                        <img src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=400" class="w-full h-full object-cover group-hover:scale-110 transition">
+                    </div>
+                    <h4 class="font-bold mb-2 group-hover:text-kgp-blue">SSD Samsung 980 Pro 1TB</h4>
+                    <p class="text-red-600 font-bold">Liên hệ báo giá</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm hover:shadow-xl transition group border border-transparent hover:border-kgp-blue/20">
+                    <div class="relative mb-4 overflow-hidden rounded-lg h-48">
+                        <img src="https://images.unsplash.com/photo-1551703599-6b3e8379aa8c?auto=format&fit=crop&w=400" class="w-full h-full object-cover group-hover:scale-110 transition">
+                    </div>
+                    <h4 class="font-bold mb-2 group-hover:text-kgp-blue">Màn hình Dell Ultrasharp 24"</h4>
+                    <p class="text-red-600 font-bold">Liên hệ báo giá</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DỰ ÁN (Projects) -->
+    <section id="projects" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center uppercase tracking-widest">Dự án tiêu biểu</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="relative group overflow-hidden h-72 rounded-lg" data-aos="zoom-in">
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-kgp-blue/80 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-center items-center text-white p-6">
+                        <h4 class="text-xl font-bold">Tòa nhà Viettel Complex</h4>
+                        <p class="text-sm mt-2">Lắp đặt hệ thống 200 Camera IP và Server lưu trữ tập trung.</p>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden h-72 rounded-lg" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6199f7d009?auto=format&fit=crop&w=800" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-kgp-orange/80 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-center items-center text-white p-6">
+                        <h4 class="text-xl font-bold">Chuỗi Villa Thảo Điền</h4>
+                        <p class="text-sm mt-2">Giải pháp Smart Home và an ninh vòng ngoài 2 lớp.</p>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden h-72 rounded-lg" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-kgp-blue/80 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-center items-center text-white p-6">
+                        <h4 class="text-xl font-bold">Văn phòng Shopee HCM</h4>
+                        <p class="text-sm mt-2">Build dàn PC đồ họa 50 máy và hạ tầng mạng LAN.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DỊCH VỤ (Services) -->
+    <section id="services" class="py-20 bg-kgp-blue text-white">
+        <div class="container mx-auto px-4 grid md:grid-cols-4 gap-8">
+            <div class="text-center" data-aos="fade-up">
+                <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-tools text-3xl text-kgp-orange"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-2 uppercase">Lắp đặt tận nơi</h3>
+                <p class="text-sm text-blue-100 px-4">Đội ngũ kỹ thuật lắp đặt thẩm mỹ, nhanh gọn trong 24h.</p>
+            </div>
+            <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-shield-alt text-3xl text-kgp-orange"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-2 uppercase">Bảo trì định kỳ</h3>
+                <p class="text-sm text-blue-100 px-4">Gói bảo trì hệ thống định kỳ, đảm bảo camera luôn hoạt động tốt.</p>
+            </div>
+            <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-headset text-3xl text-kgp-orange"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-2 uppercase">Hỗ trợ 24/7</h3>
+                <p class="text-sm text-blue-100 px-4">Hỗ trợ kỹ thuật qua Ultraview/Zalo bất cứ khi nào bạn cần.</p>
+            </div>
+            <div class="text-center" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-sync text-3xl text-kgp-orange"></i>
+                </div>
+                <h3 class="font-bold text-lg mb-2 uppercase">Đổi trả 1-1</h3>
+                <p class="text-sm text-blue-100 px-4">Chính sách lỗi là đổi mới ngay lập tức trong 30 ngày đầu.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TÀI LIỆU (Documents) -->
+    <section id="documents" class="py-20 bg-gray-50 text-center">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 uppercase tracking-wide">Kho Tài Liệu & Phần Mềm</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <a href="#" class="bg-white p-6 rounded-xl border-b-4 border-kgp-orange shadow-sm hover:shadow-md transition">
+                    <i class="fas fa-file-pdf text-4xl text-red-500 mb-4"></i>
+                    <h4 class="font-bold">Catalogue Camera 2024</h4>
+                    <p class="text-xs text-gray-400 mt-2">Download (15MB)</p>
+                </a>
+                <a href="#" class="bg-white p-6 rounded-xl border-b-4 border-kgp-orange shadow-sm hover:shadow-md transition">
+                    <i class="fas fa-desktop text-4xl text-kgp-blue mb-4"></i>
+                    <h4 class="font-bold">Phần mềm iVMS-4200</h4>
+                    <p class="text-xs text-gray-400 mt-2">Window/MacOS</p>
+                </a>
+                <a href="#" class="bg-white p-6 rounded-xl border-b-4 border-kgp-orange shadow-sm hover:shadow-md transition">
+                    <i class="fas fa-mobile-alt text-4xl text-green-500 mb-4"></i>
+                    <h4 class="font-bold">App Hik-Connect AI</h4>
+                    <p class="text-xs text-gray-400 mt-2">Android/iOS</p>
+                </a>
+                <a href="#" class="bg-white p-6 rounded-xl border-b-4 border-kgp-orange shadow-sm hover:shadow-md transition">
+                    <i class="fas fa-book text-4xl text-gray-600 mb-4"></i>
+                    <h4 class="font-bold">Hướng dẫn cài đặt</h4>
+                    <p class="text-xs text-gray-400 mt-2">E-book (PDF)</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIÊN HỆ (Contact) -->
+    <footer id="contact" class="bg-white pt-20 pb-10 border-t">
+        <div class="container mx-auto px-4">
+            <div class="grid lg:grid-cols-3 gap-12">
+                <div>
+                    <!-- LOGO VUÔNG CỦA BẠN -->
+                    <img src="https://i.imgur.com/KqW99eB.png" alt="KGPTelecom" class="h-24 mb-6">
+                    <h3 class="text-xl font-bold text-kgp-blue mb-4 uppercase">CÔNG TY TNHH KGPTELECOM</h3>
+                    <p class="text-gray-600 italic">"Công nghệ trong tầm tay - Niềm tin trong mỗi sản phẩm"</p>
+                    <div class="flex space-x-4 mt-8">
+                        <a href="#" class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-kgp-blue hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="#" class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition"><i class="fab fa-youtube text-xl"></i></a>
+                        <a href="#" class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-blue-400 hover:text-white transition"><i class="fab fa-zalo font-bold text-xs uppercase">Zalo</i></a>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h4 class="text-lg font-bold border-b-2 border-kgp-orange inline-block mb-4 uppercase">Thông tin liên hệ</h4>
+                    <p class="flex items-start"><i class="fas fa-map-marker-alt mt-1 mr-3 text-kgp-orange"></i> 7-9 Tôn Đức Thắng, phường Bến Nghé, Quận 1, TP. HCM</p>
+                    <p class="flex items-center"><i class="fas fa-phone-alt mr-3 text-kgp-orange"></i> <strong>Hotline:</strong> 0844 900 099</p>
+                    <p class="flex items-center"><i class="fas fa-tools mr-3 text-kgp-orange"></i> <strong>Bảo hành:</strong> 0844 900 099</p>
+                    <p class="flex items-center"><i class="fas fa-envelope mr-3 text-kgp-orange"></i> info@kgptelecom.com</p>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold border-b-2 border-kgp-orange inline-block mb-4 uppercase">Bản đồ chỉ đường</h4>
+                    <div class="h-56 rounded-xl overflow-hidden shadow-lg">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4602324283125!2d106.7021639153341!3d10.776019462148103!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4689b9d107%3A0xc6380c5e751a0b38!2zNy05IFTDtG4gxJDhu6ljIFRow6huZywgQuG6v24gTmdDynamicLCBRdeG6rW4gMSwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1620000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t mt-12 pt-8 text-center text-gray-500 text-sm italic">
+                &copy; 2024 CÔNG TY TNHH KGPTELECOM. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Call to action button on Mobile -->
+    <a href="tel:0844900099" class="fixed bottom-6 right-6 z-[100] md:hidden bg-red-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl animate-bounce">
+        <i class="fas fa-phone-alt text-xl"></i>
+    </a>
+
+    <!-- SCRIPTS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true });
+
+        const swiper = new Swiper(".heroSwiper", {
+            loop: true,
+            effect: "fade",
+            autoplay: { delay: 5000 },
+            navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+            pagination: { el: ".swiper-pagination", clickable: true },
+        });
+    </script>
+</body>
+</html>
