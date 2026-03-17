@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO TIÊU CHUẨN -->
+    <title>KGPTelecom - Nhà Thầu Điện Nhẹ & Công Nghệ Trong Tầm Tay</title>
+    <meta name="description" content="KGPTelecom (Khang Gia Phúc) - Nhà thầu điện nhẹ uy tín tại TP.HCM. Chuyên phân phối Camera chính hãng và giải pháp Nhà thông minh Smart Home.">
+    <link rel="canonical" href="https://tconghanh.github.io/KGPTelecom/">
+
+    <!-- FAVICON -->
+    <link rel="icon" href="Picture/favicon.ico">
+
+    <!-- LIBRARIES -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        :root { --kgp-blue: #0071BC; --kgp-orange: #F58220; }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; overflow-x: hidden; background-color: #fdfdfd; color: #1a1a1a; }
+        
+        .text-kgp-blue { color: var(--kgp-blue); }
+        .bg-kgp-blue { background-color: var(--kgp-blue); }
+        .text-kgp-orange { color: var(--kgp-orange); }
+        .bg-kgp-orange { background-color: var(--kgp-orange); }
+        
+        .glass-header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .nav-link { font-size: 0.85rem; font-weight: 700; transition: 0.3s; position: relative; color: #374151; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0; background: var(--kgp-orange); transition: 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+        .nav-link:hover { color: var(--kgp-blue); }
+        
+        .filter-btn { border: 1px solid #e5e7eb; transition: all 0.3s; }
+        .filter-btn.active { background-color: var(--kgp-blue); color: white; border-color: var(--kgp-blue); box-shadow: 0 4px 12px rgba(0,113,188,0.2); }
+
+        @keyframes pulse-red {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(220, 38, 38, 0); }
+        }
+        .animate-pulse-red { animation: pulse-red 2s infinite; }
+        
+        #main-modal { opacity: 0; pointer-events: none; transition: 0.3s ease; }
+        #main-modal.active { opacity: 1; pointer-events: auto; }
+
+        #back-to-top { opacity: 0; pointer-events: none; transition: 0.4s; transform: translateY(20px); }
+        #back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="fixed w-full top-0 z-[100] glass-header">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#home" class="flex items-center">
+                <img src="Picture/logo.png" alt="KGPTelecom Logo" class="h-10 md:h-14 w-auto">
+            </a>
+
+            <nav class="hidden lg:flex space-x-8 uppercase tracking-tight">
+                <a href="#home" class="nav-link">Trang chủ</a>
+                <a href="#products" class="nav-link">Sản phẩm</a>
+                <a href="#projects" class="nav-link">Dự án</a>
+                <a href="#profile" class="nav-link">Hồ sơ năng lực</a>
+                <a href="#contact" class="nav-link">Liên hệ</a>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                <a href="https://zalo.me/0844900099" target="_blank" class="hidden sm:flex items-center bg-[#0068FF] text-white px-6 py-2.5 rounded-full font-bold hover:bg-blue-700 transition shadow-md">
+                    <i class="fab fa-whatsapp mr-2 text-xl"></i> 0844 900 099
+                </a>
+                <button onclick="toggleMobileMenu()" class="lg:hidden text-2xl text-kgp-blue"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE MENU -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 z-[110] bg-kgp-blue text-white translate-x-full flex flex-col items-center justify-center space-y-8 uppercase font-bold text-xl transition-transform duration-500">
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-4xl"><i class="fas fa-times"></i></button>
+        <a href="#home" onclick="toggleMobileMenu()">Trang chủ</a>
+        <a href="#products" onclick="toggleMobileMenu()">Sản phẩm</a>
+        <a href="#projects" onclick="toggleMobileMenu()">Dự án</a>
+        <a href="#profile" onclick="toggleMobileMenu()">Hồ sơ năng lực</a>
+        <a href="#contact" onclick="toggleMobileMenu()">Liên hệ</a>
+        <a href="https://zalo.me/0844900099" target="_blank" class="bg-white text-kgp-blue px-8 py-3 rounded-full text-sm">Zalo: 0844 900 099</a>
+    </div>
+
+    <main>
+        <!-- HERO SLIDER (4 SLIDES) -->
+        <section id="home" class="swiper heroSwiper h-[65vh] md:h-[85vh]">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide relative">
+                    <img src="Picture/Slide01.jpg" class="w-full h-full object-cover" alt="Smart Home">
+                    <div class="absolute inset-0 bg-black/50 flex items-center">
+                        <div class="container mx-auto px-6 text-white" data-aos="fade-right">
+                            <span class="bg-kgp-orange text-[10px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block tracking-widest">Smart Solution</span>
+                            <h2 class="text-4xl md:text-7xl font-black mb-4 tracking-tighter uppercase leading-[1.1]">NHÀ THÔNG MINH<br><span class="text-kgp-orange">SMART HOME</span></h2>
+                            <p class="text-lg md:text-xl mb-8 max-w-xl opacity-90 font-light italic">Kiến tạo không gian sống hiện đại, tự động hóa bậc nhất.</p>
+                            <a href="#contact" class="bg-white text-kgp-blue px-8 py-3.5 rounded-xl font-bold uppercase hover:bg-kgp-orange hover:text-white transition inline-block">Khám phá ngay</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide relative">
+                    <img src="Picture/Slide02.jpg" class="w-full h-full object-cover" alt="Security Camera">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center text-center">
+                        <div class="container mx-auto px-6 text-white">
+                            <h2 class="text-4xl md:text-7xl font-black mb-4 tracking-tighter uppercase">CAMERA GIÁM SÁT</h2>
+                            <p class="text-lg md:text-xl mb-8 opacity-90">Phân phối chính hãng Hikvision - Dahua - Ezviz - Imou.</p>
+                            <a href="#products" class="bg-kgp-orange px-8 py-3.5 rounded-xl font-bold uppercase hover:bg-white hover:text-kgp-blue transition inline-block">Xem sản phẩm</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide relative">
+                    <img src="Picture/Slide03.jpg" class="w-full h-full object-cover" alt="ELV Contractor">
+                    <div class="absolute inset-0 bg-black/50 flex items-center">
+                        <div class="container mx-auto px-6 text-white">
+                            <h2 class="text-4xl md:text-7xl font-black mb-4 tracking-tighter uppercase leading-none">NHÀ THẦU ĐIỆN NHẸ<br><span class="text-kgp-orange">CHUYÊN NGHIỆP</span></h2>
+                            <p class="text-lg md:text-xl mb-8 max-w-xl opacity-90">Thi công hạ tầng mạng, âm thanh thông báo và an ninh tòa nhà.</p>
+                            <a href="#projects" class="bg-white text-kgp-blue px-8 py-3.5 rounded-xl font-bold uppercase hover:bg-kgp-orange hover:text-white transition inline-block">Dự án thực tế</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide relative">
+                    <img src="Picture/Slide04.jpg" class="w-full h-full object-cover" alt="Services">
+                    <div class="absolute inset-0 bg-gradient-to-l from-black/80 to-transparent flex items-center justify-end text-right">
+                        <div class="container mx-auto px-6 text-white">
+                            <h2 class="text-4xl md:text-7xl font-black mb-4 tracking-tighter uppercase text-kgp-orange">DỊCH VỤ TẬN TÂM</h2>
+                            <p class="text-lg md:text-xl mb-8 opacity-90">Bảo trì, sửa chữa và hỗ trợ kỹ thuật nhanh chóng trong 24h.</p>
+                            <a href="https://zalo.me/0844900099" target="_blank" class="bg-kgp-blue px-8 py-3.5 rounded-xl font-bold uppercase hover:bg-white hover:text-kgp-blue transition inline-block">Liên hệ hỗ trợ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </section>
+
+        <!-- CORE VALUES -->
+        <section class="relative z-10 -mt-16 container mx-auto px-4 mb-20">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 bg-white p-8 rounded-3xl shadow-2xl border border-gray-50">
+                <div class="flex flex-col items-center text-center p-4 border-r border-gray-100 last:border-0">
+                    <div class="w-14 h-14 bg-blue-50 text-kgp-blue rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-check-double text-2xl"></i></div>
+                    <h4 class="font-bold text-sm uppercase tracking-wide">Chính Hãng 100%</h4>
+                    <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">Sản phẩm chất lượng</p>
+                </div>
+                <div class="flex flex-col items-center text-center p-4 border-r border-gray-100 last:border-0">
+                    <div class="w-14 h-14 bg-orange-50 text-kgp-orange rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-tools text-2xl"></i></div>
+                    <h4 class="font-bold text-sm uppercase tracking-wide">Lắp đặt 24h</h4>
+                    <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">Đội ngũ lành nghề</p>
+                </div>
+                <div class="flex flex-col items-center text-center p-4 border-r border-gray-100 last:border-0">
+                    <div class="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-tags text-2xl"></i></div>
+                    <h4 class="font-bold text-sm uppercase tracking-wide">Giá cạnh tranh</h4>
+                    <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">Tối ưu ngân sách</p>
+                </div>
+                <div class="flex flex-col items-center text-center p-4">
+                    <div class="w-14 h-14 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-medal text-2xl"></i></div>
+                    <h4 class="font-bold text-sm uppercase tracking-wide">Bảo hành đến 5 năm</h4>
+                    <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">Hậu mãi tốt nhất</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTS SECTION -->
+        <section id="products" class="py-12">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12" data-aos="fade-up">
+                    <span class="text-kgp-orange font-black text-xs uppercase tracking-widest">Technology Store</span>
+                    <h2 class="text-4xl md:text-5xl font-black text-kgp-blue uppercase italic mt-2">Sản phẩm tiêu biểu</h2>
+                    <div class="w-24 h-1.5 bg-kgp-orange mx-auto mt-6 rounded-full"></div>
+                </div>
+                <div id="filter-container" class="flex flex-wrap justify-center gap-3 mb-12"></div>
+                <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8"></div>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects" class="py-24 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16" data-aos="fade-up">
+                    <h2 class="text-4xl md:text-5xl font-black text-kgp-blue uppercase italic border-b-8 border-kgp-orange pb-4">Dự án tiêu biểu</h2>
+                </div>
+                <div id="project-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </div>
+        </section>
+
+        <!-- PROFILE -->
+        <section id="profile" class="py-24 bg-kgp-blue text-white relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-1/3 h-full bg-white/5 skew-x-12 translate-x-20"></div>
+            <div class="container mx-auto px-4 text-center relative z-10">
+                <h2 class="text-3xl md:text-5xl font-black mb-6 uppercase tracking-tight">Hồ Sơ Năng Lực KGPTelecom</h2>
+                <p class="max-w-2xl mx-auto mb-12 text-blue-100 text-lg font-light italic">Sự tin cậy khẳng định qua chất lượng thi công dự án.</p>
+                <a href="https://www.canva.com/design/DAGykeEt8hU/L0-V9Mi13ArenR_1mJLtjA/edit" target="_blank" class="inline-flex items-center bg-white text-kgp-blue px-12 py-5 rounded-2xl font-black text-xl hover:bg-kgp-orange hover:text-white transition shadow-2xl group">
+                    <i class="fas fa-file-contract mr-4 text-2xl"></i> XEM PROFILE (PDF)
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="bg-white pt-24 pb-12 border-t border-gray-100">
+        <div class="container mx-auto px-4 grid lg:grid-cols-3 gap-16">
+            <div>
+                <img src="Picture/logo.png" class="h-16 mb-8" alt="Logo">
+                <p class="text-gray-500 text-sm leading-relaxed italic mb-8">"CÔNG TY TNHH KHANG GIA PHÚC - Công nghệ trong tầm tay."</p>
+                <div class="flex gap-4">
+                    <a href="https://www.facebook.com/congnghetrongtamtay1/" target="_blank" class="w-12 h-12 bg-blue-50 text-kgp-blue rounded-xl flex items-center justify-center hover:bg-kgp-blue hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
+                    <a href="https://www.tiktok.com/@congnghetrongtamtay" target="_blank" class="w-12 h-12 bg-gray-50 text-gray-900 rounded-xl flex items-center justify-center hover:bg-black hover:text-white transition"><i class="fab fa-tiktok text-xl"></i></a>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <h4 class="text-kgp-blue font-black text-xl uppercase italic border-b-2 border-kgp-orange inline-block pb-1">Thông tin liên hệ</h4>
+                <div class="space-y-4 text-sm text-gray-600">
+                    <p class="flex items-start"><i class="fas fa-building text-kgp-orange mt-1 mr-4"></i> <strong>Trụ sở:</strong> 7-9 Tôn Đức Thắng, Phường Sài Gòn, TP.HCM</p>
+                    <p class="flex items-start"><i class="fas fa-map-marker-alt text-kgp-orange mt-1 mr-4"></i> <strong>Văn phòng:</strong> 39/6/C1 Đường 22, Phường Hiệp Bình, TP.HCM</p>
+                    <p class="flex items-center"><i class="fas fa-phone-alt text-kgp-orange mr-4"></i> <strong>Hotline:</strong> 0844 900 099</p>
+                    <p class="flex items-center"><i class="fas fa-envelope text-kgp-orange mr-4"></i> <strong>Email:</strong> khanggiaphuc.com@gmail.com</p>
+                    <p class="flex items-center"><i class="fas fa-globe text-kgp-orange mr-4"></i> <strong>Website:</strong> www.khanggiaphuc.com</p>
+                </div>
+            </div>
+            <div class="flex flex-col min-h-[300px]">
+                <h4 class="text-kgp-blue font-black text-xl uppercase italic border-b-2 border-kgp-orange inline-block pb-1 mb-6">Kết nối Facebook</h4>
+                <div class="flex-grow rounded-2xl overflow-hidden shadow-xl border border-gray-100">
+                    <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fcongnghetrongtamtay1&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" 
+                        width="100%" height="100%" style="border:none;overflow:hidden;min-height:250px" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="container mx-auto px-4 border-t border-gray-100 mt-20 pt-10 text-center text-[10px] uppercase tracking-widest font-black text-gray-400">
+            &copy; <span id="year"></span> CÔNG TY TNHH KHANG GIA PHÚC | KHANGGIAPHUC.COM
+        </div>
+    </footer>
+
+    <!-- MAIN MODAL (SHARED) -->
+    <div id="main-modal" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-5xl rounded-[2rem] overflow-hidden shadow-2xl flex flex-col md:row-reverse md:flex-row max-h-[90vh] relative">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-400 hover:text-kgp-orange text-3xl z-10 transition"><i class="fas fa-times"></i></button>
+            <div class="md:w-3/5 bg-gray-50 p-8 flex flex-col items-center justify-center">
+                <div class="w-full h-[40vh] md:h-[50vh] flex items-center justify-center mb-4">
+                    <img id="modal-img" src="" class="max-w-full max-h-full object-contain rounded-2xl" alt="Preview">
+                </div>
+                <div id="modal-thumbs" class="grid grid-cols-4 gap-3 w-full max-w-md"></div>
+            </div>
+            <div class="md:w-2/5 p-10 flex flex-col justify-center border-l border-gray-100">
+                <span id="modal-cat" class="text-kgp-orange font-black text-xs uppercase tracking-[0.2em] mb-3">Label</span>
+                <h3 id="modal-name" class="text-2xl font-black text-gray-900 mb-4 leading-tight">Title</h3>
+                <div id="modal-price-container" class="mb-8">
+                    <span id="modal-price" class="text-3xl font-black text-red-600 tracking-tighter">0đ</span>
+                </div>
+                <p id="modal-desc" class="text-gray-500 text-sm mb-8 font-light italic leading-relaxed"></p>
+                <div class="space-y-4">
+                    <a href="https://zalo.me/0844900099" target="_blank" class="w-full bg-[#0068FF] text-white py-4 rounded-2xl font-black text-center hover:bg-blue-700 transition shadow-xl flex items-center justify-center gap-3">
+                        <i class="fab fa-whatsapp text-2xl"></i> LIÊN HỆ ZALO NGAY
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING ACTIONS -->
+    <div class="fixed bottom-6 right-6 z-[99] flex flex-col gap-4">
+        <button id="back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" class="w-12 h-12 bg-white shadow-2xl rounded-full text-kgp-blue hover:bg-kgp-blue hover:text-white transition flex items-center justify-center"><i class="fas fa-chevron-up"></i></button>
+        <a href="https://zalo.me/0844900099" target="_blank" class="w-14 h-14 bg-[#0068FF] rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition"><i class="fab fa-whatsapp text-3xl"></i></a>
+        <a href="tel:0844900099" class="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition animate-pulse-red"><i class="fas fa-phone-alt text-2xl"></i></a>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <script>
+        const products = [
+            { id: "SP001", name: "Camera EZVIZ H6C G1 3K 5MP", price: "540.000đ", cat: "Ezviz", img: "Picture/SP001.jpg" },
+            { id: "SP002", name: "Camera iMOU Ranger Mini 5MP", price: "635.000đ", cat: "Imou", img: "Picture/SP002.jpg" },
+            { id: "SP003", name: "Camera EZVIZ H8C Pro 3K 5MP", price: "1.159.000đ", cat: "Ezviz", img: "Picture/SP003.jpg" },
+            { id: "SP004", name: "Camera IMOU IPC-A52P 360 độ", price: "615.000đ", cat: "Imou", img: "Picture/SP004.jpg" },
+            { id: "SP005", name: "Camera EZVIZ H9c Dual Ống Kính Kép", price: "1.350.000đ", cat: "Ezviz", img: "Picture/SP005.jpg" },
+            { id: "SP006", name: "Camera EZVIZ H3C 2K 3MP", price: "880.000đ", cat: "Ezviz", img: "Picture/SP006.jpg" },
+            { id: "SP007", name: "Camera 4G Hikvision 4MP Ngoài Trời", price: "1.129.000đ", cat: "Hikvision", img: "Picture/SP007.jpg" },
+            { id: "SP008", name: "Camera EZVIZ H8C 2K 4G", price: "990.000đ", cat: "Ezviz", img: "Picture/SP008.jpg" },
+            { id: "SP009", name: "Wifi 7 Reyee RG-RAP72 BE3600", price: "3.889.000đ", cat: "Ruijie", img: "Picture/SP009.jpg" },
+            { id: "SP010", name: "Thiết bị Ruijie RG-RAP2200(E)", price: "1.500.000đ", cat: "Ruijie", img: "Picture/SP010.jpg" },
+            { id: "SP011", name: "TP-Link Archer C24 Băng Tần Kép", price: "379.000đ", cat: "TP-Link", img: "Picture/SP011.jpg" },
+            { id: "SP012", name: "TP-LINK Archer AX23 Wifi 6 AX1800", price: "869.000đ", cat: "TP-Link", img: "Picture/SP012.jpg" },
+            { id: "SP013", name: "Đầu ghi Hikvision 4 kênh HGHI-K1", price: "850.000đ", cat: "Hikvision", img: "Picture/SP013.jpg" },
+            { id: "SP014", name: "Đầu ghi IP Hikvision DS-7604NXI-K1", price: "1.950.000đ", cat: "Hikvision", img: "Picture/SP014.jpg" },
+            { id: "SP015", name: "Máy chấm công Ronald Jack FA-210", price: "4.000.000đ", cat: "Ronald Jack", img: "Picture/SP015.jpg" },
+            { id: "SP016", name: "Máy chấm công Hikvision khuôn mặt", price: "31.980.000đ", cat: "Hikvision", img: "Picture/SP016.jpg" },
+            { id: "SP017", name: "PC Dell Tower ECT1250 Core i5", price: "19.990.000đ", cat: "Dell", img: "Picture/SP017.jpg" },
+            { id: "SP018", name: "Laptop Dell Vostro DC15255", price: "16.990.000đ", cat: "Dell", img: "Picture/SP018.jpg" },
+            { id: "SP019", name: "Ổ Cứng SSD Samsung 980 500GB", price: "3.290.000đ", cat: "Samsung", img: "Picture/SP019.jpg" },
+            { id: "SP020", name: "Màn Hình Gigabyte GS24F 165Hz", price: "2.299.000đ", cat: "Gigabyte", img: "Picture/SP020.jpg" }
+        ];
+
+        const projects = [
+            { id: "DA001", title: "THCS Mạch Kiếm Hùng", desc: "Hệ thống an ninh & âm thanh trường học", img: "Picture/DA001.jpg", cat: "Trường học" },
+            { id: "DA002", title: "Biệt thự Lakeview Thủ Đức", desc: "Giải pháp Smart Home cao cấp", img: "Picture/DA002.jpg", cat: "Biệt thự" },
+            { id: "DA003", title: "Lavida Plus Quận 7", desc: "Hạ tầng mạng & Camera căn hộ", img: "Picture/DA003.jpg", cat: "Chung cư" },
+            { id: "DA004", title: "C-Holding Bình Dương", desc: "Hệ thống Server văn phòng", img: "Picture/DA004.jpg", cat: "Văn phòng" },
+            { id: "DA005", title: "Orchid Park Nhà Bè", desc: "Âm thanh tòa nhà & an ninh", img: "Picture/DA005.jpg", cat: "Chung cư" },
+            { id: "DA006", title: "Chuỗi Bánh Mì 362", desc: "Camera an ninh chuỗi cửa hàng", img: "Picture/DA006.jpg", cat: "Chuỗi cửa hàng" },
+            { id: "DA007", title: "Biệt thự cổ Sài Gòn", desc: "Camera giám sát biệt thự", img: "Picture/DA007.jpg", cat: "Biệt thự" },
+            { id: "DA008", title: "Sài Gòn Gateway", desc: "Camera an ninh chung cư", img: "Picture/DA008.jpg", cat: "Chung cư" },
+            { id: "DA009", title: "Chung cư Khánh Hội", desc: "Camera giám sát hầm xe lớn", img: "Picture/DA009.jpg", cat: "Hầm xe" }
+        ];
+
+        function initApp() {
+            AOS.init({ duration: 1000, once: true });
+            document.getElementById('year').textContent = new Date().getFullYear();
+            renderFilters();
+            renderProducts(products);
+            renderProjects();
+            
+            new Swiper(".heroSwiper", {
+                loop: true, effect: "fade",
+                autoplay: { delay: 6000 },
+                pagination: { el: ".swiper-pagination", clickable: true },
+            });
+
+            window.addEventListener('scroll', () => {
+                const btt = document.getElementById('back-to-top');
+                window.scrollY > 600 ? btt.classList.add('visible') : btt.classList.remove('visible');
+            });
+        }
+
+        function renderFilters() {
+            const categories = ["Tất cả", ...new Set(products.map(p => p.cat))];
+            const container = document.getElementById('filter-container');
+            container.innerHTML = categories.map((cat, idx) => `
+                <button onclick="filterProducts('${cat}', this)" class="filter-btn px-6 py-2 rounded-full text-sm font-bold ${idx===0?'active':''}">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        function filterProducts(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const filtered = cat === "Tất cả" ? products : products.filter(p => p.cat === cat);
+            renderProducts(filtered);
+        }
+
+        function renderProducts(data) {
+            const container = document.getElementById('product-list');
+            container.innerHTML = data.map(p => `
+                <article onclick="openModal('product', '${p.id}')" data-aos="fade-up" class="bg-white group rounded-3xl shadow-sm border border-gray-50 overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-500">
+                    <div class="relative aspect-square p-6 bg-gray-50 overflow-hidden">
+                        <img src="${p.img}" alt="${p.name}" class="w-full h-full object-contain group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-4 left-4 bg-white/90 px-3 py-1 rounded-lg text-[10px] font-black text-kgp-blue border border-gray-100">${p.cat}</div>
+                    </div>
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold text-xs uppercase line-clamp-2 mb-4 h-8 leading-relaxed">${p.name}</h3>
+                        <p class="text-red-600 font-black text-xl tracking-tighter">${p.price}</p>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function renderProjects() {
+            const container = document.getElementById('project-list');
+            container.innerHTML = projects.map(proj => `
+                <div class="relative h-80 rounded-3xl overflow-hidden group shadow-lg cursor-pointer" onclick="openModal('project', '${proj.id}')" data-aos="zoom-in">
+                    <img src="${proj.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-8 flex flex-col justify-end text-white">
+                        <span class="text-kgp-orange font-bold text-[10px] uppercase mb-2 tracking-widest">${proj.cat}</span>
+                        <h4 class="font-black text-xl uppercase tracking-tighter">${proj.title}</h4>
+                        <p class="text-sm opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition duration-500 font-light text-blue-100">${proj.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openModal(type, id) {
+            const item = type === 'product' ? products.find(p => p.id === id) : projects.find(p => p.id === id);
+            if(!item) return;
+            
+            const modalImg = document.getElementById('modal-img');
+            const modalName = document.getElementById('modal-name');
+            const modalCat = document.getElementById('modal-cat');
+            const modalPriceCont = document.getElementById('modal-price-container');
+            const modalDesc = document.getElementById('modal-desc');
+            
+            modalImg.src = item.img;
+            modalName.textContent = item.name || item.title;
+            modalCat.textContent = item.cat;
+            
+            if(type === 'product') {
+                modalPriceCont.classList.remove('hidden');
+                document.getElementById('modal-price').textContent = item.price;
+                modalDesc.textContent = "";
+            } else {
+                modalPriceCont.classList.add('hidden');
+                modalDesc.textContent = item.desc;
+            }
+            
+            let thumbHTML = `<img src="Picture/${item.id}.jpg" onclick="changeModalImg('Picture/${item.id}.jpg')" class="aspect-square w-full object-cover rounded-xl border-2 border-kgp-blue cursor-pointer thumb-img">`;
+            for(let i=1; i<=3; i++) {
+                const extraSrc = `Picture/${item.id}.${i}.jpg`;
+                thumbHTML += `<img src="${extraSrc}" onclick="changeModalImg('${extraSrc}')" onerror="this.style.display='none'" class="aspect-square w-full object-cover rounded-xl border-2 border-transparent hover:border-kgp-orange cursor-pointer transition thumb-img">`;
+            }
+            
+            document.getElementById('modal-thumbs').innerHTML = thumbHTML;
+            document.getElementById('main-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function changeModalImg(src) {
+            document.getElementById('modal-img').src = src;
+            document.querySelectorAll('.thumb-img').forEach(img => {
+                img.classList.remove('border-kgp-blue');
+                if(img.src.includes(src)) img.classList.add('border-kgp-blue');
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('main-modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu-overlay');
+            menu.classList.toggle('translate-x-full');
+            document.body.style.overflow = menu.classList.contains('translate-x-full') ? 'auto' : 'hidden';
+        }
+
+        window.onclick = (e) => { if(e.target === document.getElementById('main-modal')) closeModal(); };
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
