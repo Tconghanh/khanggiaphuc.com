@@ -46,14 +46,48 @@
         #main-modal { opacity: 0; pointer-events: none; transition: 0.3s ease; }
         #main-modal.active { opacity: 1; pointer-events: auto; }
 
+        /* CART DRAWER */
+        #cart-drawer { transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        #cart-drawer.active { transform: translateX(0); }
+
         #back-to-top { opacity: 0; pointer-events: none; transition: 0.4s; transform: translateY(20px); }
         #back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+        /* --- FIX IN TRANG TRẮNG (PRINT STYLES) --- */
+        #print-section { display: none; }
+        
+        @media print {
+            /* Ẩn tất cả mọi thứ trên trang web */
+            body * { visibility: hidden; }
+            header, footer, main, #cart-drawer, #cart-overlay, #back-to-top, .no-print, #main-modal { 
+                display: none !important; 
+            }
+            
+            /* Chỉ hiển thị duy nhất vùng báo giá */
+            #print-section { 
+                display: block !important; 
+                visibility: visible !important;
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                opacity: 1 !important;
+            }
+            
+            #print-section * { 
+                visibility: visible !important; 
+            }
+            
+            /* Tắt ngắt trang không mong muốn */
+            table { page-break-inside: auto; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+        }
     </style>
 </head>
-<body>
+<body class="pt-16">
 
     <!-- HEADER -->
-    <header class="fixed w-full top-0 z-[100] glass-header">
+    <header class="fixed w-full top-0 z-[100] glass-header no-print">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <a href="#home" class="flex items-center">
                 <img src="Picture/logo.png" alt="KGPTelecom Logo" class="h-10 md:h-14 w-auto">
@@ -68,8 +102,12 @@
             </nav>
 
             <div class="flex items-center gap-4">
+                <button onclick="toggleCart()" class="relative p-2 text-kgp-blue hover:bg-blue-50 rounded-full transition">
+                    <i class="fas fa-shopping-cart text-2xl"></i>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">0</span>
+                </button>
                 <a href="https://zalo.me/0844900099" target="_blank" class="hidden sm:flex items-center bg-[#0068FF] text-white px-6 py-2.5 rounded-full font-bold hover:bg-blue-700 transition shadow-md">
-                    <i class="fab fa-whatsapp mr-2 text-xl"></i> 0844 900 099
+                    <i class="fab fa-whatsapp mr-2 text-xl"></i> 0844.900.099
                 </a>
                 <button onclick="toggleMobileMenu()" class="lg:hidden text-2xl text-kgp-blue"><i class="fas fa-bars"></i></button>
             </div>
@@ -84,11 +122,10 @@
         <a href="#projects" onclick="toggleMobileMenu()">Dự án</a>
         <a href="#profile" onclick="toggleMobileMenu()">Hồ sơ năng lực</a>
         <a href="#contact" onclick="toggleMobileMenu()">Liên hệ</a>
-        <a href="https://zalo.me/0844900099" target="_blank" class="bg-white text-kgp-blue px-8 py-3 rounded-full text-sm">Zalo: 0844 900 099</a>
     </div>
 
-    <main>
-        <!-- HERO SLIDER (4 SLIDES) -->
+    <main class="no-print">
+        <!-- HERO SLIDER -->
         <section id="home" class="swiper heroSwiper h-[65vh] md:h-[85vh]">
             <div class="swiper-wrapper">
                 <div class="swiper-slide relative">
@@ -142,22 +179,18 @@
                 <div class="flex flex-col items-center text-center p-4 border-r border-gray-100 last:border-0">
                     <div class="w-14 h-14 bg-blue-50 text-kgp-blue rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-check-double text-2xl"></i></div>
                     <h4 class="font-bold text-sm uppercase tracking-wide">Chính Hãng 100%</h4>
-                    <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">Sản phẩm chất lượng</p>
                 </div>
                 <div class="flex flex-col items-center text-center p-4 border-r border-gray-100 last:border-0">
                     <div class="w-14 h-14 bg-orange-50 text-kgp-orange rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-tools text-2xl"></i></div>
                     <h4 class="font-bold text-sm uppercase tracking-wide">Lắp đặt 24h</h4>
-                    <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">Đội ngũ lành nghề</p>
                 </div>
                 <div class="flex flex-col items-center text-center p-4 border-r border-gray-100 last:border-0">
                     <div class="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-tags text-2xl"></i></div>
                     <h4 class="font-bold text-sm uppercase tracking-wide">Giá cạnh tranh</h4>
-                    <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">Tối ưu ngân sách</p>
                 </div>
                 <div class="flex flex-col items-center text-center p-4">
                     <div class="w-14 h-14 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-4"><i class="fas fa-medal text-2xl"></i></div>
-                    <h4 class="font-bold text-sm uppercase tracking-wide">Bảo hành đến 5 năm</h4>
-                    <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">Hậu mãi tốt nhất</p>
+                    <h4 class="font-bold text-sm uppercase tracking-wide">Bảo hành dài hạn</h4>
                 </div>
             </div>
         </section>
@@ -176,12 +209,10 @@
         </section>
 
         <!-- PROJECTS -->
-        <section id="projects" class="py-24 bg-gray-50">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-16" data-aos="fade-up">
-                    <h2 class="text-4xl md:text-5xl font-black text-kgp-blue uppercase italic border-b-8 border-kgp-orange pb-4">Dự án tiêu biểu</h2>
-                </div>
-                <div id="project-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        <section id="projects" class="py-24 bg-gray-50 text-center">
+            <div class="container mx-auto px-4 mb-16" data-aos="fade-up">
+                <h2 class="text-4xl md:text-5xl font-black text-kgp-blue uppercase italic border-b-8 border-kgp-orange pb-4 inline-block">Dự án tiêu biểu</h2>
+                <div id="project-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 text-left"></div>
             </div>
         </section>
 
@@ -199,7 +230,7 @@
     </main>
 
     <!-- FOOTER -->
-    <footer id="contact" class="bg-white pt-24 pb-12 border-t border-gray-100">
+    <footer id="contact" class="bg-white pt-24 pb-12 border-t border-gray-100 no-print">
         <div class="container mx-auto px-4 grid lg:grid-cols-3 gap-16">
             <div>
                 <img src="Picture/logo.png" class="h-16 mb-8" alt="Logo">
@@ -212,27 +243,44 @@
             <div class="space-y-6">
                 <h4 class="text-kgp-blue font-black text-xl uppercase italic border-b-2 border-kgp-orange inline-block pb-1">Thông tin liên hệ</h4>
                 <div class="space-y-4 text-sm text-gray-600">
-                    <p class="flex items-start"><i class="fas fa-building text-kgp-orange mt-1 mr-4"></i> <strong>Trụ sở:</strong> 7-9 Tôn Đức Thắng, Phường Sài Gòn, TP.HCM</p>
-                    <p class="flex items-start"><i class="fas fa-map-marker-alt text-kgp-orange mt-1 mr-4"></i> <strong>Văn phòng:</strong> 39/6/C1 Đường 22, Phường Hiệp Bình, TP.HCM</p>
-                    <p class="flex items-center"><i class="fas fa-phone-alt text-kgp-orange mr-4"></i> <strong>Hotline:</strong> 0844 900 099</p>
-                    <p class="flex items-center"><i class="fas fa-envelope text-kgp-orange mr-4"></i> <strong>Email:</strong> khanggiaphuc.com@gmail.com</p>
-                    <p class="flex items-center"><i class="fas fa-globe text-kgp-orange mr-4"></i> <strong>Website:</strong> www.khanggiaphuc.com</p>
+                    <p class="flex items-start"><i class="fas fa-building text-kgp-orange mr-4 mt-1"></i> <span><strong>Trụ sở:</strong> 7-9 Tôn Đức Thắng, Phường Sài Gòn, TP.HCM</span></p>
+                    <p class="flex items-start"><i class="fas fa-map-marker-alt text-kgp-orange mr-4 mt-1"></i> <span><strong>Văn phòng:</strong> 39/6/C1 Đường 22, Phường Hiệp Bình, TP.HCM</span></p>
+                    <p class="flex items-center"><i class="fas fa-phone-alt text-kgp-orange mr-4"></i> <span><strong>Hotline:</strong> 0844.900.099 - 0906.338.444</span></p>
+                    <p class="flex items-center"><i class="fas fa-envelope text-kgp-orange mr-4"></i> <span><strong>Email:</strong> khanggiaphuc.com@gmail.com</span></p>
+                    <p class="flex items-center"><i class="fas fa-globe text-kgp-orange mr-4"></i> <span><strong>Website:</strong> www.khanggiaphuc.com</span></p>
                 </div>
             </div>
-            <div class="flex flex-col min-h-[300px]">
-                <h4 class="text-kgp-blue font-black text-xl uppercase italic border-b-2 border-kgp-orange inline-block pb-1 mb-6">Kết nối Facebook</h4>
-                <div class="flex-grow rounded-2xl overflow-hidden shadow-xl border border-gray-100">
-                    <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fcongnghetrongtamtay1&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" 
-                        width="100%" height="100%" style="border:none;overflow:hidden;min-height:250px" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
-                </div>
+            <div class="rounded-2xl overflow-hidden shadow-xl border border-gray-100 h-64">
+                <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fcongnghetrongtamtay1&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="100%" height="100%" style="border:none" scrolling="no" frameborder="0"></iframe>
             </div>
         </div>
-        <div class="container mx-auto px-4 border-t border-gray-100 mt-20 pt-10 text-center text-[10px] uppercase tracking-widest font-black text-gray-400">
-            &copy; <span id="year"></span> CÔNG TY TNHH KHANG GIA PHÚC | KHANGGIAPHUC.COM
-        </div>
+        <div class="text-center text-[10px] mt-20 text-gray-400 uppercase font-black">&copy; <span id="year"></span> CÔNG TY TNHH KHANG GIA PHÚC | KHANGGIAPHUC.COM</div>
     </footer>
 
-    <!-- MAIN MODAL (SHARED) -->
+    <!-- CART SIDEBAR -->
+    <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/50 z-[150] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <div id="cart-drawer" class="fixed top-0 right-0 w-full max-w-md h-full bg-white z-[200] shadow-2xl flex flex-col no-print">
+        <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+            <h3 class="font-black text-xl text-kgp-blue uppercase"><i class="fas fa-shopping-bag mr-3"></i> Giỏ hàng</h3>
+            <button onclick="toggleCart()" class="text-2xl text-gray-400"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4"></div>
+        <div class="p-6 border-t bg-gray-50 space-y-4">
+            <div class="flex justify-between font-black text-xl">
+                <span>Tổng cộng:</span>
+                <span id="cart-total" class="text-red-600">0đ</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="clearCart()" class="py-3 border border-gray-300 rounded-xl font-bold text-gray-500">Xóa hết</button>
+                <button onclick="preparePrint()" class="py-3 bg-kgp-blue text-white rounded-xl font-bold hover:bg-blue-700 transition">
+                    <i class="fas fa-file-invoice mr-2"></i> IN BÁO GIÁ
+                </button>
+            </div>
+            <a href="https://zalo.me/0844900099" target="_blank" class="block w-full py-4 bg-[#0068FF] text-white text-center rounded-xl font-black shadow-lg hover:bg-blue-700 transition uppercase tracking-wide">Liên hệ Zalo đặt hàng</a>
+        </div>
+    </div>
+
+    <!-- MAIN MODAL -->
     <div id="main-modal" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-md flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-5xl rounded-[2rem] overflow-hidden shadow-2xl flex flex-col md:row-reverse md:flex-row max-h-[90vh] relative">
             <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-400 hover:text-kgp-orange text-3xl z-10 transition"><i class="fas fa-times"></i></button>
@@ -249,17 +297,69 @@
                     <span id="modal-price" class="text-3xl font-black text-red-600 tracking-tighter">0đ</span>
                 </div>
                 <p id="modal-desc" class="text-gray-500 text-sm mb-8 font-light italic leading-relaxed"></p>
-                <div class="space-y-4">
-                    <a href="https://zalo.me/0844900099" target="_blank" class="w-full bg-[#0068FF] text-white py-4 rounded-2xl font-black text-center hover:bg-blue-700 transition shadow-xl flex items-center justify-center gap-3">
-                        <i class="fab fa-whatsapp text-2xl"></i> LIÊN HỆ ZALO NGAY
+                <div class="space-y-3">
+                    <button id="modal-add-btn" class="w-full bg-kgp-orange text-white py-4 rounded-2xl font-black flex items-center justify-center gap-3 shadow-lg hover:bg-orange-600 transition uppercase">
+                        <i class="fas fa-cart-plus text-xl"></i> Thêm vào giỏ hàng
+                    </button>
+                    <a href="https://zalo.me/0844900099" target="_blank" class="w-full bg-[#0068FF] text-white py-4 rounded-2xl font-black text-center flex items-center justify-center gap-3 hover:bg-blue-700 transition uppercase">
+                        <i class="fab fa-whatsapp text-2xl"></i> Liên hệ Zalo
                     </a>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- PRINT SECTION (HIDDEN ON SCREEN) -->
+    <div id="print-section">
+        <div style="display: flex; justify-content: space-between; border-bottom: 4px solid #0071BC; padding-bottom: 20px; margin-bottom: 30px;">
+            <div style="width: 65%;">
+                <img src="Picture/logo.png" style="height: 60px; margin-bottom: 10px;">
+                <h1 style="font-size: 22px; color: #0071BC; margin: 0; font-weight: 900;">CÔNG TY TNHH KHANG GIA PHÚC</h1>
+                <p style="font-size: 11px; margin: 5px 0 2px;"><strong>Trụ sở:</strong> 7-9 Tôn Đức Thắng, Phường Sài Gòn, TP.HCM</p>
+                <p style="font-size: 11px; margin: 2px 0;"><strong>Văn phòng:</strong> 39/6/C1 Đường 22, Phường Hiệp Bình, TP.HCM</p>
+                <p style="font-size: 11px; margin: 2px 0;"><strong>Hotline:</strong> 0844.900.099 - 0906.338.444 | <strong>Web:</strong> www.khanggiaphuc.com</p>
+            </div>
+            <div style="width: 30%; text-align: right;">
+                <h2 style="font-size: 28px; font-weight: 900; margin: 0; color: #333;">BÁO GIÁ</h2>
+                <p id="print-date" style="font-size: 12px; font-style: italic; color: #666;"></p>
+                <p style="font-size: 11px; margin-top: 5px;">Mã số: #KGP<span id="print-ref"></span></p>
+            </div>
+        </div>
+        
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 13px;">
+            <thead>
+                <tr style="background-color: #f3f4f6;">
+                    <th style="border: 1px solid #ccc; padding: 10px; text-align: center; width: 50px;">STT</th>
+                    <th style="border: 1px solid #ccc; padding: 10px; text-align: left;">Tên sản phẩm / Giải pháp</th>
+                    <th style="border: 1px solid #ccc; padding: 10px; text-align: right; width: 120px;">Đơn giá</th>
+                    <th style="border: 1px solid #ccc; padding: 10px; text-align: center; width: 60px;">SL</th>
+                    <th style="border: 1px solid #ccc; padding: 10px; text-align: right; width: 140px;">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody id="print-table-body"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" style="border: 1px solid #ccc; padding: 12px; text-align: right; font-weight: 900; font-size: 16px;">TỔNG CỘNG (VNĐ):</td>
+                    <td id="print-total" style="border: 1px solid #ccc; padding: 12px; text-align: right; font-weight: 900; font-size: 18px; color: #dc2626;"></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; text-align: center; margin-top: 40px; font-style: italic;">
+            <div>
+                <p style="font-weight: bold; font-style: normal; margin-bottom: 80px;">KHÁCH HÀNG XÁC NHẬN</p>
+                <p>(Ký và ghi rõ họ tên)</p>
+            </div>
+            <div>
+                <p style="font-weight: bold; font-style: normal;">ĐẠI DIỆN KGPTELECOM</p>
+                <p style="margin-bottom: 80px;">(Ký tên và đóng dấu)</p>
+                <p style="font-weight: 900; color: #0071BC; font-style: normal;">CÔNG TY TNHH KHANG GIA PHÚC</p>
+            </div>
+        </div>
+    </div>
+
     <!-- FLOATING ACTIONS -->
-    <div class="fixed bottom-6 right-6 z-[99] flex flex-col gap-4">
+    <div class="fixed bottom-6 right-6 z-[99] flex flex-col gap-4 no-print">
         <button id="back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" class="w-12 h-12 bg-white shadow-2xl rounded-full text-kgp-blue hover:bg-kgp-blue hover:text-white transition flex items-center justify-center"><i class="fas fa-chevron-up"></i></button>
         <a href="https://zalo.me/0844900099" target="_blank" class="w-14 h-14 bg-[#0068FF] rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition"><i class="fab fa-whatsapp text-3xl"></i></a>
         <a href="tel:0844900099" class="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition animate-pulse-red"><i class="fas fa-phone-alt text-2xl"></i></a>
@@ -285,7 +385,7 @@
             { id: "SP013", name: "Đầu ghi Hikvision 4 kênh HGHI-K1", price: "850.000đ", cat: "Hikvision", img: "Picture/SP013.jpg" },
             { id: "SP014", name: "Đầu ghi IP Hikvision DS-7604NXI-K1", price: "1.950.000đ", cat: "Hikvision", img: "Picture/SP014.jpg" },
             { id: "SP015", name: "Máy chấm công Ronald Jack FA-210", price: "4.000.000đ", cat: "Ronald Jack", img: "Picture/SP015.jpg" },
-            { id: "SP016", name: "Máy chấm công Hikvision khuôn mặt", price: "31.980.000đ", cat: "Hikvision", img: "Picture/SP016.jpg" },
+            { id: "SP016", name: "Máy chấm công Hikvision khuôn mặt", price: "3.980.000đ", cat: "Hikvision", img: "Picture/SP016.jpg" }, 
             { id: "SP017", name: "PC Dell Tower ECT1250 Core i5", price: "19.990.000đ", cat: "Dell", img: "Picture/SP017.jpg" },
             { id: "SP018", name: "Laptop Dell Vostro DC15255", price: "16.990.000đ", cat: "Dell", img: "Picture/SP018.jpg" },
             { id: "SP019", name: "Ổ Cứng SSD Samsung 980 500GB", price: "3.290.000đ", cat: "Samsung", img: "Picture/SP019.jpg" },
@@ -303,6 +403,8 @@
             { id: "DA008", title: "Sài Gòn Gateway", desc: "Camera an ninh chung cư", img: "Picture/DA008.jpg", cat: "Chung cư" },
             { id: "DA009", title: "Chung cư Khánh Hội", desc: "Camera giám sát hầm xe lớn", img: "Picture/DA009.jpg", cat: "Hầm xe" }
         ];
+
+        let cart = [];
 
         function initApp() {
             AOS.init({ duration: 1000, once: true });
@@ -323,6 +425,110 @@
             });
         }
 
+        // CART LOGIC
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            const overlay = document.getElementById('cart-overlay');
+            drawer.classList.toggle('active');
+            overlay.classList.toggle('opacity-100');
+            overlay.classList.toggle('pointer-events-auto');
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const exists = cart.find(item => item.id === id);
+            if (exists) { exists.qty += 1; } 
+            else { cart.push({ ...product, qty: 1 }); }
+            updateCartUI();
+            if(!document.getElementById('cart-drawer').classList.contains('active')) toggleCart();
+        }
+
+        function updateCartQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+                updateCartUI();
+            }
+        }
+
+        function clearCart() { cart = []; updateCartUI(); }
+
+        function formatPrice(num) { return num.toLocaleString('vi-VN') + 'đ'; }
+        function parsePrice(str) { return parseInt(str.replace(/\D/g, '')); }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items');
+            const countLabel = document.getElementById('cart-count');
+            const totalLabel = document.getElementById('cart-total');
+            let total = 0; let itemsCount = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="text-center py-20 text-gray-400 italic">Giỏ hàng trống</div>';
+            } else {
+                container.innerHTML = cart.map(item => {
+                    const priceNum = parsePrice(item.price);
+                    total += priceNum * item.qty;
+                    itemsCount += item.qty;
+                    return `
+                        <div class="flex items-center gap-4 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                            <img src="${item.img}" class="w-16 h-16 object-contain">
+                            <div class="flex-grow">
+                                <h4 class="text-[11px] font-black uppercase line-clamp-2">${item.name}</h4>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-red-600 font-bold">${item.price}</span>
+                                    <div class="flex items-center gap-2">
+                                        <button onclick="updateCartQty('${item.id}', -1)" class="w-6 h-6 border rounded flex items-center justify-center hover:bg-gray-100">-</button>
+                                        <span class="text-xs font-bold">${item.qty}</span>
+                                        <button onclick="updateCartQty('${item.id}', 1)" class="w-6 h-6 border rounded flex items-center justify-center hover:bg-gray-100">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            countLabel.textContent = itemsCount;
+            totalLabel.textContent = formatPrice(total);
+        }
+
+        // --- FIXED PRINT LOGIC (FORCE RE-RENDER & REMOVE AOS) ---
+        function preparePrint() {
+            if (cart.length === 0) return alert("Vui lòng thêm sản phẩm trước khi in báo giá.");
+            
+            const body = document.getElementById('print-table-body');
+            let total = 0;
+            
+            body.innerHTML = cart.map((item, idx) => {
+                const subtotal = parsePrice(item.price) * item.qty;
+                total += subtotal;
+                return `
+                    <tr>
+                        <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">${idx+1}</td>
+                        <td style="border: 1px solid #ccc; padding: 10px; font-weight: bold;">${item.name}</td>
+                        <td style="border: 1px solid #ccc; padding: 10px; text-align: right;">${item.price}</td>
+                        <td style="border: 1px solid #ccc; padding: 10px; text-align: center;">${item.qty}</td>
+                        <td style="border: 1px solid #ccc; padding: 10px; text-align: right; font-weight: bold;">${formatPrice(subtotal)}</td>
+                    </tr>
+                `;
+            }).join('');
+            
+            document.getElementById('print-total').textContent = formatPrice(total);
+            document.getElementById('print-date').textContent = "Ngày lập: " + new Date().toLocaleDateString('vi-VN');
+            document.getElementById('print-ref').textContent = Math.floor(Math.random() * 9000) + 1000;
+            
+            // Xóa triệt để các hiệu ứng mờ của AOS trước khi in để trình duyệt không bị "trắng"
+            document.querySelectorAll('[data-aos]').forEach(el => {
+                el.style.opacity = "1";
+                el.style.transform = "none";
+                el.style.visibility = "visible";
+            });
+
+            // Gọi lệnh in ngay lập tức
+            window.print();
+        }
+
+        // UI RENDERING
         function renderFilters() {
             const categories = ["Tất cả", ...new Set(products.map(p => p.cat))];
             const container = document.getElementById('filter-container');
@@ -343,14 +549,17 @@
         function renderProducts(data) {
             const container = document.getElementById('product-list');
             container.innerHTML = data.map(p => `
-                <article onclick="openModal('product', '${p.id}')" data-aos="fade-up" class="bg-white group rounded-3xl shadow-sm border border-gray-50 overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-500">
-                    <div class="relative aspect-square p-6 bg-gray-50 overflow-hidden">
+                <article data-aos="fade-up" class="bg-white group rounded-3xl shadow-sm border border-gray-50 overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col h-full">
+                    <div onclick="openModal('product', '${p.id}')" class="relative aspect-square p-6 bg-gray-50 overflow-hidden cursor-pointer">
                         <img src="${p.img}" alt="${p.name}" class="w-full h-full object-contain group-hover:scale-110 transition duration-700">
-                        <div class="absolute top-4 left-4 bg-white/90 px-3 py-1 rounded-lg text-[10px] font-black text-kgp-blue border border-gray-100">${p.cat}</div>
+                        <div class="absolute top-4 left-4 bg-white/90 px-3 py-1 rounded-lg text-[10px] font-black text-kgp-blue border border-gray-100 uppercase">${p.cat}</div>
                     </div>
-                    <div class="p-6 text-center">
-                        <h3 class="font-bold text-xs uppercase line-clamp-2 mb-4 h-8 leading-relaxed">${p.name}</h3>
-                        <p class="text-red-600 font-black text-xl tracking-tighter">${p.price}</p>
+                    <div class="p-6 text-center flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 onclick="openModal('product', '${p.id}')" class="font-bold text-xs uppercase line-clamp-2 mb-4 h-8 leading-relaxed cursor-pointer">${p.name}</h3>
+                            <p class="text-red-600 font-black text-xl tracking-tighter mb-4">${p.price}</p>
+                        </div>
+                        <button onclick="addToCart('${p.id}')" class="w-full bg-kgp-blue text-white py-3 rounded-xl font-bold text-xs uppercase hover:bg-kgp-orange transition">Thêm vào giỏ</button>
                     </div>
                 </article>
             `).join('');
@@ -373,32 +582,32 @@
         function openModal(type, id) {
             const item = type === 'product' ? products.find(p => p.id === id) : projects.find(p => p.id === id);
             if(!item) return;
-            
             const modalImg = document.getElementById('modal-img');
             const modalName = document.getElementById('modal-name');
             const modalCat = document.getElementById('modal-cat');
             const modalPriceCont = document.getElementById('modal-price-container');
             const modalDesc = document.getElementById('modal-desc');
+            const addBtn = document.getElementById('modal-add-btn');
             
             modalImg.src = item.img;
             modalName.textContent = item.name || item.title;
             modalCat.textContent = item.cat;
             
             if(type === 'product') {
-                modalPriceCont.classList.remove('hidden');
+                modalPriceCont.classList.remove('hidden'); addBtn.classList.remove('hidden');
                 document.getElementById('modal-price').textContent = item.price;
                 modalDesc.textContent = "";
+                addBtn.onclick = () => addToCart(item.id);
             } else {
-                modalPriceCont.classList.add('hidden');
+                modalPriceCont.classList.add('hidden'); addBtn.classList.add('hidden');
                 modalDesc.textContent = item.desc;
             }
             
-            let thumbHTML = `<img src="Picture/${item.id}.jpg" onclick="changeModalImg('Picture/${item.id}.jpg')" class="aspect-square w-full object-cover rounded-xl border-2 border-kgp-blue cursor-pointer thumb-img">`;
+            let thumbHTML = `<img src="${item.img}" onclick="changeModalImg('${item.img}')" class="aspect-square w-full object-cover rounded-xl border-2 border-kgp-blue cursor-pointer thumb-img">`;
             for(let i=1; i<=3; i++) {
                 const extraSrc = `Picture/${item.id}.${i}.jpg`;
                 thumbHTML += `<img src="${extraSrc}" onclick="changeModalImg('${extraSrc}')" onerror="this.style.display='none'" class="aspect-square w-full object-cover rounded-xl border-2 border-transparent hover:border-kgp-orange cursor-pointer transition thumb-img">`;
             }
-            
             document.getElementById('modal-thumbs').innerHTML = thumbHTML;
             document.getElementById('main-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -423,7 +632,10 @@
             document.body.style.overflow = menu.classList.contains('translate-x-full') ? 'auto' : 'hidden';
         }
 
-        window.onclick = (e) => { if(e.target === document.getElementById('main-modal')) closeModal(); };
+        window.onclick = (e) => { 
+            if(e.target === document.getElementById('main-modal')) closeModal(); 
+            if(e.target === document.getElementById('cart-overlay')) toggleCart();
+        };
         document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
