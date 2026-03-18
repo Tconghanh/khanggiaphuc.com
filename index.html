@@ -1,9 +1,57 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" prefix="og: http://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KGPTelecom - Nhà Thầu Điện Nhẹ & Công Nghệ Trong Tầm Tay</title>
+    
+    <!-- === CẤU HÌNH SEO CHUYÊN SÂU === -->
+    <title>KGPTelecom - Nhà Thầu Điện Nhẹ Uy Tín TP.HCM | Camera & Smart Home</title>
+    <meta name="description" content="KGPTelecom (Khang Gia Phúc) - Nhà thầu điện nhẹ chuyên nghiệp tại TP.HCM. Chuyên lắp đặt Camera giám sát, giải pháp Nhà thông minh, hạ tầng mạng LAN/WiFi và âm thanh thông báo.">
+    <meta name="keywords" content="nhà thầu điện nhẹ hcm, lắp đặt camera hcm, thiết bị smart home, khang gia phúc, kgptelecom, giải pháp an ninh, thi công mạng nội bộ">
+    <link rel="canonical" href="https://tconghanh.github.io/KGPTelecom/">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="KGPTelecom">
+
+    <!-- Open Graph / Facebook / Zalo -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tconghanh.github.io/KGPTelecom/">
+    <meta property="og:title" content="KGPTelecom - Công Nghệ Trong Tầm Tay">
+    <meta property="og:description" content="Nhà thầu điện nhẹ uy tín TP.HCM. Giải pháp Camera & Smart Home chính hãng.">
+    <meta property="og:image" content="Picture/logo.png">
+
+    <!-- JSON-LD Structured Data (Giúp Google hiểu doanh nghiệp) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "KGPTelecom - Công ty TNHH Khang Gia Phúc",
+      "image": "Picture/logo.png",
+      "@id": "",
+      "url": "https://tconghanh.github.io/KGPTelecom/",
+      "telephone": "0844900099",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "7-9 Tôn Đức Thắng, Phường Sài Gòn",
+        "addressLocality": "Quận 1",
+        "addressRegion": "TP.HCM",
+        "postalCode": "700000",
+        "addressCountry": "VN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 10.776,
+        "longitude": 106.705
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "opens": "08:00",
+        "closes": "17:30"
+      }
+    }
+    </script>
+
+    <!-- FAVICON -->
     <link rel="icon" href="Picture/favicon.ico">
 
     <!-- LIBRARIES -->
@@ -23,43 +71,38 @@
         .glass-header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
         .nav-link { font-size: 0.8rem; font-weight: 700; transition: 0.3s; position: relative; color: #374151; }
         .nav-link:hover { color: var(--kgp-blue); }
-        
         .filter-btn { border: 1px solid #e5e7eb; transition: all 0.3s; padding: 8px 22px; border-radius: 99px; font-size: 11px; font-weight: 700; background: #fff; text-transform: uppercase; }
         .filter-btn.active { background-color: var(--kgp-blue); color: white; border-color: var(--kgp-blue); box-shadow: 0 4px 12px rgba(0,113,188,0.2); }
-        
         #cart-drawer { transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         #cart-drawer.active { transform: translateX(0); }
-        
-        .profileSwiper { padding: 40px 0 60px; }
-        .profile-page { box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid #ddd; border-radius: 4px; overflow: hidden; background: #fff; }
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: skeleton-loading 1.5s infinite; }
+        @keyframes skeleton-loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        /* Custom Scrollbar for Modal Specs */
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
-
+        /* PRINT STYLES - CHUẨN BÁO GIÁ DOANH NGHIỆP */
         #print-section { display: none; }
         @media print {
             body * { visibility: hidden; }
             #print-section, #print-section * { visibility: visible !important; }
-            #print-section { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: white; padding: 20px; }
+            #print-section { 
+                display: block !important; 
+                position: absolute; left: 0; top: 0; width: 100%; 
+                background: white; padding: 0; margin: 0;
+            }
             .no-print { display: none !important; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #000 !important; padding: 8px; }
         }
     </style>
 </head>
 <body class="pt-16 md:pt-20">
 
-    <!-- HEADER -->
     <header class="fixed w-full top-0 z-[100] glass-header no-print">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center gap-4">
-            <a href="#home" class="shrink-0"><img src="Picture/logo.png" alt="KGPTelecom" class="h-10 md:h-14 w-auto"></a>
-
-            <!-- Header Search Bar -->
+            <a href="#home" class="shrink-0"><img src="Picture/logo.png" alt="KGPTelecom Logo" class="h-10 md:h-14 w-auto"></a>
             <div class="hidden lg:flex flex-grow max-w-md relative">
                 <input type="text" oninput="handleHeaderSearch(this.value)" placeholder="Tìm sản phẩm..." class="w-full bg-gray-100 border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-kgp-blue outline-none transition">
                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
             </div>
-
             <nav class="hidden xl:flex space-x-6 uppercase tracking-tight">
                 <a href="#home" class="nav-link">Trang chủ</a>
                 <a href="#products" class="nav-link">Sản phẩm</a>
@@ -67,7 +110,6 @@
                 <a href="#profile" class="nav-link">HSNL</a>
                 <a href="#contact" class="nav-link">Liên hệ</a>
             </nav>
-
             <div class="flex items-center gap-2 md:gap-4 shrink-0">
                 <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})" class="lg:hidden p-2 text-gray-500"><i class="fas fa-search text-xl"></i></button>
                 <button onclick="toggleCart()" class="relative p-2 text-kgp-blue hover:bg-blue-50 rounded-full transition">
@@ -82,27 +124,27 @@
     </header>
 
     <main class="no-print">
-        <!-- HERO SLIDER (4 SLIDES) -->
+        <!-- HERO SLIDER -->
         <section id="home" class="swiper heroSwiper h-[65vh] md:h-[85vh]">
             <div class="swiper-wrapper">
                 <div class="swiper-slide relative">
-                    <img src="Picture/Slide01.jpg" class="w-full h-full object-cover">
+                    <img src="Picture/Slide01.jpg" class="w-full h-full object-cover" alt="Nhà thông minh KGPTelecom">
                     <div class="absolute inset-0 bg-black/50 flex items-center text-white">
                         <div class="container mx-auto px-6" data-aos="fade-right">
                             <span class="bg-kgp-orange text-[10px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block tracking-widest text-white">Smart Solution</span>
-                            <h2 class="text-4xl md:text-7xl font-black mb-4 uppercase leading-none">NHÀ THÔNG MINH<br><span class="text-kgp-orange">SMART HOME</span></h2>
+                            <h1 class="text-4xl md:text-7xl font-black mb-4 uppercase leading-none">NHÀ THÔNG MINH<br><span class="text-kgp-orange">SMART HOME</span></h1>
                             <p class="text-lg md:text-xl font-light italic opacity-90">Kiến tạo không gian sống hiện đại, tự động hóa bậc nhất.</p>
                         </div>
                     </div>
                 </div>
-                <div class="swiper-slide relative"><img src="Picture/Slide02.jpg" class="w-full h-full object-cover"><div class="absolute inset-0 bg-black/40 flex items-center justify-center text-center text-white"><h2 class="text-4xl md:text-7xl font-black uppercase tracking-tighter">CAMERA GIÁM SÁT</h2></div></div>
-                <div class="swiper-slide relative"><img src="Picture/Slide03.jpg" class="w-full h-full object-cover"><div class="absolute inset-0 bg-black/50 flex items-center text-white px-6"><h2 class="text-4xl md:text-7xl font-black uppercase leading-none">NHÀ THẦU ĐIỆN NHẸ<br><span class="text-kgp-orange">CHUYÊN NGHIỆP</span></h2></div></div>
-                <div class="swiper-slide relative"><img src="Picture/Slide04.jpg" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-l from-black/80 to-transparent flex items-center justify-end text-right text-white px-6"><h2 class="text-4xl md:text-7xl font-black uppercase text-kgp-orange tracking-tighter">DỊCH VỤ TẬN TÂM</h2></div></div>
+                <div class="swiper-slide relative"><img src="Picture/Slide02.jpg" class="w-full h-full object-cover" alt="Camera giám sát chính hãng"><div class="absolute inset-0 bg-black/40 flex items-center justify-center text-center text-white"><h2 class="text-4xl md:text-7xl font-black uppercase tracking-tighter">CAMERA GIÁM SÁT</h2></div></div>
+                <div class="swiper-slide relative"><img src="Picture/Slide03.jpg" class="w-full h-full object-cover" alt="Nhà thầu điện nhẹ chuyên nghiệp"><div class="absolute inset-0 bg-black/50 flex items-center text-white px-6"><h2 class="text-4xl md:text-7xl font-black uppercase leading-none">NHÀ THẦU ĐIỆN NHẸ<br><span class="text-kgp-orange">CHUYÊN NGHIỆP</span></h2></div></div>
+                <div class="swiper-slide relative"><img src="Picture/Slide04.jpg" class="w-full h-full object-cover" alt="Dịch vụ hỗ trợ KGPTelecom"><div class="absolute inset-0 bg-gradient-to-l from-black/80 to-transparent flex items-center justify-end text-right text-white px-6"><h2 class="text-4xl md:text-7xl font-black uppercase text-kgp-orange tracking-tighter">DỊCH VỤ TẬN TÂM</h2></div></div>
             </div>
             <div class="swiper-pagination"></div>
         </section>
 
-        <!-- PRODUCTS SECTION -->
+        <!-- PRODUCTS -->
         <section id="products" class="py-12 bg-white text-center">
             <div class="container mx-auto px-4">
                 <h2 class="text-4xl md:text-5xl font-black text-kgp-blue uppercase italic" data-aos="fade-up">Sản phẩm tiêu biểu</h2>
@@ -114,7 +156,7 @@
             </div>
         </section>
 
-        <!-- PROJECTS (9 PROJECTS) -->
+        <!-- PROJECTS -->
         <section id="projects" class="py-24 bg-gray-50 text-center">
             <div class="container mx-auto px-4">
                 <h2 class="text-4xl md:text-5xl font-black text-kgp-blue uppercase italic border-b-8 border-kgp-orange pb-4 inline-block" data-aos="fade-up">Dự án tiêu biểu</h2>
@@ -122,7 +164,7 @@
             </div>
         </section>
 
-        <!-- HỒ SƠ NĂNG LỰC -->
+        <!-- HSNL -->
         <section id="profile" class="py-24 bg-kgp-blue relative overflow-hidden text-center text-white">
             <div class="container mx-auto px-4 relative z-10">
                 <h2 class="text-3xl md:text-5xl font-black mb-4 uppercase" data-aos="fade-up">Hồ Sơ Năng Lực KGPTelecom</h2>
@@ -140,22 +182,21 @@
         </section>
     </main>
 
-    <!-- FOOTER -->
     <footer id="contact" class="bg-white pt-24 pb-12 border-t border-gray-100 no-print text-sm">
         <div class="container mx-auto px-4 grid lg:grid-cols-3 gap-16">
             <div>
-                <img src="Picture/logo.png" class="h-16 mb-8">
+                <img src="Picture/logo.png" class="h-16 mb-8" alt="KGPTelecom Logo">
                 <p class="text-gray-500 italic">"CÔNG TY TNHH KHANG GIA PHÚC - Công nghệ trong tầm tay."</p>
-                <div class="flex gap-4 mt-8">
-                    <a href="https://www.facebook.com/congnghetrongtamtay1/" target="_blank" class="w-12 h-12 bg-blue-50 text-kgp-blue rounded-xl flex items-center justify-center hover:bg-kgp-blue hover:text-white transition"><i class="fab fa-facebook-f text-xl"></i></a>
-                    <a href="https://www.tiktok.com/@congnghetrongtamtay" target="_blank" class="w-12 h-12 bg-gray-50 text-gray-900 rounded-xl flex items-center justify-center hover:bg-black hover:text-white transition"><i class="fab fa-tiktok text-xl"></i></a>
+                <div class="flex gap-4 mt-8 text-white">
+                    <a href="https://www.facebook.com/congnghetrongtamtay1/" target="_blank" class="w-12 h-12 bg-[#0071BC] rounded-xl flex items-center justify-center hover:bg-kgp-orange transition shadow-sm"><i class="fab fa-facebook-f text-xl"></i></a>
+                    <a href="https://www.tiktok.com/@congnghetrongtamtay" target="_blank" class="w-12 h-12 bg-black rounded-xl flex items-center justify-center hover:bg-kgp-orange transition shadow-sm"><i class="fab fa-tiktok text-xl"></i></a>
                 </div>
             </div>
             <div class="space-y-4 text-left">
                 <h4 class="text-kgp-blue font-black text-xl uppercase italic border-b-2 border-kgp-orange inline-block pb-1">Thông tin liên hệ</h4>
                 <div class="space-y-4 text-xs text-gray-600">
-                    <p class="flex items-start"><i class="fas fa-building text-kgp-orange mr-3 mt-1"></i> <span><strong>Trụ sở:</strong> 7-9 Tôn Đức Thắng, Phường Sài Gòn, TP.HCM</span></p>
-                    <p class="flex items-start"><i class="fas fa-map-marker-alt text-kgp-orange mr-3 mt-1"></i> <span><strong>Văn phòng:</strong> 39/6/C1 Đường 22, Phường Hiệp Bình, TP.HCM</span></p>
+                    <p class="flex items-start"><i class="fas fa-building text-kgp-orange mr-3 mt-1"></i> <span><strong>Trụ sở:</strong> 7-9 Tôn Đức Thắng, Phường Bến Nghé, Quận 1, TP.HCM</span></p>
+                    <p class="flex items-start"><i class="fas fa-map-marker-alt text-kgp-orange mr-3 mt-1"></i> <span><strong>Văn phòng:</strong> 39/6/C1 Đường 22, Phường Hiệp Bình Chánh, Thủ Đức, TP.HCM</span></p>
                     <p class="flex items-center"><i class="fas fa-phone-alt text-kgp-orange mr-3"></i> <span><strong>Hotline:</strong> 0844.900.099 - 0906.338.444</span></p>
                     <p class="flex items-center"><i class="fas fa-envelope text-kgp-orange mr-3"></i> <span><strong>Email:</strong> khanggiaphuc.com@gmail.com</span></p>
                     <p class="flex items-center"><i class="fas fa-globe text-kgp-orange mr-3"></i> <span><strong>Website:</strong> www.khanggiaphuc.com</span></p>
@@ -175,57 +216,73 @@
         <div id="cart-items" class="flex-grow overflow-y-auto p-6 space-y-4 text-xs"></div>
         <div class="p-6 border-t bg-gray-50 space-y-4"><div class="flex justify-between font-black text-xl"><span>Tổng cộng:</span><span id="cart-total" class="text-red-600">0đ</span></div>
         <div class="grid grid-cols-2 gap-3"><button onclick="clearCart()" class="py-3 border border-gray-300 rounded-xl font-bold text-gray-500 text-[10px]">XÓA HẾT</button><button onclick="preparePrint()" class="py-3 bg-kgp-blue text-white rounded-xl font-bold uppercase text-[10px]">IN BÁO GIÁ</button></div>
-        <a href="https://zalo.me/0844900099" target="_blank" class="block w-full py-4 bg-[#0068FF] text-white text-center rounded-xl font-black uppercase text-xs">LIÊN HỆ ZALO</a></div>
+        <a href="https://zalo.me/0844900099" target="_blank" class="block w-full py-4 bg-[#0068FF] text-white text-center rounded-xl font-black uppercase text-xs shadow-md">LIÊN HỆ ZALO</a></div>
     </div>
 
-    <!-- PRODUCT MODAL (UPDATED WITH SPECS) -->
+    <!-- PRODUCT MODAL -->
     <div id="main-modal" class="fixed inset-0 z-[300] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 no-print" style="opacity:0; pointer-events:none; transition:0.3s;">
         <div class="bg-white w-full max-w-5xl rounded-[2rem] overflow-hidden shadow-2xl flex flex-col md:flex-row relative max-h-[95vh]">
             <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-400 text-2xl z-20 hover:text-kgp-orange transition"><i class="fas fa-times"></i></button>
-            
-            <!-- Left: Images -->
             <div class="md:w-1/2 bg-gray-50 p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r">
-                <img id="modal-img" src="" class="max-w-full max-h-[300px] md:max-h-[400px] object-contain rounded-xl p-2 bg-white mb-6 transition-all duration-300">
+                <img id="modal-img" src="" class="max-w-full max-h-[300px] md:max-h-[400px] object-contain rounded-xl p-2 bg-white mb-6" alt="Sản phẩm">
                 <div id="modal-thumbs" class="grid grid-cols-4 gap-2 w-full"></div>
             </div>
-
-            <!-- Right: Content & Specs -->
-            <div class="md:w-1/2 p-8 md:p-12 flex flex-col overflow-y-auto custom-scroll">
+            <div class="md:w-1/2 p-8 md:p-12 flex flex-col overflow-y-auto custom-scroll bg-white">
                 <span id="modal-cat" class="text-kgp-orange font-bold text-[10px] uppercase mb-2 tracking-widest">Danh mục</span>
                 <h3 id="modal-name" class="text-2xl font-black mb-4 uppercase leading-tight text-gray-900">Tên sản phẩm</h3>
-                
-                <div id="modal-price-container" class="mb-6 flex items-baseline gap-2">
-                    <span id="modal-price" class="text-3xl font-black text-red-600">0đ</span>
-                    <span class="text-xs text-gray-400 font-bold uppercase">(Đã bao gồm VAT)</span>
-                </div>
-
-                <!-- Technical Specifications Section -->
-                <div id="modal-specs-area" class="mb-8">
-                    <h4 class="text-sm font-black text-kgp-blue uppercase mb-4 flex items-center gap-2">
-                        <i class="fas fa-microchip"></i> Thông số kỹ thuật
-                    </h4>
-                    <ul id="modal-specs-list" class="space-y-2 text-xs text-gray-600 font-medium">
-                        <!-- Specs will be injected here -->
-                    </ul>
-                </div>
-
-                <div class="mt-auto pt-6 border-t border-gray-100">
-                    <button id="modal-add-btn" class="w-full bg-kgp-orange text-white py-4 rounded-xl font-black uppercase text-sm shadow-lg hover:bg-orange-600 transition flex items-center justify-center gap-3">
-                        <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
-                    </button>
-                </div>
+                <div id="modal-price-container" class="mb-6 flex items-baseline gap-2"><span id="modal-price" class="text-3xl font-black text-red-600">0đ</span><span class="text-xs text-gray-400 font-bold uppercase">(Đã bao gồm VAT)</span></div>
+                <div id="modal-specs-area" class="mb-8"><h4 class="text-sm font-black text-kgp-blue uppercase mb-4 flex items-center gap-2"><i class="fas fa-microchip"></i> Thông số kỹ thuật</h4><ul id="modal-specs-list" class="space-y-2 text-xs text-gray-600 font-medium"></ul></div>
+                <div class="mt-auto pt-6 border-t border-gray-100"><button id="modal-add-btn" class="w-full bg-kgp-orange text-white py-4 rounded-xl font-black uppercase text-sm shadow-lg hover:bg-orange-600 transition flex items-center justify-center gap-3"><i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng</button></div>
             </div>
         </div>
     </div>
 
-    <!-- PRINT SECTION -->
+    <!-- === VÙNG IN BÁO GIÁ === -->
     <div id="print-section">
-        <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #0071BC; padding-bottom: 10px; margin-bottom: 20px;">
-            <div><h1 style="font-size: 20px; color: #0071BC; font-weight: 900; margin: 0;">CÔNG TY TNHH KHANG GIA PHÚC</h1><p style="font-size: 11px; margin: 5px 0;">Đ/C: 39/6/C1 Đường 22, Phường Hiệp Bình, TP.HCM</p></div>
-            <div style="text-align: right;"><h2 style="font-size: 26px; font-weight: 900; margin: 0;">BÁO GIÁ</h2><p id="print-date" style="font-size: 11px;"></p></div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 3px solid #0071BC; padding-bottom: 15px; margin-bottom: 25px;">
+            <div style="width: 65%;">
+                <h1 style="font-size: 22px; color: #0071BC; margin: 0; font-weight: 900;">CÔNG TY TNHH KHANG GIA PHÚC</h1>
+                <p style="font-size: 11px; margin: 5px 0 2px;"><strong>Văn phòng:</strong> 39/6/C1 Đường 22, P. Hiệp Bình Chánh, Thủ Đức, TP.HCM</p>
+                <p style="font-size: 11px; margin: 2px 0;"><strong>Hotline:</strong> 0844.900.099 - 0906.338.444 | <strong>Web:</strong> khanggiaphuc.com</p>
+            </div>
+            <div style="width: 30%; text-align: right;">
+                <h2 style="font-size: 26px; font-weight: 900; margin: 0; color: #333;">BÁO GIÁ</h2>
+                <p id="print-date" style="font-size: 11px; font-style: italic;"></p>
+                <p style="font-size: 10px;">Mã số: #KGP<span id="print-ref"></span></p>
+            </div>
         </div>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 12px;"><thead><tr style="background: #f3f4f6;"><th style="border:1px solid #ccc; padding:10px;">STT</th><th style="border:1px solid #ccc; padding:10px; text-align:left;">Sản phẩm</th><th style="border:1px solid #ccc; padding:10px; text-align:right;">Đơn giá</th><th style="border:1px solid #ccc; padding:10px;">SL</th><th style="border:1px solid #ccc; padding:10px; text-align:right;">Thành tiền</th></tr></thead><tbody id="print-table-body"></tbody><tfoot><tr><td colspan="4" style="border:1px solid #ccc; padding:12px; text-align:right; font-weight:900;">TỔNG CỘNG (VNĐ):</td><td id="print-total" style="border:1px solid #ccc; padding:12px; text-align:right; font-weight:900; color: #dc2626;"></td></tr></tfoot></table>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; text-align: center; margin-top: 40px; font-style: italic;"><div><p style="font-weight:bold; font-style: normal;">KHÁCH HÀNG XÁC NHẬN</p><div style="height: 100px;"></div><p>(Ký tên)</p></div><div><p style="font-weight:bold; font-style: normal;">ĐẠI DIỆN KGPTELECOM</p><div style="height: 100px;"></div><p style="font-weight:900; color:#0071BC; font-style: normal;">CÔNG TY TNHH KHANG GIA PHÚC</p></div></div>
+        
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 12px;">
+            <thead>
+                <tr style="background: #f3f4f6;">
+                    <th style="border: 1px solid #000; padding: 8px;">STT</th>
+                    <th style="border: 1px solid #000; padding: 8px; text-align: left;">Tên sản phẩm / Giải pháp công nghệ</th>
+                    <th style="border: 1px solid #000; padding: 8px; text-align: right;">Đơn giá</th>
+                    <th style="border: 1px solid #000; padding: 8px; text-align: center;">SL</th>
+                    <th style="border: 1px solid #000; padding: 8px; text-align: right;">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody id="print-table-body"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" style="border: 1px solid #000; padding: 10px; text-align: right; font-weight: 900;">TỔNG GIÁ TRỊ (VNĐ):</td>
+                    <td id="print-total" style="border: 1px solid #000; padding: 10px; text-align: right; font-weight: 900; font-size: 14px; color: #dc2626;"></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div style="margin-bottom: 30px; padding: 15px; border: 1px dashed #0071BC; border-radius: 8px; background: #f9f9f9;">
+            <h4 style="margin: 0 0 10px 0; color: #0071BC; font-size: 14px; text-transform: uppercase; font-weight: 900;">Thông tin thanh toán chuyển khoản:</h4>
+            <p style="font-size: 13px; margin: 5px 0;"><strong>Ngân hàng:</strong> Techcombank (TCB)</p>
+            <p style="font-size: 13px; margin: 5px 0;"><strong>Số tài khoản:</strong> <span style="font-size: 16px; color: #dc2626; font-weight: 900;">1793418868</span></p>
+            <p style="font-size: 13px; margin: 5px 0;"><strong>Chủ tài khoản:</strong> CÔNG TY TNHH KHANG GIA PHÚC</p>
+            <p style="font-size: 11px; color: #666; font-style: italic; margin-top: 5px;">* Nội dung chuyển khoản: [Tên khách hàng] - [Số điện thoại] thanh toán báo giá #KGP<span id="print-ref-2"></span></p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; text-align: center; margin-top: 30px; font-style: italic;">
+            <div><p style="font-weight:bold; font-style: normal;">KHÁCH HÀNG XÁC NHẬN</p><div style="height: 80px;"></div><p>(Ký và ghi rõ họ tên)</p></div>
+            <div><p style="font-weight:bold; font-style: normal;">ĐẠI DIỆN KGPTELECOM</p><div style="height: 80px;"></div><p style="font-weight:900; color:#0071BC; font-style: normal;">CÔNG TY TNHH KHANG GIA PHÚC</p></div>
+        </div>
     </div>
 
     <!-- SCRIPTS -->
@@ -249,7 +306,6 @@
             { id: "DA009", title: "Chung cư Khánh Hội", desc: "Camera giám sát hầm xe lớn", img: "Picture/DA009.jpg", cat: "Hầm xe" }
         ];
 
-        // 1. FETCH DATA FROM SHEET (9 COLUMNS)
         async function fetchProducts() {
             try {
                 const res = await fetch(SHEET_CSV_URL);
@@ -257,22 +313,12 @@
                 const rows = csvText.split(/\r?\n/).filter(r => r.trim() !== "");
                 products = rows.slice(1).map(row => {
                     const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    return { 
-                        id: cols[0]?.replace(/"/g, '').trim(), 
-                        name: cols[1]?.replace(/"/g, '').trim(), 
-                        price: cols[2]?.replace(/"/g, '').trim(), 
-                        cat: cols[3]?.replace(/"/g, '').trim(), 
-                        img: cols[4]?.replace(/"/g, '').trim(), 
-                        img1: cols[5]?.replace(/"/g, '').trim(), 
-                        img2: cols[6]?.replace(/"/g, '').trim(), 
-                        img3: cols[7]?.replace(/"/g, '').trim(),
-                        specs: cols[8]?.replace(/"/g, '').trim() // NEW COLUMN I: SPECS
-                    };
+                    return { id: cols[0]?.replace(/"/g, '').trim(), name: cols[1]?.replace(/"/g, '').trim(), price: cols[2]?.replace(/"/g, '').trim(), cat: cols[3]?.replace(/"/g, '').trim(), img: cols[4]?.replace(/"/g, '').trim(), img1: cols[5]?.replace(/"/g, '').trim(), img2: cols[6]?.replace(/"/g, '').trim(), img3: cols[7]?.replace(/"/g, '').trim(), specs: cols[8]?.replace(/"/g, '').trim() };
                 }).filter(p => p.id);
                 renderFilters();
                 const hasFeatured = products.some(p => p.cat.toLowerCase().includes("nổi bật"));
                 filterProducts(hasFeatured ? 'Nổi bật' : 'Tất cả');
-            } catch (e) { console.error("Sheet Error", e); }
+            } catch (e) { console.error(e); }
         }
 
         function renderFilters() {
@@ -281,7 +327,7 @@
             let final = []; const idx = unique.findIndex(c => c.toLowerCase() === "nổi bật");
             if(idx > -1) { final.push(unique[idx]); unique.splice(idx,1); }
             final.push("Tất cả", ...unique);
-            document.getElementById('filter-container').innerHTML = final.map(c => `<button id="btn-filter-${c}" onclick="filterProducts('${c}')" class="filter-btn">${c}</button>`).join('');
+            document.getElementById('filter-container').innerHTML = final.map(c => `<button id="btn-filter-${c}" onclick="filterProducts('${c}')" class="filter-btn shadow-sm">${c}</button>`).join('');
         }
 
         function applyFilters() {
@@ -313,10 +359,9 @@
         function renderProducts(data) {
             const list = document.getElementById('product-list');
             if(data.length === 0) { list.innerHTML = '<div class="col-span-full py-10 opacity-50 italic text-center w-full">Không tìm thấy sản phẩm...</div>'; return; }
-            list.innerHTML = data.map(p => `<article data-aos="fade-up" class="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col group"><div onclick="openModal('product', '${p.id}')" class="relative aspect-square p-4 cursor-pointer bg-gray-50/50"><img src="${p.img}" class="w-full h-full object-contain group-hover:scale-110 transition duration-700" onerror="this.src='Picture/no-image.jpg'"></div><div class="p-4 text-center flex-grow flex flex-col justify-between"><h3 class="font-bold text-[10px] uppercase line-clamp-2 h-8 leading-tight mb-2">${p.name}</h3><p class="text-red-600 font-black text-sm mb-3">${p.price}</p><button onclick="addToCart('${p.id}')" class="w-full bg-kgp-blue text-white py-2 rounded-xl font-bold text-[9px] uppercase hover:bg-kgp-orange transition">THÊM GIỎ HÀNG</button></div></article>`).join('');
+            list.innerHTML = data.map(p => `<article data-aos="fade-up" class="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col group"><div onclick="openModal('product', '${p.id}')" class="relative aspect-square p-4 cursor-pointer bg-gray-50/50"><img src="${p.img}" class="w-full h-full object-contain group-hover:scale-110 transition duration-700" alt="${p.name}" onerror="this.src='Picture/no-image.jpg'"></div><div class="p-4 text-center flex-grow flex flex-col justify-between"><h3 class="font-bold text-[10px] uppercase line-clamp-2 h-8 leading-tight mb-2">${p.name}</h3><p class="text-red-600 font-black text-sm mb-3">${p.price}</p><button onclick="addToCart('${p.id}')" class="w-full bg-kgp-blue text-white py-2 rounded-xl font-bold text-[9px] uppercase hover:bg-kgp-orange transition shadow-md">THÊM GIỎ HÀNG</button></div></article>`).join('');
         }
 
-        // 2. CART LOGIC
         function toggleCart() {
             const d = document.getElementById('cart-drawer'); const o = document.getElementById('cart-overlay');
             if(!d.classList.contains('active')) { d.classList.add('active'); o.classList.add('opacity-100', 'pointer-events-auto'); document.body.style.overflow = 'hidden'; }
@@ -333,102 +378,77 @@
             let t = 0; let c = 0; const items = document.getElementById('cart-items');
             items.innerHTML = cart.length === 0 ? '<div class="text-center py-10 opacity-30 italic text-sm">Giỏ hàng trống</div>' : cart.map(item => {
                 const pN = parseInt(item.price.replace(/\D/g, '')) || 0; t += pN * item.qty; c += item.qty;
-                return `<div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-gray-100"><img src="${item.img}" class="w-10 h-10 object-contain"><div class="flex-grow text-left"><h4 class="font-bold uppercase text-[9px] line-clamp-1">${item.name}</h4><div class="flex justify-between items-center"><span class="text-red-600 font-bold">${item.price}</span><div class="flex items-center gap-1"><button onclick="changeQty('${item.id}', -1)" class="w-4 h-4 border rounded text-[10px] hover:bg-gray-100">-</button><b>${item.qty}</b><button onclick="changeQty('${item.id}', 1)" class="w-4 h-4 border rounded text-[10px] hover:bg-gray-100">+</button></div></div></div></div>`;
+                return `<div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-gray-50 shadow-sm"><img src="${item.img}" class="w-10 h-10 object-contain"><div class="flex-grow text-left"><h4 class="font-bold uppercase text-[9px] line-clamp-1">${item.name}</h4><div class="flex justify-between items-center"><span class="text-red-600 font-bold">${item.price}</span><div class="flex items-center gap-1"><button onclick="changeQty('${item.id}', -1)" class="w-4 h-4 border rounded text-[10px] hover:bg-gray-100">-</button><b>${item.qty}</b><button onclick="changeQty('${item.id}', 1)" class="w-4 h-4 border rounded text-[10px] hover:bg-gray-100">+</button></div></div></div></div>`;
             }).join('');
             document.getElementById('cart-count').textContent = c; document.getElementById('cart-total').textContent = t.toLocaleString('vi-VN') + 'đ';
         }
 
         function changeQty(id, d) { const i = cart.find(x => x.id === id); if(i) { i.qty += d; if(i.qty <= 0) cart = cart.filter(x => x.id !== id); updateCartUI(); } }
-        function clearCart() { cart = []; updateCartUI(); }
+        function clearCart() { if(confirm('Xóa toàn bộ giỏ hàng?')) { cart = []; updateCartUI(); } }
 
         function preparePrint() {
-            if(cart.length === 0) return alert("Trống!");
+            if(cart.length === 0) return alert("Vui lòng thêm sản phẩm vào giỏ hàng trước!");
             const b = document.getElementById('print-table-body'); let t = 0;
+            const refID = Math.floor(Math.random()*9000)+1000;
             b.innerHTML = cart.map((item, idx) => {
                 const s = (parseInt(item.price.replace(/\D/g, '')) || 0) * item.qty; t += s;
-                return `<tr><td style="border:1px solid #ccc; padding:8px; text-align:center;">${idx+1}</td><td style="border:1px solid #ccc; padding:8px; font-weight:bold;">${item.name}</td><td style="border:1px solid #ccc; padding:8px; text-align:right;">${item.price}</td><td style="border:1px solid #ccc; padding:8px; text-align:center;">${item.qty}</td><td style="border:1px solid #ccc; padding:8px; text-align:right; font-weight:bold;">${s.toLocaleString('vi-VN')}đ</td></tr>`;
+                return `<tr><td style="border:1px solid #000; padding:8px; text-align:center;">${idx+1}</td><td style="border:1px solid #000; padding:8px; font-weight:bold;">${item.name}</td><td style="border:1px solid #000; padding:8px; text-align:right;">${item.price}</td><td style="border:1px solid #000; padding:8px; text-align:center;">${item.qty}</td><td style="border:1px solid #000; padding:8px; text-align:right; font-weight:bold;">${s.toLocaleString('vi-VN')}đ</td></tr>`;
             }).join('');
             document.getElementById('print-total').textContent = t.toLocaleString('vi-VN') + 'đ';
-            document.getElementById('print-date').textContent = "Ngày: " + new Date().toLocaleDateString('vi-VN');
-            document.getElementById('print-ref').textContent = Math.floor(Math.random()*9000)+1000;
+            document.getElementById('print-date').textContent = "Ngày lập: " + new Date().toLocaleDateString('vi-VN');
+            document.getElementById('print-ref').textContent = refID;
+            document.getElementById('print-ref-2').textContent = refID;
+            
             document.querySelectorAll('[data-aos]').forEach(el => { el.style.opacity = "1"; el.style.transform = "none"; el.style.visibility = "visible"; });
-            window.print();
+            setTimeout(() => { window.print(); }, 200);
         }
 
-        // 3. MODAL & SPECS LOGIC
         function openModal(type, id) {
             const item = type === 'product' ? products.find(p => p.id === id) : projects.find(p => p.id === id);
             if(!item) return;
-            
             document.getElementById('modal-img').src = item.img;
             document.getElementById('modal-name').textContent = item.name || item.title;
             document.getElementById('modal-cat').textContent = item.cat ? item.cat.replace(/;/g, ' | ') : '';
-            
             const specsArea = document.getElementById('modal-specs-area');
             const specsList = document.getElementById('modal-specs-list');
-
             if(type === 'product') {
                 document.getElementById('modal-price-container').style.display = 'flex';
                 document.getElementById('modal-price').textContent = item.price;
                 document.getElementById('modal-add-btn').style.display = 'flex';
                 document.getElementById('modal-add-btn').onclick = () => addToCart(item.id);
-                
-                // Render Specs from Sheet (semicolon separated)
-                if(item.specs && item.specs.trim() !== "") {
-                    specsArea.style.display = 'block';
-                    const specItems = item.specs.split(';').map(s => `<li><i class="fas fa-check text-green-500 mr-2"></i> ${s.trim()}</li>`).join('');
-                    specsList.innerHTML = specItems;
-                } else {
-                    specsArea.style.display = 'none';
-                }
-
-                // Thumbnails
+                if(item.specs) { specsArea.style.display = 'block'; specsList.innerHTML = item.specs.split(';').map(s => `<li><i class="fas fa-check text-green-500 mr-2"></i> ${s.trim()}</li>`).join(''); }
+                else specsArea.style.display = 'none';
                 let ts = `<img src="${item.img}" onclick="changeModalImg('${item.img}', this)" class="aspect-square w-full object-contain rounded-lg border-2 border-kgp-blue cursor-pointer p-1 bg-white">`;
                 [item.img1, item.img2, item.img3].forEach(img => { if(img && img.trim() !== "") ts += `<img src="${img}" onclick="changeModalImg('${img}', this)" class="aspect-square w-full object-contain rounded-lg border-2 border-transparent hover:border-kgp-orange cursor-pointer p-1 bg-white">`; });
                 document.getElementById('modal-thumbs').innerHTML = ts;
             } else {
                 document.getElementById('modal-price-container').style.display = 'none';
                 document.getElementById('modal-add-btn').style.display = 'none';
-                specsArea.style.display = 'block';
-                specsList.innerHTML = `<li>${item.desc}</li>`;
+                specsArea.style.display = 'block'; specsList.innerHTML = `<li>${item.desc}</li>`;
                 document.getElementById('modal-thumbs').innerHTML = "";
             }
-            
             const modal = document.getElementById('main-modal'); modal.style.opacity = '1'; modal.style.pointerEvents = 'auto'; document.body.style.overflow = 'hidden';
         }
-
         function changeModalImg(src, btn) { document.getElementById('modal-img').src = src; document.querySelectorAll('#modal-thumbs img').forEach(i => i.style.borderColor = "transparent"); btn.style.borderColor = "#0071BC"; }
         function closeModal() { document.getElementById('main-modal').style.opacity = '0'; document.getElementById('main-modal').style.pointerEvents = 'none'; document.body.style.overflow = 'auto'; }
 
-        // 4. INITIALIZE
         function initApp() {
             AOS.init({ duration: 800, once: true });
             document.getElementById('year').textContent = new Date().getFullYear();
             fetchProducts();
-            
-            // Projects
             document.getElementById('project-list').innerHTML = projects.map(proj => `
                 <div class="relative h-64 rounded-3xl overflow-hidden group shadow-lg cursor-pointer" onclick="openModal('project', '${proj.id}')" data-aos="zoom-in">
-                    <img src="${proj.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+                    <img src="${proj.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000" alt="${proj.title}">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end text-white text-left">
                         <span class="text-kgp-orange font-bold text-[8px] uppercase mb-1">${proj.cat}</span>
                         <h4 class="font-black text-sm uppercase">${proj.title}</h4>
                     </div>
                 </div>`).join('');
-            
-            // HSNL
             let hsnlHtml = '';
-            for(let i=1; i<=14; i++) { hsnlHtml += `<div class="swiper-slide"><div class="profile-page"><img src="Picture/HSNL.${i}.jpg" class="w-full h-auto" loading="lazy"></div></div>`; }
+            for(let i=1; i<=14; i++) { hsnlHtml += `<div class="swiper-slide"><div class="profile-page"><img src="Picture/HSNL.${i}.jpg" class="w-full h-auto" loading="lazy" alt="HSNL Trang ${i}"></div></div>`; }
             document.getElementById('profile-slides').innerHTML = hsnlHtml;
-
             new Swiper(".heroSwiper", { loop: true, effect: "fade", autoplay: { delay: 5000 }, pagination: { el: ".swiper-pagination", clickable: true } });
-            new Swiper(".profileSwiper", {
-                slidesPerView: 1.2, spaceBetween: 20, centeredSlides: true, loop: true,
-                autoplay: { delay: 3000, disableOnInteraction: false },
-                pagination: { el: ".swiper-pagination", clickable: true },
-                navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-                breakpoints: { 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3.5 } }
-            });
+            new Swiper(".profileSwiper", { slidesPerView: 1.2, spaceBetween: 20, centeredSlides: true, loop: true, autoplay: { delay: 3000 }, pagination: { el: ".swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }, breakpoints: { 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3.5 } } });
         }
         window.onclick = (e) => { 
             if(e.target == document.getElementById('cart-overlay')) toggleCart();
