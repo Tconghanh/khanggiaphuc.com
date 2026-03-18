@@ -373,4 +373,68 @@
                 document.getElementById('modal-add-btn').style.display = 'flex';
                 document.getElementById('modal-add-btn').onclick = () => addToCart(item.id);
                 
-             
+                // Render Specs from Sheet (semicolon separated)
+                if(item.specs && item.specs.trim() !== "") {
+                    specsArea.style.display = 'block';
+                    const specItems = item.specs.split(';').map(s => `<li><i class="fas fa-check text-green-500 mr-2"></i> ${s.trim()}</li>`).join('');
+                    specsList.innerHTML = specItems;
+                } else {
+                    specsArea.style.display = 'none';
+                }
+
+                // Thumbnails
+                let ts = `<img src="${item.img}" onclick="changeModalImg('${item.img}', this)" class="aspect-square w-full object-contain rounded-lg border-2 border-kgp-blue cursor-pointer p-1 bg-white">`;
+                [item.img1, item.img2, item.img3].forEach(img => { if(img && img.trim() !== "") ts += `<img src="${img}" onclick="changeModalImg('${img}', this)" class="aspect-square w-full object-contain rounded-lg border-2 border-transparent hover:border-kgp-orange cursor-pointer p-1 bg-white">`; });
+                document.getElementById('modal-thumbs').innerHTML = ts;
+            } else {
+                document.getElementById('modal-price-container').style.display = 'none';
+                document.getElementById('modal-add-btn').style.display = 'none';
+                specsArea.style.display = 'block';
+                specsList.innerHTML = `<li>${item.desc}</li>`;
+                document.getElementById('modal-thumbs').innerHTML = "";
+            }
+            
+            const modal = document.getElementById('main-modal'); modal.style.opacity = '1'; modal.style.pointerEvents = 'auto'; document.body.style.overflow = 'hidden';
+        }
+
+        function changeModalImg(src, btn) { document.getElementById('modal-img').src = src; document.querySelectorAll('#modal-thumbs img').forEach(i => i.style.borderColor = "transparent"); btn.style.borderColor = "#0071BC"; }
+        function closeModal() { document.getElementById('main-modal').style.opacity = '0'; document.getElementById('main-modal').style.pointerEvents = 'none'; document.body.style.overflow = 'auto'; }
+
+        // 4. INITIALIZE
+        function initApp() {
+            AOS.init({ duration: 800, once: true });
+            document.getElementById('year').textContent = new Date().getFullYear();
+            fetchProducts();
+            
+            // Projects
+            document.getElementById('project-list').innerHTML = projects.map(proj => `
+                <div class="relative h-64 rounded-3xl overflow-hidden group shadow-lg cursor-pointer" onclick="openModal('project', '${proj.id}')" data-aos="zoom-in">
+                    <img src="${proj.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end text-white text-left">
+                        <span class="text-kgp-orange font-bold text-[8px] uppercase mb-1">${proj.cat}</span>
+                        <h4 class="font-black text-sm uppercase">${proj.title}</h4>
+                    </div>
+                </div>`).join('');
+            
+            // HSNL
+            let hsnlHtml = '';
+            for(let i=1; i<=14; i++) { hsnlHtml += `<div class="swiper-slide"><div class="profile-page"><img src="Picture/HSNL.${i}.jpg" class="w-full h-auto" loading="lazy"></div></div>`; }
+            document.getElementById('profile-slides').innerHTML = hsnlHtml;
+
+            new Swiper(".heroSwiper", { loop: true, effect: "fade", autoplay: { delay: 5000 }, pagination: { el: ".swiper-pagination", clickable: true } });
+            new Swiper(".profileSwiper", {
+                slidesPerView: 1.2, spaceBetween: 20, centeredSlides: true, loop: true,
+                autoplay: { delay: 3000, disableOnInteraction: false },
+                pagination: { el: ".swiper-pagination", clickable: true },
+                navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+                breakpoints: { 640: { slidesPerView: 2 }, 1024: { slidesPerView: 3.5 } }
+            });
+        }
+        window.onclick = (e) => { 
+            if(e.target == document.getElementById('cart-overlay')) toggleCart();
+            if(e.target == document.getElementById('main-modal')) closeModal();
+        };
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
