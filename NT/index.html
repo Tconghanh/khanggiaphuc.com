@@ -3,96 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Khang Gia Phúc - Công Nghệ Trong Tầm Tay | Smarthome, Camera, IT</title>
-    <meta name="description" content="Khang Gia Phúc chuyên thi công hệ thống Smarthome, Camera giám sát, Âm thanh thông báo và Mạng văn phòng chuyên nghiệp.">
-    <meta name="keywords" content="khang gia phuc, smarthome, camera, am thanh thong bao, mang van phong">
+    <title>Khang Gia Phúc - Công Nghệ Trong Tầm Tay | khanggiaphuc.com</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="Data/favicon.ico">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Khang Gia Phúc chuyên giải pháp Smarthome, Camera giám sát, Âm thanh thông báo và Mạng văn phòng chuyên nghiệp tại TP.HCM.">
+    <meta name="keywords" content="khang gia phuc, smarthome, camera, am thanh thong bao, mang van phong, khanggiaphuc.com">
+
     <!-- CSS Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
     <style>
-        :root {
-            --primary-color: #0056b3;
-            --secondary-color: #f8f9fa;
-            --text-dark: #333;
-        }
+        :root { --primary-color: #0056b3; --accent-color: #ff4757; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f4f7f6; overflow-x: hidden; }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
-
-        /* Sidebar Menu */
+        /* Sidebar */
         #sidebar {
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-            background: #1a1a1a;
-            color: white;
-            z-index: 1000;
-            transition: all 0.3s;
+            width: 260px; height: 100vh; position: fixed; left: 0; top: 0;
+            background: #111; color: white; z-index: 1000; transition: 0.3s;
         }
-        #sidebar .nav-link {
-            color: #ccc;
-            padding: 15px 25px;
-            border-bottom: 1px solid #333;
-        }
-        #sidebar .nav-link:hover { background: var(--primary-color); color: white; }
+        #sidebar .logo-area { padding: 20px; text-align: center; border-bottom: 1px solid #333; }
+        #sidebar .logo-area img { max-width: 180px; margin-bottom: 10px; }
+        #sidebar .nav-link { color: #adb5bd; padding: 12px 25px; border-bottom: 1px solid #222; font-size: 0.9rem; }
+        #sidebar .nav-link:hover, #sidebar .nav-link.active { background: var(--primary-color); color: white; }
         
-        #main-content { margin-left: 250px; width: calc(100% - 250px); }
+        #main-content { margin-left: 260px; width: calc(100% - 260px); min-height: 100vh; }
 
-        /* Hero Slide */
-        .swiper { width: 100%; height: 500px; }
+        /* Slide */
+        .swiper { width: 100%; height: 550px; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
-        .slide-caption {
-            position: absolute; bottom: 50px; left: 50px;
-            background: rgba(0,0,0,0.6); color: white; padding: 20px; border-radius: 5px;
-        }
 
-        /* Product Card */
-        .product-card { border: 1px solid #eee; transition: 0.3s; margin-bottom: 20px; }
-        .product-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .product-img { height: 200px; object-fit: contain; width: 100%; padding: 10px; }
+        /* Projects */
+        .project-card { border: none; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.3s; height: 100%; }
+        .project-card:hover { transform: translateY(-5px); }
+        .project-card img { height: 200px; object-fit: cover; }
+
+        /* Products */
+        .product-card { background: white; border-radius: 8px; border: 1px solid #eee; padding: 15px; transition: 0.3s; height: 100%; cursor: pointer; }
+        .product-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+        .product-img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 15px; }
+        .price { color: var(--accent-color); font-weight: bold; font-size: 1.1rem; }
         
-        /* Responsive */
+        /* Mobile Optimization */
         @media (max-width: 992px) {
-            #sidebar { width: 0; left: -250px; }
+            #sidebar { left: -260px; }
+            #sidebar.active { left: 0; }
             #main-content { margin-left: 0; width: 100%; }
-            #sidebar.active { width: 250px; left: 0; }
+            .swiper { height: 300px; }
         }
 
-        .sticky-cart {
-            position: fixed; bottom: 20px; right: 20px; z-index: 999;
-            background: #ff4757; color: white; padding: 15px; border-radius: 50%;
-            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        .cart-float {
+            position: fixed; bottom: 30px; right: 30px; z-index: 1000;
+            background: var(--accent-color); color: white; width: 60px; height: 60px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 5px 20px rgba(255,71,87,0.4);
         }
+        .badge-count { position: absolute; top: 0; right: 0; background: yellow; color: black; border-radius: 50%; padding: 2px 7px; font-size: 12px; }
     </style>
 </head>
 <body>
 
-<!-- Mobile Toggle -->
-<button class="btn btn-dark d-lg-none m-2" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+<!-- Mobile Header -->
+<div class="bg-dark text-white p-3 d-lg-none d-flex justify-content-between align-items-center">
+    <img src="Data/logo.png" height="30" alt="Logo">
+    <button class="btn btn-outline-light" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+</div>
 
 <!-- Menu Dọc -->
 <nav id="sidebar">
-    <div class="p-4 text-center">
-        <h4 class="fw-bold">KHANG GIA PHÚC</h4>
-        <small>Technology Solutions</small>
+    <div class="logo-area">
+        <img src="Data/logo.png" alt="Khang Gia Phúc Logo">
+        <p class="small text-secondary m-0">Công nghệ trong tầm tay</p>
     </div>
-    <ul class="nav flex-column mt-3">
-        <li class="nav-item"><a href="#home" class="nav-link"><i class="fas fa-home me-2"></i> TRANG CHỦ</a></li>
+    <ul class="nav flex-column mt-2">
+        <li class="nav-item"><a href="#home" class="nav-link active"><i class="fas fa-home me-2"></i> TRANG CHỦ</a></li>
         <li class="nav-item"><a href="#intro" class="nav-link"><i class="fas fa-info-circle me-2"></i> GIỚI THIỆU</a></li>
         <li class="nav-item"><a href="#projects" class="nav-link"><i class="fas fa-project-diagram me-2"></i> DỰ ÁN</a></li>
-        <li class="nav-item"><a href="#products" class="nav-link"><i class="fas fa-laptop me-2"></i> SẢN PHẨM</a></li>
+        <li class="nav-item"><a href="#products" class="nav-link"><i class="fas fa-box-open me-2"></i> SẢN PHẨM</a></li>
         <li class="nav-item"><a href="#news" class="nav-link"><i class="fas fa-newspaper me-2"></i> TIN TỨC</a></li>
         <li class="nav-item"><a href="#contact" class="nav-link"><i class="fas fa-phone me-2"></i> LIÊN HỆ</a></li>
-        <li class="nav-item">
-            <div class="p-3">
-                <input type="text" class="form-control form-control-sm" placeholder="Tìm kiếm...">
-            </div>
-        </li>
     </ul>
+    <div class="p-3">
+        <div class="input-group">
+            <input type="text" class="form-control form-control-sm border-secondary bg-dark text-white" id="searchInput" placeholder="Tìm kiếm...">
+            <button class="btn btn-sm btn-primary" onclick="searchProducts()"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
 </nav>
 
 <main id="main-content">
@@ -100,205 +100,314 @@
     <section id="home">
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <img src="Data/SL1.jpg" alt="Smarthome">
-                    <div class="slide-caption"><h3>Giải pháp Smarthome</h3><p>Điều khiển ngôi nhà trong tầm tay</p></div>
-                </div>
-                <div class="swiper-slide"><img src="Data/SL2.jpg" alt="Camera"></div>
-                <div class="swiper-slide"><img src="Data/SL3.jpg" alt="Audio"></div>
-                <div class="swiper-slide"><img src="Data/SL4.jpg" alt="Network"></div>
-                <div class="swiper-slide"><img src="Data/SL5.jpg" alt="IT"></div>
+                <div class="swiper-slide"><img src="Data/SL1.jpg" alt="Smarthome"></div>
+                <div class="swiper-slide"><img src="Data/SL2.jpg" alt="Hệ thống Camera"></div>
+                <div class="swiper-slide"><img src="Data/SL3.jpg" alt="Âm thanh thông báo"></div>
+                <div class="swiper-slide"><img src="Data/SL4.jpg" alt="Mạng văn phòng"></div>
+                <div class="swiper-slide"><img src="Data/SL5.jpg" alt="Thiết bị tin học"></div>
             </div>
             <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
         </div>
     </section>
 
-    <!-- Intro Section -->
-    <section id="intro" class="p-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-4">VỀ CHÚNG TÔI</h2>
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>CÔNG TY TNHH KHANG GIA PHÚC</strong></p>
-                    <p><i class="fas fa-map-marker-alt"></i> Trụ sở: 7-9 Tôn Đức Thắng, Phường Sài Gòn, TP.HCM</p>
-                    <p><i class="fas fa-building"></i> Văn phòng: 39/6/C1 Đường 22, Phường Hiệp Bình, TP.HCM</p>
-                    <p><i class="fas fa-phone"></i> Hotline: 0844.900.099 - 0906.338.444</p>
-                    <p><i class="fas fa-envelope"></i> Email: khanggiaphuc.com@gmail.com</p>
-                    <a href="https://www.canva.com/design/DAGykeEt8hU/L0-V9Mi13ArenR_1mJLtjA/edit" target="_blank" class="btn btn-primary">
-                        <i class="fas fa-download"></i> Tải Hồ Sơ Năng Lực
+    <!-- Giới thiệu -->
+    <section id="intro" class="py-5 container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h2 class="fw-bold text-primary mb-4">CÔNG TY TNHH KHANG GIA PHÚC</h2>
+                <div class="bg-white p-4 rounded shadow-sm">
+                    <p><i class="fas fa-map-marker-alt text-danger me-2"></i> <strong>Trụ sở:</strong> 7-9 Tôn Đức Thắng, Phường Sài Gòn, TP.HCM</p>
+                    <p><i class="fas fa-building text-danger me-2"></i> <strong>Văn phòng:</strong> 39/6/C1 Đường 22, Phường Hiệp Bình, TP.HCM</p>
+                    <p><i class="fas fa-phone-alt text-danger me-2"></i> <strong>Hotline:</strong> 0844.900.099 - 0906.338.444</p>
+                    <p><i class="fas fa-envelope text-danger me-2"></i> <strong>Email:</strong> khanggiaphuc.com@gmail.com</p>
+                    <p><i class="fas fa-globe text-danger me-2"></i> <strong>Website:</strong> www.khanggiaphuc.com</p>
+                    <hr>
+                    <a href="https://www.canva.com/design/DAGykeEt8hU/L0-V9Mi13ArenR_1mJLtjA/edit" target="_blank" class="btn btn-primary px-4 py-2">
+                        <i class="fas fa-file-download me-2"></i> TẢI HỒ SƠ NĂNG LỰC
                     </a>
                 </div>
-                <div class="col-md-6">
-                    <img src="Data/DA01.jpg" class="img-fluid rounded shadow" alt="Intro">
-                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <img src="Data/DA01.jpg" class="img-fluid rounded shadow" alt="Khang Gia Phuc">
             </div>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="p-5">
+    <!-- Dự án Section -->
+    <section id="projects" class="py-5 bg-light">
         <div class="container">
-            <h2 class="text-center mb-5">DỰ ÁN TIÊU BIỂU</h2>
-            <div class="row g-4" id="project-list">
-                <!-- Sẽ render từ JS hoặc HTML cứng -->
+            <h2 class="text-center fw-bold mb-5">DỰ ÁN TIÊU BIỂU</h2>
+            <div class="row g-4">
                 <div class="col-md-3">
-                    <div class="card border-0 shadow-sm">
-                        <img src="Data/DA01.jpg" class="card-img-top" alt="Project">
-                        <div class="card-body small">Thi công hệ thống mạng trường Mạch Kiếm Hùng</div>
+                    <div class="project-card bg-white">
+                        <img src="Data/DA01.jpg" class="card-img-top" alt="Dự án 1" onerror="this.src='https://via.placeholder.com/300x200'">
+                        <div class="card-body small fw-bold text-center">Thi công hệ thống mạng, camera, âm thanh thông báo cho trường THCS Mạch Kiếm Hùng</div>
                     </div>
                 </div>
-                <!-- Lặp lại cho các dự án khác -->
+                <div class="col-md-3">
+                    <div class="project-card bg-white">
+                        <img src="Data/DA02.jpg" class="card-img-top" alt="Dự án 2" onerror="this.src='https://via.placeholder.com/300x200'">
+                        <div class="card-body small fw-bold text-center">Thi công hệ thống mạng và camera cho biệt thự Phú Hữu, TP.Thủ Đức, HCM</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="project-card bg-white">
+                        <img src="Data/DA03.jpg" class="card-img-top" alt="Dự án 3" onerror="this.src='https://via.placeholder.com/300x200'">
+                        <div class="card-body small fw-bold text-center">Thi công hệ thống âm thanh thông báo, mạng wifi và camera dự án Lavida Plus - quận 7, HCM</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="project-card bg-white">
+                        <img src="Data/DA04.jpg" class="card-img-top" alt="Dự án 4" onerror="this.src='https://via.placeholder.com/300x200'">
+                        <div class="card-body small fw-bold text-center">Thi công hệ thống server, mạng LAN, camera tòa nhà văn phòng C-Holding, Thủ Dầu Một, Bình Dương</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Products Section -->
-    <section id="products" class="p-5 bg-white">
+    <!-- Sản phẩm Section -->
+    <section id="products" class="py-5 bg-white">
         <div class="container">
-            <h2 class="text-center mb-4">SẢN PHẨM CÔNG NGHỆ</h2>
+            <h2 class="text-center fw-bold mb-4">SẢN PHẨM CÔNG NGHỆ</h2>
             
-            <!-- Category Tabs -->
-            <ul class="nav nav-pills justify-content-center mb-4" id="categoryTabs">
-                <li class="nav-item"><button class="nav-link active" onclick="filterCategory('bán chạy')">Bán chạy</button></li>
-                <li class="nav-item"><button class="nav-link" onclick="filterCategory('all')">Tất cả</button></li>
-            </ul>
+            <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" id="cat-filters">
+                <button class="btn btn-outline-primary active" onclick="renderByCategory('bán chạy', this)">Bán chạy</button>
+                <button class="btn btn-outline-primary" onclick="renderByCategory('all', this)">Tất cả</button>
+            </div>
 
-            <div class="row" id="product-container">
-                <!-- Dữ liệu từ Google Sheet sẽ đổ vào đây -->
+            <div class="row g-4" id="product-grid">
+                <!-- Data đổ từ JS -->
+                <div class="col-12 text-center p-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Đang tải dữ liệu sản phẩm...</p>
+                </div>
             </div>
             
-            <nav class="mt-4"><ul class="pagination justify-content-center" id="pagination"></ul></nav>
+            <nav class="mt-5"><ul class="pagination justify-content-center" id="pagination"></ul></nav>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white p-5">
+    <footer class="bg-dark text-white pt-5 pb-3">
         <div class="container">
-            <div class="row">
+            <div class="row g-4">
                 <div class="col-md-4">
-                    <h5>KHANG GIA PHÚC</h5>
-                    <p>Công nghệ trong tầm tay</p>
-                    <img src="Data/logo.png" alt="Logo" style="max-width: 150px; filter: brightness(0) invert(1);">
+                    <img src="Data/logo.png" height="50" class="mb-3" style="filter: brightness(0) invert(1);">
+                    <h5 class="fw-bold">CÔNG TY TNHH KHANG GIA PHÚC</h5>
+                    <p class="text-secondary small">Công nghệ trong tầm tay. Chúng tôi mang đến giải pháp công nghệ hiện đại nhất cho ngôi nhà và doanh nghiệp của bạn.</p>
                 </div>
                 <div class="col-md-4">
-                    <h5>LIÊN HỆ</h5>
-                    <small>
-                        Trụ sở: 7-9 Tôn Đức Thắng, Q.1, TP.HCM<br>
-                        Văn phòng: 39/6/C1 Đường 22, Thủ Đức, TP.HCM<br>
-                        Hotline: 0844.900.099<br>
-                        Website: www.khanggiaphuc.com
-                    </small>
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">THÔNG TIN LIÊN HỆ</h5>
+                    <p class="small mb-1">Trụ sở: 7-9 Tôn Đức Thắng, Phường Sài Gòn, TP.HCM</p>
+                    <p class="small mb-1">Văn phòng: 39/6/C1 Đường 22, Phường Hiệp Bình, TP.HCM</p>
+                    <p class="small mb-1">Hotline: 0844.900.099 - 0906.338.444</p>
+                    <p class="small">Email: khanggiaphuc.com@gmail.com</p>
                 </div>
                 <div class="col-md-4">
-                    <h5>FACEBOOK</h5>
-                    <a href="https://www.facebook.com/congnghetrongtamtay1" class="text-white">Theo dõi chúng tôi</a>
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">KẾT NỐI VỚI CHÚNG TÔI</h5>
+                    <a href="https://www.facebook.com/congnghetrongtamtay1" target="_blank" class="btn btn-outline-light w-100 mb-2">
+                        <i class="fab fa-facebook me-2"></i> Facebook Fanpage
+                    </a>
+                    <div class="mt-3 bg-white p-2 text-dark rounded small text-center">
+                        <strong>THANH TOÁN:</strong> Techcombank (TCB)<br>
+                        STK: <strong>1793418868</strong><br>
+                        CTK: CONG TY TNHH KHANG GIA PHÚC
+                    </div>
                 </div>
             </div>
+            <hr>
+            <p class="text-center small text-secondary">© 2024 khanggiaphuc.com. All Rights Reserved.</p>
         </div>
     </footer>
 </main>
 
-<!-- Floating Cart -->
-<div class="sticky-cart" onclick="showCart()">
-    <i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span>
+<!-- Cart Floating -->
+<div class="cart-float" onclick="openCartModal()">
+    <i class="fas fa-shopping-cart fa-lg"></i>
+    <span class="badge-count" id="cart-count">0</span>
 </div>
 
 <!-- Modal Product Detail -->
-<div class="modal fade" id="productModal" tabindex="-1">
+<div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content" id="product-detail-body">
-            <!-- Render từ JS -->
+        <div class="modal-content" id="modal-content-body"></div>
+    </div>
+</div>
+
+<!-- Modal Giỏ Hàng & Báo Giá -->
+<div class="modal fade" id="cartModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">DANH SÁCH BÁO GIÁ</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table align-middle" id="cart-table">
+                    <thead><tr><th>Sản phẩm</th><th>Giá</th><th></th></tr></thead>
+                    <tbody id="cart-items-body"></tbody>
+                </table>
+                <div id="cart-empty-msg" class="text-center p-3 d-none">Giỏ hàng trống</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="clearCart()">Xóa tất cả</button>
+                <button class="btn btn-success" onclick="exportQuotePDF()"><i class="fas fa-file-pdf me-2"></i>TẢI BÁO GIÁ PDF</button>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Libraries -->
+<!-- JS Libraries -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
 <script>
-    // Config & Data State
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSWO-gmp4q0mpMlKEBjLs3UPtG9h-F8FkEvc29AeLbi5fJ6m669d4vU8cYP0nxu9fbacvpxjZ-54a6N/pub?output=csv';
-    let allProducts = [];
-    let cart = [];
+    let products = [];
+    let cart = JSON.parse(localStorage.getItem('kgp-cart')) || [];
+    let currentCategory = 'bán chạy';
     let currentPage = 1;
     const itemsPerPage = 40;
 
-    // Khởi tạo Slide
+    // Khởi tạo Swiper
     const swiper = new Swiper(".mySwiper", {
+        loop: true,
         autoplay: { delay: 4000 },
         pagination: { el: ".swiper-pagination", clickable: true },
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
     });
 
-    // Fetch dữ liệu từ Google Sheet
-    async function loadProducts() {
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+
+    // Fetch dữ liệu
+    async function init() {
+        updateCartBadge();
         Papa.parse(CSV_URL, {
             download: true,
             header: true,
+            skipEmptyLines: true,
             complete: function(results) {
-                allProducts = results.data;
-                renderProducts('bán chạy');
-                generateCategories(allProducts);
+                // Làm sạch dữ liệu (trim khoảng trắng)
+                products = results.data.map(p => ({
+                    ID: p.ID ? p.ID.trim() : "",
+                    Name: p.Name ? p.Name.trim() : "",
+                    Price: p.Price ? p.Price.trim() : "Liên hệ",
+                    Cat: p.Cat ? p.Cat.trim() : "",
+                    Specs: p.Specs ? p.Specs.trim() : "Đang cập nhật"
+                })).filter(p => p.ID !== "");
+                
+                generateCatFilters();
+                renderProducts();
             }
         });
     }
 
-    function renderProducts(cat, page = 1) {
-        let filtered = cat === 'all' ? allProducts : allProducts.filter(p => p.Cat && p.Cat.toLowerCase() === cat.toLowerCase());
-        
-        const container = document.getElementById('product-container');
-        container.innerHTML = '';
+    function generateCatFilters() {
+        const cats = [...new Set(products.map(p => p.Cat))].filter(c => c && c.toLowerCase() !== 'bán chạy');
+        const container = document.getElementById('cat-filters');
+        cats.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-outline-primary';
+            btn.innerText = cat;
+            btn.onclick = (e) => renderByCategory(cat, btn);
+            container.appendChild(btn);
+        });
+    }
 
-        // Phân trang
-        const start = (page - 1) * itemsPerPage;
-        const paginated = filtered.slice(start, start + itemsPerPage);
+    function renderByCategory(cat, btn) {
+        currentCategory = cat;
+        currentPage = 1;
+        document.querySelectorAll('#cat-filters .btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderProducts();
+    }
 
-        paginated.forEach(p => {
-            if(!p.ID) return;
-            container.innerHTML += `
+    function renderProducts() {
+        const grid = document.getElementById('product-grid');
+        grid.innerHTML = '';
+
+        let filtered = currentCategory === 'all' 
+            ? products 
+            : products.filter(p => p.Cat.toLowerCase() === currentCategory.toLowerCase());
+
+        const totalPages = Math.ceil(filtered.length / itemsPerPage);
+        const start = (currentPage - 1) * itemsPerPage;
+        const pageItems = filtered.slice(start, start + itemsPerPage);
+
+        if (pageItems.length === 0) {
+            grid.innerHTML = '<div class="col-12 text-center py-5">Chưa có sản phẩm nào trong mục này.</div>';
+            return;
+        }
+
+        pageItems.forEach(p => {
+            grid.innerHTML += `
                 <div class="col-lg-3 col-md-4 col-6">
-                    <div class="product-card p-2 text-center">
-                        <img src="Data/${p.ID}.jpg" class="product-img" onerror="this.src='Data/no-image.jpg'" onclick="showDetail('${p.ID}')">
-                        <h6 class="mt-2 text-truncate">${p.Name}</h6>
-                        <p class="text-danger fw-bold">${p.Price} VNĐ</p>
-                        <button class="btn btn-sm btn-outline-primary" onclick="addToCart('${p.ID}')">Thêm vào giỏ</button>
+                    <div class="product-card" onclick="showDetail('${p.ID}')">
+                        <img src="Data/${p.ID}.jpg" class="product-img" onerror="this.src='https://via.placeholder.com/200'">
+                        <div class="small text-muted mb-1">${p.ID}</div>
+                        <h6 class="fw-bold mb-2" style="height: 40px; overflow: hidden;">${p.Name}</h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price">${p.Price}</span>
+                            <button class="btn btn-sm btn-primary" onclick="addToCart(event, '${p.ID}')"><i class="fas fa-plus"></i></button>
+                        </div>
                     </div>
                 </div>
             `;
         });
-        
-        renderPagination(filtered.length, page, cat);
+
+        renderPagination(totalPages);
     }
 
+    function renderPagination(total) {
+        const nav = document.getElementById('pagination');
+        nav.innerHTML = '';
+        if (total <= 1) return;
+
+        for (let i = 1; i <= total; i++) {
+            nav.innerHTML += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <button class="page-link" onclick="goToPage(${i})">${i}</button>
+                </li>
+            `;
+        }
+    }
+
+    function goToPage(p) { currentPage = p; renderProducts(); window.location.hash = 'products'; }
+
     function showDetail(id) {
-        const p = allProducts.find(x => x.ID === id);
-        const modalBody = document.getElementById('product-detail-body');
+        const p = products.find(x => x.ID === id);
+        const modalBody = document.getElementById('modal-content-body');
         modalBody.innerHTML = `
-            <div class="modal-header">
-                <h5 class="modal-title">${p.Name}</h5>
+            <div class="modal-header border-0 shadow-sm">
+                <h5 class="modal-title fw-bold">${p.Name} (Mã: ${p.ID})</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <img src="Data/${p.ID}.jpg" class="img-fluid mb-2">
-                        <div class="d-flex gap-2">
-                            <img src="Data/${p.ID}.1.jpg" style="width:60px" onerror="this.remove()">
-                            <img src="Data/${p.ID}.2.jpg" style="width:60px" onerror="this.remove()">
-                            <img src="Data/${p.ID}.3.jpg" style="width:60px" onerror="this.remove()">
+                <div class="row g-4">
+                    <div class="col-md-5">
+                        <img src="Data/${p.ID}.jpg" class="img-fluid rounded border mb-3" onerror="this.src='https://via.placeholder.com/400'">
+                        <div class="row g-2">
+                            <div class="col-4"><img src="Data/${p.ID}.1.jpg" class="img-fluid border" onerror="this.parentElement.remove()"></div>
+                            <div class="col-4"><img src="Data/${p.ID}.2.jpg" class="img-fluid border" onerror="this.parentElement.remove()"></div>
+                            <div class="col-4"><img src="Data/${p.ID}.3.jpg" class="img-fluid border" onerror="this.parentElement.remove()"></div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <h4>Giá: <span class="text-danger">${p.Price} VNĐ</span></h4>
-                        <div class="mt-3 p-3 bg-light border">
-                            <h6>Thông số kỹ thuật:</h6>
-                            <p>${p.Specs || 'Đang cập nhật...'}</p>
+                    <div class="col-md-7">
+                        <h3 class="text-danger fw-bold mb-3">${p.Price} VNĐ</h3>
+                        <div class="p-3 bg-light rounded border mb-4">
+                            <h6 class="fw-bold border-bottom pb-2">Thông số kỹ thuật:</h6>
+                            <p class="small" style="white-space: pre-wrap;">${p.Specs}</p>
                         </div>
-                        <button class="btn btn-primary mt-3 w-100" onclick="addToCart('${p.ID}')">THÊM VÀO GIỎ HÀNG</button>
+                        <button class="btn btn-primary btn-lg w-100" onclick="addToCart(null, '${p.ID}')">
+                            <i class="fas fa-cart-plus me-2"></i>THÊM VÀO GIỎ HÀNG
+                        </button>
                     </div>
                 </div>
             </div>
@@ -306,51 +415,114 @@
         new bootstrap.Modal('#productModal').show();
     }
 
-    function addToCart(id) {
-        const p = allProducts.find(x => x.ID === id);
+    function addToCart(e, id) {
+        if (e) e.stopPropagation();
+        const p = products.find(x => x.ID === id);
         cart.push(p);
-        document.getElementById('cart-count').innerText = cart.length;
-        alert('Đã thêm ' + p.Name + ' vào giỏ hàng!');
+        localStorage.setItem('kgp-cart', JSON.stringify(cart));
+        updateCartBadge();
+        alert('Đã thêm sản phẩm vào danh sách báo giá!');
     }
 
-    // Xuất PDF Báo Giá
-    async function printPDF() {
+    function updateCartBadge() { document.getElementById('cart-count').innerText = cart.length; }
+
+    function openCartModal() {
+        const body = document.getElementById('cart-items-body');
+        const emptyMsg = document.getElementById('cart-empty-msg');
+        body.innerHTML = '';
+        
+        if (cart.length === 0) {
+            emptyMsg.classList.remove('d-none');
+        } else {
+            emptyMsg.classList.add('d-none');
+            cart.forEach((p, idx) => {
+                body.innerHTML += `
+                    <tr>
+                        <td><strong>${p.ID}</strong> - ${p.Name}</td>
+                        <td class="text-danger fw-bold">${p.Price}</td>
+                        <td class="text-end"><button class="btn btn-sm text-danger" onclick="removeFromCart(${idx})"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                `;
+            });
+        }
+        new bootstrap.Modal('#cartModal').show();
+    }
+
+    function removeFromCart(idx) {
+        cart.splice(idx, 1);
+        localStorage.setItem('kgp-cart', JSON.stringify(cart));
+        updateCartBadge();
+        openCartModal();
+    }
+
+    function clearCart() {
+        if(confirm('Bạn muốn xóa toàn bộ giỏ hàng?')) {
+            cart = [];
+            localStorage.removeItem('kgp-cart');
+            updateCartBadge();
+            openCartModal();
+        }
+    }
+
+    async function exportQuotePDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
+        
+        // Header
+        doc.setFontSize(20); doc.text("BÁO GIÁ CÔNG NGHỆ", 105, 20, { align: 'center' });
+        doc.setFontSize(10); doc.text("CÔNG TY TNHH KHANG GIA PHÚC - khanggiaphuc.com", 105, 28, { align: 'center' });
+        doc.text("Hotline: 0844.900.099 - 0906.338.444", 105, 34, { align: 'center' });
 
-        doc.setFontSize(18);
-        doc.text("BÁO GIÁ CÔNG NGHỆ - KHANG GIA PHÚC", 14, 20);
-        
-        doc.setFontSize(10);
-        doc.text("Ngày: " + new Date().toLocaleDateString(), 14, 30);
-        
-        const tableData = cart.map((p, index) => [
-            index + 1,
-            p.Name,
-            p.Price,
-            `https://khanggiaphuc.com/?id=${p.ID}`
+        const tableData = cart.map((p, idx) => [
+            idx + 1, 
+            p.ID, 
+            p.Name, 
+            p.Price, 
+            `https://khanggiaphuc.com?id=${p.ID}`
         ]);
 
         doc.autoTable({
-            head: [['STT', 'Tên sản phẩm', 'Đơn giá', 'Liên kết']],
+            head: [['STT', 'Mã SP', 'Tên sản phẩm', 'Đơn giá', 'Link sản phẩm']],
             body: tableData,
-            startY: 40
+            startY: 45,
+            theme: 'grid'
         });
 
         const finalY = doc.lastAutoTable.finalY + 10;
+        doc.setFontSize(11);
         doc.text("THÔNG TIN THANH TOÁN:", 14, finalY);
         doc.text("Ngân hàng: Techcombank (TCB)", 14, finalY + 7);
         doc.text("Số tài khoản: 1793418868", 14, finalY + 14);
         doc.text("Chủ tài khoản: CÔNG TY TNHH KHANG GIA PHÚC", 14, finalY + 21);
-
-        doc.save("Bao_Gia_KhangGiaPhuc.pdf");
+        
+        doc.save(`BaoGia_KhangGiaPhuc_${Date.now()}.pdf`);
     }
 
-    function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('active');
+    function searchProducts() {
+        const term = document.getElementById('searchInput').value.toLowerCase();
+        if(!term) return;
+        currentCategory = 'all';
+        const filtered = products.filter(p => p.Name.toLowerCase().includes(term) || p.ID.toLowerCase().includes(term));
+        const grid = document.getElementById('product-grid');
+        grid.innerHTML = '';
+        filtered.forEach(p => {
+             grid.innerHTML += `
+                <div class="col-lg-3 col-md-4 col-6">
+                    <div class="product-card" onclick="showDetail('${p.ID}')">
+                        <img src="Data/${p.ID}.jpg" class="product-img" onerror="this.src='https://via.placeholder.com/200'">
+                        <div class="small text-muted mb-1">${p.ID}</div>
+                        <h6 class="fw-bold mb-2">${p.Name}</h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price">${p.Price}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        window.location.hash = 'products';
     }
 
-    window.onload = loadProducts;
+    window.onload = init;
 </script>
 
 </body>
