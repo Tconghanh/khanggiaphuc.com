@@ -4,236 +4,236 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nội Thất Mạnh An - 7 Năm Kiến Tạo Không Gian Đẳng Cấp</title>
-    
-    <!-- Favicon từ thư mục Data -->
     <link rel="icon" type="image/x-icon" href="Data/favicon.ico">
-    
-    <!-- CSS Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    
     <style>
         html { scroll-behavior: smooth; }
-        :root { --primary-gold: #b89356; }
-        .text-gold { color: var(--primary-gold); }
-        .bg-gold { background-color: var(--primary-gold); }
-        
-        /* Tối ưu Swiper Banner */
-        .hero-swiper { height: 80vh; }
+        :root { --gold: #b89356; --dark: #1a1a1a; }
+        .text-gold { color: var(--gold); }
+        .bg-gold { background-color: var(--gold); }
+        .hero-swiper { height: 90vh; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
-        .hero-overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)); }
-        
-        /* Hiệu ứng hover dự án */
-        .project-card:hover .project-img { transform: scale(1.1); }
-        .project-img { transition: transform 0.5s ease; }
+        .process-step:hover .step-number { background-color: var(--gold); color: white; transform: scale(1.1); }
+        .step-number { transition: all 0.3s ease; }
     </style>
 </head>
-<body class="font-sans text-gray-800 bg-white">
+<body class="font-sans text-gray-800">
 
-    <!-- Header -->
-    <header class="fixed w-full z-[100] bg-white/95 backdrop-blur-sm shadow-sm">
+    <!-- HEADER -->
+    <header class="fixed w-full z-[100] bg-white/95 backdrop-blur-md shadow-md">
         <div class="container mx-auto px-4 md:px-10 py-3 flex justify-between items-center">
-            <a href="#" class="flex items-center">
-                <!-- Logo từ thư mục Data -->
-                <img src="Data/Logo.png" alt="Nội Thất Mạnh An" class="h-12 md:h-16 object-contain">
-            </a>
-            
-            <nav class="hidden lg:flex space-x-8 font-semibold uppercase text-sm tracking-widest">
+            <a href="#home"><img src="Data/Logo.png" alt="Mạnh An Logo" class="h-14 md:h-20 object-contain"></a>
+            <nav class="hidden lg:flex space-x-10 font-bold uppercase text-xs tracking-widest">
+                <a href="#home" class="hover:text-gold transition">Trang chủ</a>
                 <a href="#about" class="hover:text-gold transition">Giới thiệu</a>
+                <a href="#process" class="hover:text-gold transition">Quy trình làm việc</a>
                 <a href="#projects" class="hover:text-gold transition">Dự án</a>
-                <a href="#factory" class="hover:text-gold transition">Nhà máy</a>
-                <a href="#contact" class="hover:text-gold transition">Liên hệ</a>
             </nav>
-            
             <div class="flex items-center gap-4">
-                <a href="tel:0779162808" class="hidden md:block bg-gold text-white px-6 py-2 rounded-full font-bold hover:bg-black transition">
-                    <i class="fas fa-phone-alt mr-2"></i>0779 162 808
+                <a href="tel:0779499624" class="bg-gold text-white px-5 py-2 rounded shadow-lg font-bold text-sm hover:bg-black transition">
+                    HOTLINE: 0779.499.624
                 </a>
-                <button class="lg:hidden text-2xl"><i class="fas fa-bars"></i></button>
             </div>
         </div>
     </header>
 
-    <!-- Hero Slider (SL1 - SL5) -->
-    <section class="relative pt-20">
+    <!-- SECTION 1: TRANG CHỦ (SLIDE) -->
+    <section id="home" class="relative pt-20">
         <div class="swiper hero-swiper">
             <div class="swiper-wrapper">
-                <!-- Vòng lặp 5 ảnh Slide -->
-                <div class="swiper-slide relative">
-                    <img src="Data/SL1.jpg" alt="Thiết kế nội thất đẳng cấp">
-                    <div class="absolute inset-0 hero-overlay flex items-center justify-center text-center text-white p-4">
-                        <div class="max-w-4xl">
-                            <h2 class="text-3xl md:text-6xl font-bold uppercase mb-4">Kiến Tạo Không Gian Đẳng Cấp</h2>
-                            <p class="text-lg md:text-xl opacity-90">Hơn 7 năm kinh nghiệm thiết kế & thi công trọn gói</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide"><img src="Data/SL2.jpg" alt="Nội thất Mạnh An"></div>
-                <div class="swiper-slide"><img src="Data/SL3.jpg" alt="Không gian đương đại"></div>
-                <div class="swiper-slide"><img src="Data/SL4.jpg" alt="Thi công trọn gói"></div>
-                <div class="swiper-slide"><img src="Data/SL5.jpg" alt="Xưởng sản xuất nội thất"></div>
+                <div class="swiper-slide"><img src="Data/SL1.jpg" alt="Slide 1"></div>
+                <div class="swiper-slide"><img src="Data/SL2.jpg" alt="Slide 2"></div>
+                <div class="swiper-slide"><img src="Data/SL3.jpg" alt="Slide 3"></div>
+                <div class="swiper-slide"><img src="Data/SL4.jpg" alt="Slide 4"></div>
+                <div class="swiper-slide"><img src="Data/SL5.jpg" alt="Slide 5"></div>
             </div>
-            <!-- Swiper Navigation -->
+            <div class="swiper-pagination"></div>
             <div class="swiper-button-next text-white"></div>
             <div class="swiper-button-prev text-white"></div>
-            <div class="swiper-pagination"></div>
         </div>
     </section>
 
-    <!-- Giới thiệu ngắn -->
-    <section id="about" class="py-16 bg-gray-50">
-        <div class="container mx-auto px-6 text-center">
-            <h1 class="text-2xl md:text-4xl font-bold mb-6 uppercase text-gray-900">Nội Thất Mạnh An - Chuyên Nghiệp & Tận Tâm</h1>
-            <div class="w-20 h-1 bg-gold mx-auto mb-8"></div>
-            <p class="max-w-4xl mx-auto text-gray-600 leading-relaxed text-lg">
-                Là thương hiệu nội thất uy tín, chúng tôi chuyên thiết kế – thi công nội thất trọn gói theo phong cách <b>đương đại (Contemporary)</b>. 
-                Sở hữu đội ngũ 20 kỹ thuật viên, 5 kiến trúc sư cùng hệ thống nhà máy hơn 5.000m² tại TPHCM, Hà Nội, Bình Dương, Đồng Nai...
-            </p>
+    <!-- SECTION 2: GIỚI THIỆU -->
+    <section id="about" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4 uppercase">CÔNG TY TNHH XÂY DỰNG NỘI THẤT MẠNH AN</h2>
+                <div class="w-24 h-1 bg-gold mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-4xl mx-auto italic text-lg leading-relaxed">
+                    "7 năm kiến tạo không gian đẳng cấp & chuyên nghiệp. Chúng tôi chuyên thiết kế – thi công nội thất trọn gói phong cách đương đại (Contemporary) cho nhà hàng, spa, showroom, phòng khám, tiệm vàng, nhà thuốc..."
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div class="bg-white p-8 border-b-4 border-gold shadow-sm hover:shadow-xl transition">
+                    <h3 class="font-bold text-xl mb-4 text-gold uppercase"><i class="fas fa-users mr-2"></i>Về Nhân Lực</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Xưởng mộc có hơn 20 kỹ thuật thợ mộc tay nghề cao và đội ngũ hơn 5 kiến trúc sư giàu kinh nghiệm, đầy nhiệt huyết và đam mê cống hiến.</p>
+                </div>
+                <div class="bg-white p-8 border-b-4 border-gold shadow-sm hover:shadow-xl transition">
+                    <h3 class="font-bold text-xl mb-4 text-gold uppercase"><i class="fas fa-industry mr-2"></i>Về Vật Lực</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Hệ thống hơn 5.000m² gồm: 1 nhà máy sản xuất + 1 xưởng mộc tại HN, 1 xưởng cơ khí + 1 xưởng quảng cáo tại TPHCM. Trang thiết bị hiện đại đảm bảo tiến độ công trình.</p>
+                </div>
+                <div class="bg-white p-8 border-b-4 border-gold shadow-sm hover:shadow-xl transition">
+                    <h3 class="font-bold text-xl mb-4 text-gold uppercase"><i class="fas fa-award mr-2"></i>Về Chất Lượng</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Sử dụng nguyên vật liệu đạt chuẩn CO, CQ. Cam kết không dùng vật tư kém chất lượng. Tất cả sản phẩm được bảo hành lên tới 2 năm.</p>
+                </div>
+                <div class="bg-white p-8 border-b-4 border-gold shadow-sm hover:shadow-xl transition">
+                    <h3 class="font-bold text-xl mb-4 text-gold uppercase"><i class="fas fa-tags mr-2"></i>Về Giá Thành</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Áp dụng quy trình 5S và sản xuất công nghiệp giúp tối ưu chi phí, mang lại báo giá thi công hợp lý nhất cho khách hàng.</p>
+                </div>
+                <div class="bg-white p-8 border-b-4 border-gold shadow-sm hover:shadow-xl transition md:col-span-2">
+                    <h3 class="font-bold text-xl mb-4 text-gold uppercase"><i class="fas fa-shield-alt mr-2"></i>Nguyên Vật Liệu & Dịch Vụ</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Chúng tôi đặt chất lượng và tiến độ lên hàng đầu. Sự hài lòng tuyệt đối của khách hàng là kim chỉ nam cho mọi hoạt động của Mạnh An trong suốt 7 năm qua.</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Danh sách 7 Dự án tiêu biểu (DA01 - DA07) -->
+    <!-- SECTION 3: QUY TRÌNH LÀM VIỆC -->
+    <section id="process" class="py-20 bg-zinc-900 text-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-16 uppercase tracking-widest">Quy Trình Làm Việc Chuyên Nghiệp</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <!-- Bước 1 -->
+                <div class="process-step text-center">
+                    <div class="step-number w-16 h-16 rounded-full border-2 border-gold flex items-center justify-center mx-auto mb-4 text-2xl font-bold">1</div>
+                    <h4 class="font-bold mb-2 text-gold">Tiếp nhận</h4>
+                    <p class="text-xs text-zinc-400">Ghi nhận yêu cầu, ngân sách & hẹn lịch khảo sát miễn phí.</p>
+                </div>
+                <!-- Bước 2 -->
+                <div class="process-step text-center">
+                    <div class="step-number w-16 h-16 rounded-full border-2 border-gold flex items-center justify-center mx-auto mb-4 text-2xl font-bold">2</div>
+                    <h4 class="font-bold mb-2 text-gold">Khảo sát</h4>
+                    <p class="text-xs text-zinc-400">Đo đạc hiện trạng, tư vấn giải pháp & ký hợp đồng thiết kế.</p>
+                </div>
+                <!-- Bước 3 -->
+                <div class="process-step text-center">
+                    <div class="step-number w-16 h-16 rounded-full border-2 border-gold flex items-center justify-center mx-auto mb-4 text-2xl font-bold">3</div>
+                    <h4 class="font-bold mb-2 text-gold">Thiết kế</h4>
+                    <p class="text-xs text-zinc-400">Triển khai 2D/3D, chỉnh sửa theo ý khách & báo giá chi tiết.</p>
+                </div>
+                <!-- Bước 4 -->
+                <div class="process-step text-center">
+                    <div class="step-number w-16 h-16 rounded-full border-2 border-gold flex items-center justify-center mx-auto mb-4 text-2xl font-bold">4</div>
+                    <h4 class="font-bold mb-2 text-gold">Ký hợp đồng</h4>
+                    <p class="text-xs text-zinc-400">Duyệt phối cảnh, thuyết minh kỹ thuật & ký hợp đồng thi công.</p>
+                </div>
+                <!-- Bước 5 -->
+                <div class="process-step text-center">
+                    <div class="step-number w-16 h-16 rounded-full border-2 border-gold flex items-center justify-center mx-auto mb-4 text-2xl font-bold">5</div>
+                    <h4 class="font-bold mb-2 text-gold">Sản xuất</h4>
+                    <p class="text-xs text-zinc-400">Sản xuất tại xưởng, vận chuyển & lắp đặt hoàn thiện.</p>
+                </div>
+                <!-- Bước 6 -->
+                <div class="process-step text-center">
+                    <div class="step-number w-16 h-16 rounded-full border-2 border-gold flex items-center justify-center mx-auto mb-4 text-2xl font-bold">6</div>
+                    <h4 class="font-bold mb-2 text-gold">Bàn giao</h4>
+                    <p class="text-xs text-zinc-400">Nghiệm thu, bàn giao & kích hoạt chế độ bảo hành 2 năm.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: DỰ ÁN -->
     <section id="projects" class="py-20">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-100 pb-6">
-                <div>
-                    <h2 class="text-3xl font-bold uppercase">Lĩnh vực hoạt động</h2>
-                    <p class="text-gray-500 mt-2">Đa dạng không gian - Tối ưu công năng</p>
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-16 uppercase tracking-widest">Dự Án Tiêu Biểu</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="relative group overflow-hidden">
+                    <img src="Data/DA01.jpg" class="w-full h-80 object-cover transition duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <h3 class="text-white font-bold text-center p-4">Thiết kế nội thất nhà ở, shop</h3>
+                    </div>
                 </div>
-                <div class="hidden md:block text-gold font-bold">MANHAN DESIGN PROJECTS</div>
+                <div class="relative group overflow-hidden">
+                    <img src="Data/DA02.jpg" class="w-full h-80 object-cover transition duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <h3 class="text-white font-bold text-center p-4">Thiết kế và sản xuất nội thất Spa</h3>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden">
+                    <img src="Data/DA03.jpg" class="w-full h-80 object-cover transition duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <h3 class="text-white font-bold text-center p-4">Thiết kế và sản xuất nội thất phòng khám</h3>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden">
+                    <img src="Data/DA04.jpg" class="w-full h-80 object-cover transition duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <h3 class="text-white font-bold text-center p-4">Thiết kế và sản xuất nội thất nhà thuốc</h3>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden">
+                    <img src="Data/DA05.jpg" class="w-full h-80 object-cover transition duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <h3 class="text-white font-bold text-center p-4">Thiết kế nội thất quán cafe và trà sữa</h3>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden">
+                    <img src="Data/DA06.jpg" class="w-full h-80 object-cover transition duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <h3 class="text-white font-bold text-center p-4">Thiết kế nội thất nhà hàng</h3>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden lg:col-start-2">
+                    <img src="Data/DA07.jpg" class="w-full h-80 object-cover transition duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <h3 class="text-white font-bold text-center p-4">Thiết kế nội thất văn phòng</h3>
+                    </div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Dự án 1 -->
-                <div class="project-card group cursor-pointer overflow-hidden bg-white shadow-lg">
-                    <div class="h-72 overflow-hidden relative">
-                        <img src="Data/DA01.jpg" alt="Nội thất nhà ở shop" class="project-img w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span class="border-2 border-white text-white px-6 py-2 uppercase tracking-widest">Xem chi tiết</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <span class="text-xs text-gold font-bold uppercase tracking-tighter">Dự án 01</span>
-                        <h3 class="text-xl font-bold mt-2 group-hover:text-gold transition">Xây dựng Thiết kế nội thất nhà ở, shop</h3>
-                    </div>
-                </div>
-
-                <!-- Dự án 2 -->
-                <div class="project-card group cursor-pointer overflow-hidden bg-white shadow-lg">
-                    <div class="h-72 overflow-hidden">
-                        <img src="Data/DA02.jpg" alt="Nội thất Spa" class="project-img w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <span class="text-xs text-gold font-bold uppercase tracking-tighter">Dự án 02</span>
-                        <h3 class="text-xl font-bold mt-2 group-hover:text-gold transition">Thiết kế và sản xuất nội thất Spa</h3>
-                    </div>
-                </div>
-
-                <!-- Dự án 3 -->
-                <div class="project-card group cursor-pointer overflow-hidden bg-white shadow-lg">
-                    <div class="h-72 overflow-hidden">
-                        <img src="Data/DA03.jpg" alt="Nội thất phòng khám" class="project-img w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <span class="text-xs text-gold font-bold uppercase tracking-tighter">Dự án 03</span>
-                        <h3 class="text-xl font-bold mt-2 group-hover:text-gold transition">Thiết kế và sản xuất nội thất phòng khám</h3>
-                    </div>
-                </div>
-
-                <!-- Dự án 4 -->
-                <div class="project-card group cursor-pointer overflow-hidden bg-white shadow-lg">
-                    <div class="h-72 overflow-hidden">
-                        <img src="Data/DA04.jpg" alt="Nội thất nhà thuốc" class="project-img w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <span class="text-xs text-gold font-bold uppercase tracking-tighter">Dự án 04</span>
-                        <h3 class="text-xl font-bold mt-2 group-hover:text-gold transition">Thiết kế và sản xuất nội thất nhà thuốc</h3>
-                    </div>
-                </div>
-
-                <!-- Dự án 5 -->
-                <div class="project-card group cursor-pointer overflow-hidden bg-white shadow-lg">
-                    <div class="h-72 overflow-hidden">
-                        <img src="Data/DA05.jpg" alt="Nội thất quán cafe" class="project-img w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <span class="text-xs text-gold font-bold uppercase tracking-tighter">Dự án 05</span>
-                        <h3 class="text-xl font-bold mt-2 group-hover:text-gold transition">Thiết kế & thi công quán cafe, trà sữa</h3>
-                    </div>
-                </div>
-
-                <!-- Dự án 6 -->
-                <div class="project-card group cursor-pointer overflow-hidden bg-white shadow-lg">
-                    <div class="h-72 overflow-hidden">
-                        <img src="Data/DA06.jpg" alt="Nội thất nhà hàng" class="project-img w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <span class="text-xs text-gold font-bold uppercase tracking-tighter">Dự án 06</span>
-                        <h3 class="text-xl font-bold mt-2 group-hover:text-gold transition">Thiết kế và thi công nội thất nhà hàng</h3>
-                    </div>
-                </div>
-
-                <!-- Dự án 7 -->
-                <div class="project-card group cursor-pointer overflow-hidden bg-white shadow-lg lg:col-start-2">
-                    <div class="h-72 overflow-hidden">
-                        <img src="Data/DA07.jpg" alt="Nội thất văn phòng" class="project-img w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <span class="text-xs text-gold font-bold uppercase tracking-tighter">Dự án 07</span>
-                        <h3 class="text-xl font-bold mt-2 group-hover:text-gold transition">Thiết kế và thi công nội thất văn phòng</h3>
-                    </div>
+            <!-- Đối tác -->
+            <div class="mt-24 text-center">
+                <h4 class="text-xl font-bold mb-10 text-gray-400 uppercase tracking-widest italic">Đối tác tin cậy</h4>
+                <div class="flex flex-wrap justify-center gap-12 opacity-60 grayscale hover:grayscale-0 transition">
+                    <span class="text-2xl font-black">HASAKI</span>
+                    <span class="text-2xl font-black">JOLI</span>
+                    <span class="text-2xl font-black">HUY THANH JEWELRY</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer id="contact" class="bg-zinc-900 text-white pt-16 pb-8">
-        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-zinc-800 pb-12">
+    <!-- FOOTER -->
+    <footer class="bg-zinc-900 text-white pt-20 pb-10 border-t border-zinc-800">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
             <div>
-                <img src="Data/Logo.png" alt="Logo" class="h-16 mb-6 brightness-0 invert">
-                <p class="font-bold text-lg mb-2 text-gold">CÔNG TY TNHH XÂY DỰNG NỘI THẤT MẠNH AN</p>
-                <p class="text-zinc-400 text-sm">MST: 0108572813</p>
-                <div class="mt-6 flex space-x-4">
-                    <a href="tel:0779162808" class="bg-gold p-3 rounded-full hover:bg-white hover:text-gold transition">
-                        <i class="fas fa-phone-alt"></i>
-                    </a>
-                    <p class="text-2xl font-bold">0779 162 808</p>
-                </div>
+                <img src="Data/Logo.png" class="h-20 mb-6 brightness-0 invert">
+                <p class="text-gold font-bold text-lg mb-2">CÔNG TY TNHH XÂY DỰNG NỘI THẤT MẠNH AN</p>
+                <p class="text-zinc-400 text-sm mb-4">MST: 0108572813</p>
+                <p class="text-2xl font-black text-gold">Hotline: 0779.499.624</p>
             </div>
-            
             <div>
-                <h4 class="text-xl font-bold mb-6 border-l-4 border-gold pl-4">TRỤ SỞ HÀ NỘI</h4>
-                <p class="text-zinc-400 leading-relaxed italic mb-4">
-                    <i class="fas fa-map-marker-alt mr-2 text-gold"></i>
-                    Số nhà 48, ngõ 99 phố Kiều Mai, Quận Bắc Từ Liêm, Hà Nội
+                <h4 class="text-lg font-bold mb-6 border-l-4 border-gold pl-4 uppercase">Chi nhánh Miền Bắc</h4>
+                <p class="text-zinc-400 text-sm leading-relaxed mb-4">
+                    <i class="fas fa-map-marker-alt text-gold mr-2"></i>Số nhà 48, ngõ 99 phố Kiều Mai, Phường Phúc Diễn, Quận Bắc Từ Liêm, Hà Nội
                 </p>
+                <p class="text-zinc-200 font-bold underline"><i class="fas fa-phone mr-2"></i>0779.157.746</p>
             </div>
-
             <div>
-                <h4 class="text-xl font-bold mb-6 border-l-4 border-gold pl-4">CHI NHÁNH MIỀN NAM</h4>
-                <p class="text-zinc-400 leading-relaxed italic">
-                    <i class="fas fa-map-marker-alt mr-2 text-gold"></i>
-                    201/2 Mã Lò, Khu Phố 10, Bình Tân, Thành phố Hồ Chí Minh
+                <h4 class="text-lg font-bold mb-6 border-l-4 border-gold pl-4 uppercase">Chi nhánh Miền Nam</h4>
+                <p class="text-zinc-400 text-sm leading-relaxed mb-4">
+                    <i class="fas fa-map-marker-alt text-gold mr-2"></i>201/2 Mã Lò, KP10, Phường Bình Hưng Hòa, TP.HCM
                 </p>
+                <p class="text-zinc-200 font-bold underline"><i class="fas fa-phone mr-2"></i>0779.162.808</p>
             </div>
         </div>
-        <div class="text-center mt-8 text-zinc-500 text-xs tracking-widest uppercase">
-            © 2024 Manhandesign.com - Interior Excellence
+        <div class="text-center mt-20 text-zinc-600 text-xs tracking-widest uppercase">
+            © 2024 MANHANDESIGN.COM - ĐẲNG CẤP NỘI THẤT ĐƯƠNG ĐẠI
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         const swiper = new Swiper('.hero-swiper', {
             loop: true,
-            autoplay: { delay: 4000, disableOnInteraction: false },
+            autoplay: { delay: 4000 },
             pagination: { el: '.swiper-pagination', clickable: true },
             navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-            effect: 'fade',
-            fadeEffect: { crossFade: true }
+            effect: 'fade'
         });
     </script>
 </body>
