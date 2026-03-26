@@ -296,15 +296,15 @@
                 document.getElementById('f3-fb').innerHTML = `<iframe src="https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=340&height=300&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true" width="100%" height="300" style="border:none;overflow:hidden" scrolling="no" frameborder="0"></iframe>`;
 
                 const pr = await fetchData('San_Pham');
+                // Sửa lỗi mất dòng 2 bằng cách bỏ .slice(1)
                 products = pr.map(r => ({
-                    ma: r.c[0]?.v.toString().trim(), 
-                    ten: r.c[1]?.v, 
+                    ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", 
+                    ten: r.c[1]?.v || "", 
                     cats: r.c[2]?.v ? r.c[2].v.toString().split(';') : [], 
                     gia: r.c[3]?.v || 0, 
                     mota: r.c[4]?.v || "" 
-                })).filter(x => x.ma);
+                })).filter(x => x.ma && x.ma.toLowerCase() !== "mã"); // Lọc bỏ dòng tiêu đề nếu có
                 
-                // Sort categories to put "NỔI BẬT" first
                 const cats = new Set(); 
                 products.forEach(p => p.cats.forEach(c => cats.add(c.trim())));
                 let catList = Array.from(cats);
@@ -323,7 +323,7 @@
 
                 const dr = await fetchData('Du_An');
                 allProjects = dr.slice(1).map(r => ({ 
-                    ma: r.c[0]?.v.toString().trim(), 
+                    ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", 
                     ten: r.c[1]?.v, 
                     hangmuc: r.c[2]?.v, 
                     noidung: r.c[3]?.v || "", 
@@ -341,6 +341,13 @@
                 });
 
                 setInterval(() => { curSlide = (curSlide + 1) % 5; document.getElementById('slider').style.transform = `translateX(-${curSlide * 20}%)`; }, 5000);
+                
+                // KIỂM TRA MÃ SẢN PHẨM TRÊN URL ĐỂ TỰ MỞ
+                const hash = window.location.hash.substring(1);
+                if (hash) {
+                    setTimeout(() => openModal(hash), 600);
+                }
+
                 document.getElementById('loader').style.display = 'none';
             } catch (e) { console.error(e); }
         }
@@ -363,6 +370,10 @@
         function openModal(ma) {
             const p = products.find(x => x.ma.toString() === ma.toString());
             if(!p) return;
+            
+            // CẬP NHẬT URL KHI MỞ SẢN PHẨM
+            window.location.hash = ma;
+            
             currentProductMA = p.ma;
             document.getElementById('m-title').innerText = p.ten;
             document.getElementById('m-price').innerText = p.gia.toLocaleString() + ' đ';
@@ -376,7 +387,12 @@
             document.getElementById('pModal').style.display = 'flex';
         }
 
-        function closeModal() { document.getElementById('pModal').style.display = 'none'; }
+        function closeModal() { 
+            document.getElementById('pModal').style.display = 'none'; 
+            // XÓA MÃ SẢN PHẨM KHỎI URL KHI ĐÓNG
+            history.pushState("", document.title, window.location.pathname + window.location.search);
+        }
+
         function addToCartModal() { addToCart(currentProductMA); closeModal(); }
 
         function openProjModal(ma) {
@@ -395,6 +411,7 @@
 
         function addToCart(ma) {
             const p = products.find(x => x.ma.toString() === ma.toString());
+            if(!p) return;
             const ex = cart.find(x => x.ma.toString() === ma.toString());
             if (ex) ex.qty++; else cart.push({...p, qty: 1});
             updateCartUI();
