@@ -23,17 +23,23 @@
         /* --- HEADER & NAVIGATION --- */
         header { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: var(--shadow-sm); position: fixed; width: 100%; top: 0; z-index: 1000; }
         nav { max-width: 1400px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; }
-        .nav-left { display: flex; align-items: center; gap: 30px; }
+        .nav-left { display: flex; align-items: center; gap: 20px; }
         .logo img { height: 50px; width: auto; }
         
-        .search-box { position: relative; width: 280px; }
+        .search-box { position: relative; width: 250px; }
         .search-box input { width: 100%; padding: 8px 35px 8px 15px; border-radius: 20px; border: 1px solid #ddd; outline: none; font-size: 0.85rem; transition: 0.3s; }
         .search-box input:focus { border-color: var(--primary); }
         .search-box i { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #999; }
 
-        nav ul { display: flex; list-style: none; gap: 20px; }
-        nav ul li a { text-decoration: none; color: var(--dark-gray); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; transition: 0.3s; }
+        nav ul { display: flex; list-style: none; gap: 15px; align-items: center; }
+        nav ul li a { text-decoration: none; color: var(--dark-gray); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; transition: 0.3s; }
         nav ul li a:hover { color: var(--primary); }
+        
+        /* Menu Hotline & Zalo */
+        .nav-hotline { color: var(--price-red) !important; border: 1.5px solid var(--price-red); padding: 5px 12px; border-radius: 15px; display: flex; align-items: center; gap: 5px; }
+        .nav-hotline:hover { background: var(--price-red); color: white !important; }
+        .nav-zalo { color: #0068ff !important; border: 1.5px solid #0068ff; padding: 5px 12px; border-radius: 15px; display: flex; align-items: center; gap: 5px; }
+        .nav-zalo:hover { background: #0068ff; color: white !important; }
 
         /* --- UI ELEMENTS --- */
         .slider-container { width: 100%; height: 450px; margin-top: 70px; overflow: hidden; position: relative; }
@@ -41,7 +47,7 @@
         .slide { width: 20%; height: 100%; }
         .slide img { width: 100%; height: 100%; object-fit: cover; }
 
-        section { padding: 80px 20px; max-width: 1300px; margin: auto; }
+        section { padding: 60px 20px; max-width: 1300px; margin: auto; }
         .section-title { text-align: center; margin-bottom: 40px; }
         .section-title h2 { font-size: 2.2rem; color: var(--primary); font-style: italic; text-transform: uppercase; }
         .underline { width: 70px; height: 4px; background: var(--btn-orange); margin: 10px auto; border-radius: 2px; }
@@ -144,10 +150,10 @@
             </div>
             <ul>
                 <li><a href="#intro">Giới thiệu</a></li>
-                <li><a href="#activity">Lĩnh vực</a></li>
                 <li><a href="#products">Sản phẩm</a></li>
                 <li><a href="#projects">Dự án</a></li>
-                <li><a href="#footer">Liên hệ</a></li>
+                <li><a href="tel:0844900099" class="nav-hotline"><i class="fa-solid fa-phone"></i> 0844.900.099</a></li>
+                <li><a href="https://zalo.me/0844900099" target="_blank" class="nav-zalo"><i class="fa-solid fa-comment-dots"></i> Zalo</a></li>
             </ul>
         </nav>
     </header>
@@ -195,7 +201,7 @@
     
     <div id="projModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="modal-content"><span class="close-btn" onclick="document.getElementById('projModal').style.display='none'">&times;</span><div class="modal-left"><img id="pj-main-preview" class="main-preview" src=""><div class="thumbs" id="pj-thumb-box"></div></div><div class="modal-right"><div id="pj-cat" style="color: var(--primary); font-weight: 700; font-size: 0.9rem; text-transform: uppercase;"></div><h2 id="pj-title" style="margin-bottom: 20px; color: var(--dark-gray); border-bottom: 2px solid #eee; padding-bottom: 15px;"></h2><div style="color: var(--btn-orange); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; margin-bottom: 15px;">📄 CHI TIẾT DỰ ÁN</div><div id="pj-content" style="white-space: pre-line; font-size: 1rem; color: #555; line-height: 1.8;"></div></div></div></div>
 
-    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="cart-content" style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px;"><h2 style="text-align: center; color: var(--primary);">GIỎ HÀNG BÁO GIÁ</h2><table style="width:100%; border-collapse:collapse; margin:20px 0;"><thead><tr style="border-bottom:2px solid #eee; text-align:left;"><th>Sản phẩm</th><th style="width: 80px;">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table><div style="text-align: right;"><h3>Tổng cộng: <span id="cart-total-web" style="color: var(--price-red)">0đ</span></h3><button onclick="preparePrint()" style="background: #27ae60; color: white; padding: 15px 30px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; width: 100%; margin-top: 20px;">XUẤT BẢNG BÁO GIÁ (PDF)</button></div></div></div>
+    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="cart-content" style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position: relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height: 400px; overflow-y: auto;"><table style="width:100%; border-collapse:collapse; margin-bottom: 20px;"><thead><tr style="border-bottom:2px solid #eee; text-align:left;"><th>Sản phẩm</th><th style="width: 80px;">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align: right;"><h3>Tổng cộng: <span id="cart-total-web" style="color: var(--price-red)">0đ</span></h3><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;"><button onclick="shareCart()" style="background: #3498db; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.9rem;">🔗 CHIA SẺ BÁO GIÁ</button><button onclick="preparePrint()" style="background: #27ae60; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.9rem;">XUẤT BẢNG BÁO GIÁ (PDF)</button></div></div></div></div>
 
     <!-- --- PRINT SECTION --- -->
     <div id="print-section">
@@ -296,14 +302,14 @@
                 document.getElementById('f3-fb').innerHTML = `<iframe src="https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=340&height=300&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true" width="100%" height="300" style="border:none;overflow:hidden" scrolling="no" frameborder="0"></iframe>`;
 
                 const pr = await fetchData('San_Pham');
-                // Sửa lỗi mất dòng 2 bằng cách bỏ .slice(1)
+                // Sửa lỗi: Lấy từ hàng đầu tiên và lọc tiêu đề
                 products = pr.map(r => ({
                     ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", 
                     ten: r.c[1]?.v || "", 
                     cats: r.c[2]?.v ? r.c[2].v.toString().split(';') : [], 
                     gia: r.c[3]?.v || 0, 
                     mota: r.c[4]?.v || "" 
-                })).filter(x => x.ma && x.ma.toLowerCase() !== "mã"); // Lọc bỏ dòng tiêu đề nếu có
+                })).filter(x => x.ma && x.ma.toLowerCase() !== "mã");
                 
                 const cats = new Set(); 
                 products.forEach(p => p.cats.forEach(c => cats.add(c.trim())));
@@ -314,7 +320,6 @@
                     return a.localeCompare(b);
                 });
 
-                const filterBox = document.getElementById('filter-box');
                 catList.forEach(c => {
                     const b = document.createElement('button'); b.className='filter-btn'; b.innerText=c.toUpperCase();
                     b.onclick = () => filterProducts(c, b); document.getElementById('filter-box').appendChild(b);
@@ -342,10 +347,22 @@
 
                 setInterval(() => { curSlide = (curSlide + 1) % 5; document.getElementById('slider').style.transform = `translateX(-${curSlide * 20}%)`; }, 5000);
                 
-                // KIỂM TRA MÃ SẢN PHẨM TRÊN URL ĐỂ TỰ MỞ
+                // KIỂM TRA MÃ SẢN PHẨM TRÊN URL ĐỂ TỰ MỞ (#hash)
                 const hash = window.location.hash.substring(1);
-                if (hash) {
-                    setTimeout(() => openModal(hash), 600);
+                if (hash) setTimeout(() => openModal(hash), 600);
+
+                // KIỂM TRA GIỎ HÀNG ĐƯỢC CHIA SẺ (?quote=...)
+                const urlParams = new URLSearchParams(window.location.search);
+                const sharedQuote = urlParams.get('quote');
+                if (sharedQuote) {
+                    const items = sharedQuote.split(',');
+                    items.forEach(it => {
+                        const [ma, qty] = it.split(':');
+                        const p = products.find(x => x.ma.toString() === ma.toString());
+                        if (p) cart.push({ ...p, qty: parseInt(qty) || 1 });
+                    });
+                    updateCartUI();
+                    setTimeout(() => openCart(), 1000);
                 }
 
                 document.getElementById('loader').style.display = 'none';
@@ -370,10 +387,7 @@
         function openModal(ma) {
             const p = products.find(x => x.ma.toString() === ma.toString());
             if(!p) return;
-            
-            // CẬP NHẬT URL KHI MỞ SẢN PHẨM
             window.location.hash = ma;
-            
             currentProductMA = p.ma;
             document.getElementById('m-title').innerText = p.ten;
             document.getElementById('m-price').innerText = p.gia.toLocaleString() + ' đ';
@@ -389,24 +403,7 @@
 
         function closeModal() { 
             document.getElementById('pModal').style.display = 'none'; 
-            // XÓA MÃ SẢN PHẨM KHỎI URL KHI ĐÓNG
             history.pushState("", document.title, window.location.pathname + window.location.search);
-        }
-
-        function addToCartModal() { addToCart(currentProductMA); closeModal(); }
-
-        function openProjModal(ma) {
-            const pj = allProjects.find(x => x.ma.toString() === ma.toString());
-            if(!pj) return;
-            document.getElementById('pj-title').innerText = pj.ten;
-            document.getElementById('pj-cat').innerText = pj.hangmuc + " | " + pj.nam;
-            document.getElementById('pj-content').innerHTML = pj.noidung;
-            document.getElementById('pj-main-preview').src = `${imgBase}${pj.ma}.jpg`;
-            
-            let th = `<img src="${imgBase}${pj.ma}.jpg" onclick="document.getElementById('pj-main-preview').src=this.src">`;
-            [1,2,3,4].forEach(n => th += `<img src="${imgBase}${pj.ma}.${n}.jpg" onerror="this.style.display='none'" onclick="document.getElementById('pj-main-preview').src=this.src">`);
-            document.getElementById('pj-thumb-box').innerHTML = th;
-            document.getElementById('projModal').style.display = 'flex';
         }
 
         function addToCart(ma) {
@@ -428,6 +425,27 @@
         }
 
         function openCart() { document.getElementById('cartModal').style.display = 'flex'; }
+        function addToCartModal() { addToCart(currentProductMA); closeModal(); }
+
+        function shareCart() {
+            if (cart.length === 0) return alert("Giỏ hàng đang trống!");
+            const data = cart.map(item => `${item.ma}:${item.qty}`).join(',');
+            const shareUrl = window.location.origin + window.location.pathname + "?quote=" + encodeURIComponent(data);
+            navigator.clipboard.writeText(shareUrl).then(() => alert("Đã sao chép link báo giá! Gửi link này qua Zalo để khách xem giỏ hàng."));
+        }
+
+        function openProjModal(ma) {
+            const pj = allProjects.find(x => x.ma.toString() === ma.toString());
+            if(!pj) return;
+            document.getElementById('pj-title').innerText = pj.ten;
+            document.getElementById('pj-cat').innerText = pj.hangmuc + " | " + pj.nam;
+            document.getElementById('pj-content').innerHTML = pj.noidung;
+            document.getElementById('pj-main-preview').src = `${imgBase}${pj.ma}.jpg`;
+            let th = `<img src="${imgBase}${pj.ma}.jpg" onclick="document.getElementById('pj-main-preview').src=this.src">`;
+            [1,2,3,4].forEach(n => th += `<img src="${imgBase}${pj.ma}.${n}.jpg" onerror="this.style.display='none'" onclick="document.getElementById('pj-main-preview').src=this.src">`);
+            document.getElementById('pj-thumb-box').innerHTML = th;
+            document.getElementById('projModal').style.display = 'flex';
+        }
 
         function preparePrint() {
             if (!cart.length) return alert("Giỏ hàng trống!");
