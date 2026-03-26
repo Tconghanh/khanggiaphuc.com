@@ -21,7 +21,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         body { font-family: 'Roboto', sans-serif; line-height: 1.6; color: var(--dark-gray); background: #fff; overflow-x: hidden; }
 
-        /* --- HEADER & NAV (SIÊU TỐI ƯU MOBILE) --- */
+        /* --- HEADER & NAV (MOBILE OPTIMIZED) --- */
         header { background: rgba(255,255,255,0.96); backdrop-filter: blur(15px); box-shadow: var(--shadow-sm); position: fixed; width: 100%; top: 0; z-index: 1000; height: 70px; display: flex; align-items: center; }
         nav { max-width: 1400px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; width: 100%; gap: 10px; }
         
@@ -40,7 +40,6 @@
             overflow-y: auto; display: none; z-index: 1001; border: 1px solid #eee;
         }
 
-        /* Menu Navigation */
         nav ul { display: flex; list-style: none; gap: 15px; align-items: center; }
         nav ul li a { text-decoration: none; color: var(--dark-gray); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; transition: 0.3s; }
         .nav-hotline { color: var(--price-red) !important; border: 1.5px solid var(--price-red); padding: 6px 15px; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
@@ -57,16 +56,14 @@
         .section-title h2 { font-size: 2.2rem; color: var(--primary); text-align: center; text-transform: uppercase; font-style: italic; }
         .underline { width: 70px; height: 4px; background: var(--btn-orange); margin: 10px auto 40px; border-radius: 2px; }
 
-        /* PRODUCT GRID */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
-        .product-card { background: var(--white); border: 1px solid #f1f5f9; border-radius: var(--radius); padding: 15px; text-align: center; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; box-shadow: var(--shadow-sm); }
+        .product-card { background: var(--white); border: 1px solid #f1f5f9; border-radius: var(--radius); padding: 15px; text-align: center; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; box-shadow: var(--shadow-sm); height: 100%; }
         .product-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
         .product-card img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 12px; }
         .product-card h3 { font-size: 0.85rem; margin-bottom: 10px; height: 40px; overflow: hidden; color: #334155; line-height: 1.4; font-weight: 700; }
         .product-card .price { color: var(--price-red); font-weight: 700; font-size: 1.1rem; margin-bottom: 12px; }
         .btn-add-cart { background: var(--primary); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; }
 
-        /* INTRO & ACTIVITY */
         .intro-container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; background: var(--light-bg); padding: 40px; border-radius: 25px; }
         .intro-img-box { position: relative; border-radius: var(--radius); overflow: hidden; height: 350px; box-shadow: var(--shadow-lg); }
         .intro-img-box img { width: 100%; height: 100%; object-fit: cover; }
@@ -76,15 +73,14 @@
         .activity-item { background: #fff; padding: 30px 20px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow-sm); border-top: 4px solid var(--primary); }
         .activity-icon { font-size: 3rem; color: var(--primary); margin-bottom: 15px; }
 
-        /* DỰ ÁN MARQUEE */
         #projects { background: #0f172a; color: #fff; overflow: hidden; padding: 60px 0; }
         .marquee { display: flex; width: max-content; animation: scroll 40s linear infinite; gap: 20px; }
-        .proj-card { width: 300px; border-radius: var(--radius); overflow: hidden; background: #1e293b; }
+        .proj-card { width: 300px; border-radius: var(--radius); overflow: hidden; background: #1e293b; cursor: pointer; }
         .proj-card img { width: 100%; height: 180px; object-fit: cover; }
         .proj-card h4 { padding: 15px; font-size: 0.85rem; text-align: center; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        /* MODALS (OPTIMIZED MOBILE) */
+        /* MODALS */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center; padding: 15px; backdrop-filter: blur(5px); }
         .modal-content { background: var(--white); width: 100%; max-width: 1000px; border-radius: 25px; display: grid; grid-template-columns: 45% 55%; position: relative; overflow: hidden; max-height: 90vh; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 35px; color: #999; cursor: pointer; z-index: 10; }
@@ -96,57 +92,43 @@
         .specs-list li { position: relative; padding-left: 25px; margin-bottom: 8px; font-size: 0.95rem; }
         .specs-list li::before { content: '✓'; position: absolute; left: 0; color: #2ecc71; font-weight: 700; }
 
-        /* FLOATING CART */
         .cart-icon { position: fixed; bottom: 25px; right: 25px; background: var(--btn-orange); color: var(--white); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 1001; }
         .cart-count { position: absolute; top: -2px; right: -2px; background: var(--price-red); color: var(--white); border-radius: 50%; padding: 2px 7px; font-size: 11px; font-weight: 700; border: 2px solid var(--white); }
 
-        /* MOBILE OPTIMIZATION */
         @media (max-width: 768px) {
             header { height: 65px; }
-            nav { padding: 0 10px; gap: 8px; }
             .logo img { height: 35px; }
-            .search-container { max-width: none; }
             .search-box input { padding: 8px 35px 8px 12px; font-size: 0.75rem; }
             .menu-toggle { display: block; order: 3; }
-            
-            nav ul { 
-                position: fixed; top: 0; right: -100%; width: 75%; height: 100vh; 
-                background: #fff; flex-direction: column; padding: 80px 20px; 
-                box-shadow: -10px 0 20px rgba(0,0,0,0.1); transition: 0.4s; z-index: 1002;
-            }
+            nav ul { position: fixed; top: 0; right: -100%; width: 75%; height: 100vh; background: #fff; flex-direction: column; padding: 80px 20px; transition: 0.4s; z-index: 1002; box-shadow: -10px 0 20px rgba(0,0,0,0.1); }
             nav ul.active { right: 0; }
-            nav ul li { width: 100%; }
-            nav ul li a { font-size: 0.9rem; display: block; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
-
             .slider-container { height: 200px; margin-top: 65px; }
-            .section-title h2 { font-size: 1.6rem; }
-            .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-            .product-card { padding: 12px; }
-            .product-card img { height: 140px; }
-            
-            .modal-content { grid-template-columns: 1fr; max-height: 95vh; }
-            .modal-left { border-right: none; border-bottom: 1px solid #eee; padding: 15px; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+            .modal-content { grid-template-columns: 1fr; }
             .main-preview { height: 220px; }
             .modal-right { padding: 20px; }
-            
             .intro-container { grid-template-columns: 1fr; padding: 20px; }
-            .intro-img-box { height: 200px; }
         }
 
-        /* PRINT SECTION */
+        /* --- PRINT STYLES --- */
         #print-section { display: none; }
         @media print {
             body * { visibility: hidden; }
             #print-section, #print-section * { visibility: visible; }
-            #print-section { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+            #print-section { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: white; color: black; }
             .no-print { display: none !important; }
+            .p-table { width: 100% !important; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
+            .p-table th, .p-table td { border: 1px solid black !important; padding: 6px 4px; font-size: 11px; vertical-align: middle; }
+            .p-table th { background-color: #BDD7EE !important; -webkit-print-color-adjust: exact; font-weight: 700; }
+            .p-company-red { color: #d92027 !important; font-weight: 700; font-size: 20px; -webkit-print-color-adjust: exact; text-align: right; }
+            .p-title-blue { color: #0071ba !important; font-size: 28px; font-weight: 800; text-align: center; margin: 15px 0; -webkit-print-color-adjust: exact; }
+            .p-payment-box { border: 1px solid black; padding: 10px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+            .p-stamp-area { position: relative; height: 130px; margin-top: 10px; }
+            .p-stamp-img { width: 180px; position: absolute; top: 0; left: 50%; transform: translateX(-50%); opacity: 0.9; }
         }
 
         footer { background: #0f172a; color: #94a3b8; padding: 50px 20px; }
-        .footer-grid { max-width: 1300px; margin: auto; display: grid; grid-template-columns: 1fr; gap: 30px; }
-        @media (min-width: 1000px) { .footer-grid { grid-template-columns: 1.2fr 1.2fr 1fr; } }
-        
-        #loader { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--primary); font-weight: 700; }
+        #loader { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .spinner { width: 45px; height: 45px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -180,7 +162,6 @@
         </nav>
     </header>
 
-    <!-- 1. TRANG CHỦ (SLIDER) -->
     <div class="slider-container no-print">
         <div class="slider" id="slider">
             <div class="slide"><img src="https://khanggiaphuc.com/Data/SL1.jpg"></div>
@@ -191,14 +172,12 @@
         </div>
     </div>
 
-    <!-- 2. SẢN PHẨM TIÊU BIỂU -->
     <section id="products" class="no-print">
         <div class="section-title"><h2>Sản phẩm tiêu biểu</h2><div class="underline"></div></div>
         <div class="filter-container" id="filter-box"><button class="filter-btn active" onclick="filterProducts('TẤT CẢ', this)">TẤT CẢ</button></div>
         <div class="product-grid" id="product-grid"></div>
     </section>
 
-    <!-- 3. GIỚI THIỆU -->
     <section id="intro" class="no-print">
         <div class="section-title"><h2>Giới thiệu</h2><div class="underline"></div></div>
         <div class="intro-container">
@@ -207,7 +186,6 @@
         </div>
     </section>
 
-    <!-- 4. LĨNH VỰC HOẠT ĐỘNG -->
     <section id="activity" class="no-print" style="background: var(--light-bg); max-width: 100%;">
         <div style="max-width: 1300px; margin: auto;">
             <div class="section-title"><h2>Lĩnh vực hoạt động</h2><div class="underline"></div></div>
@@ -215,7 +193,6 @@
         </div>
     </section>
 
-    <!-- 5. DỰ ÁN ĐÃ TRIỂN KHAI -->
     <section id="projects" class="no-print">
         <div class="section-title"><h2 style="color: white;">Dự án đã triển khai</h2><div class="underline"></div></div>
         <div class="marquee" id="project-list"></div>
@@ -226,18 +203,60 @@
     <!-- MODALS -->
     <div id="pModal" class="modal no-print" onclick="if(event.target==this) closeModal()"><div class="modal-content"><span class="close-btn" onclick="closeModal()">&times;</span><div class="modal-left"><img id="main-preview" class="main-preview" src=""><div class="thumbs" id="thumb-box"></div></div><div class="modal-right"><div id="m-cat" style="color: var(--btn-orange); font-weight: 700; text-transform: uppercase; font-size: 0.8rem;"></div><h2 id="m-title" style="margin-bottom: 15px; color: #1a1a1a;"></h2><div id="m-price" class="price" style="font-size: 2.2rem; color: var(--price-red); font-weight: 700; margin-bottom: 20px;"></div><div style="color: var(--primary); font-weight: 700; border-bottom: 2px solid #eee; padding-bottom: 8px; margin-bottom: 15px;">⚙ THÔNG SỐ KỸ THUẬT</div><ul id="m-specs" class="specs-list"></ul><button onclick="addToCartModal()" style="background: var(--btn-orange); color: white; padding: 18px; font-weight: 700; width:100%; margin-top: 25px; border: none; border-radius: 12px; cursor: pointer; font-size: 1.1rem;">🛒 THÊM VÀO GIỎ HÀNG</button></div></div></div>
 
-    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position: relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height: 400px; overflow-y: auto;"><table style="width:100%; border-collapse:collapse; margin-bottom: 20px;"><thead><tr style="border-bottom:2px solid #eee; text-align:left;"><th>Sản phẩm</th><th style="width: 80px;">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align: right;"><h3>Tổng cộng: <span id="cart-total-web" style="color: var(--price-red)">0đ</span></h3><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;"><button onclick="shareCart()" style="background: #3498db; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700;">🔗 CHIA SẺ BÁO GIÁ</button><button onclick="preparePrint()" style="background: #27ae60; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700;">XUẤT BẢNG BÁO GIÁ (PDF)</button></div></div></div></div>
+    <div id="projModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="modal-content"><span class="close-btn" onclick="document.getElementById('projModal').style.display='none'">&times;</span><div class="modal-left"><img id="pj-main-preview" class="main-preview" src=""><div class="thumbs" id="pj-thumb-box"></div></div><div class="modal-right"><div id="pj-cat" style="color: var(--primary); font-weight: 700; font-size: 0.9rem; text-transform: uppercase;"></div><h2 id="pj-title" style="margin-bottom: 20px; color: var(--dark-gray); border-bottom: 2px solid #eee; padding-bottom: 15px;"></h2><div style="color: var(--btn-orange); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; margin-bottom: 15px;">📄 CHI TIẾT DỰ ÁN</div><div id="pj-content" style="white-space: pre-line; font-size: 1rem; color: #555; line-height: 1.8;"></div></div></div></div>
 
+    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position: relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height: 400px; overflow-y: auto;"><table style="width:100%; border-collapse:collapse; margin-bottom: 20px;"><thead><tr style="border-bottom:2px solid #eee; text-align:left;"><th>Sản phẩm</th><th style="width: 80px;">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align: right;"><h3>Tổng cộng: <span id="cart-total-web" style="color: var(--price-red)">0đ</span></h3><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;"><button onclick="shareCart()" style="background: #3498db; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700;">🔗 CHIA SẺ</button><button onclick="preparePrint()" style="background: #27ae60; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700;">XUẤT BẢNG BÁO GIÁ</button></div></div></div></div>
+
+    <!-- PRINT SECTION -->
     <div id="print-section">
-        <h1 style="text-align: center; color: #0071ba;">BẢNG BÁO GIÁ CHI TIẾT</h1>
-        <div id="print-content"></div>
+        <table style="width: 100%; border: none !important;">
+            <tr style="border: none !important;">
+                <td style="border: none !important; width: 45%;"><img src="https://khanggiaphuc.com/Data/logo.jpg" style="width: 250px;"></td>
+                <td style="border: none !important; width: 55%; text-align: right; vertical-align: top;">
+                    <div class="p-company-red">CÔNG TY TNHH KHANG GIA PHÚC</div>
+                    <div style="color: #0071ba; text-decoration: underline; font-weight: bold; font-size: 13px;">www.khanggiaphuc.com</div>
+                </td>
+            </tr>
+        </table>
+        <div class="p-title-blue">BẢNG BÁO GIÁ</div>
+        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
+            <div>Số: <b id="print-no">...</b></div>
+            <div>TP.HCM, Ngày <span id="print-date">...</span></div>
+        </div>
+        <table class="p-table">
+            <thead>
+                <tr><th style="width: 5%;">STT</th><th style="width: 42%;">Thiết bị và dịch vụ</th><th style="width: 13%;">Hình ảnh</th><th style="width: 7%;">ĐVT</th><th style="width: 6%;">SL</th><th style="width: 13.5%;">Đơn giá</th><th style="width: 13.5%;">Thành tiền</th></tr>
+            </thead>
+            <tbody id="print-table-body"></tbody>
+        </table>
+        <div class="p-footer-block">
+            <table class="p-table" style="margin-top: -1px;">
+                <tr><td colspan="6" style="text-align: right; font-weight: 700;">Tổng cộng tiền hàng (chưa VAT):</td><td id="p-subtotal" style="text-align: right; font-weight: 700;"></td></tr>
+                <tr><td colspan="6" style="text-align: right; font-weight: 700;">Thuế GTGT (VAT 10%):</td><td id="p-vat" style="text-align: right; font-weight: 700;"></td></tr>
+                <tr style="background-color: #f2f2f2 !important;"><td colspan="6" style="text-align: right; font-weight: 800; font-size: 13px;">TỔNG GIÁ TRỊ THANH TOÁN:</td><td id="p-grandtotal" style="text-align: right; font-weight: 800; font-size: 13px;"></td></tr>
+            </table>
+            <p style="font-style: italic; margin-top: 10px; font-size: 13px;">Bằng chữ: <b id="p-word" style="text-transform: capitalize;">...</b></p>
+            <div class="p-payment-box">
+                <div style="font-size: 12px; line-height: 1.7; flex: 1;">
+                    <b style="text-decoration: underline;">Thanh toán chuyển khoản:</b><br>
+                    Đơn vị: <span style="color: red; font-weight: 700;">CÔNG TY TNHH KHANG GIA PHÚC</span><br>
+                    <b>Techcombank</b> | STK: <b>1793418868</b><br>
+                    Nội dung: <span id="print-no-footer" style="font-weight: 700;">...</span>
+                </div>
+                <div style="text-align: right;"><img id="qr-payment" style="width: 110px;"></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; text-align: center; margin-top: 30px;">
+                <div><b>ĐẠI DIỆN KGP TELECOM</b><div class="p-stamp-area"><img src="https://khanggiaphuc.com/Data/dau.png" class="p-stamp-img"></div><div style="font-weight: bold; margin-top: -15px;">BAN GIÁM ĐỐC</div></div>
+                <div><b>XÁC NHẬN KHÁCH HÀNG</b><div style="height: 120px;"></div><div style="font-style: italic; font-size: 11px;">(Ký tên và đóng dấu)</div></div>
+            </div>
+        </div>
     </div>
 
     <footer id="footer" class="no-print">
         <div class="footer-grid">
             <div class="footer-col"><img src="https://khanggiaphuc.com/Data/logo.jpg" style="height: 60px; margin-bottom: 20px;"><div id="f1"></div></div>
             <div class="footer-col"><h4>THÔNG TIN LIÊN HỆ</h4><ul id="f2-contact" style="list-style: none; margin-top:15px"></ul></div>
-            <div class="footer-col"><h4>FANPAGE FACEBOOK</h4><div id="f3-fb" style="background:#fff; border-radius:10px; overflow:hidden; margin-top:15px"></div></div>
+            <div class="footer-col"><h4>FACEBOOK PAGE</h4><div id="f3-fb" style="background:#fff; border-radius:10px; overflow:hidden; margin-top:15px"></div></div>
         </div>
     </footer>
 
@@ -296,14 +315,16 @@
                 const dr = await fetchData('Du_An');
                 allProjects = dr.slice(1).map(r => ({ 
                     ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", 
-                    ten: r.c[1]?.v || ""
+                    ten: r.c[1]?.v || "",
+                    hangmuc: r.c[2]?.v || "",
+                    noidung: r.c[3]?.v || "",
+                    nam: r.c[4]?.v || ""
                 })).filter(x => x.ma);
                 
                 let pjH = ""; 
-                allProjects.forEach(pj => pjH += `<div class="proj-card"><img src="${imgBase}${pj.ma}.jpg"><h4>${pj.ten}</h4></div>`);
+                allProjects.forEach(pj => pjH += `<div class="proj-card" onclick="openProjModal('${pj.ma}')"><img src="${imgBase}${pj.ma}.jpg"><h4>${pj.ten}</h4></div>`);
                 document.getElementById('project-list').innerHTML = pjH + pjH;
 
-                // TÌM KIẾM LIVE
                 const searchInp = document.getElementById('product-search');
                 const searchRes = document.getElementById('search-results');
                 searchInp.addEventListener('input', (e) => {
@@ -316,30 +337,13 @@
                     } else searchRes.style.display = 'none';
                 });
 
-                // TÌM KIẾM ENTER
-                searchInp.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') handleSearch();
-                });
-
+                searchInp.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSearch(); });
                 document.addEventListener('click', (e) => { if(!e.target.closest('.search-container')) searchRes.style.display='none'; });
 
                 setInterval(() => { curSlide = (curSlide + 1) % 5; document.getElementById('slider').style.transform = `translateX(-${curSlide * 20}%)`; }, 5000);
                 
                 const hash = window.location.hash.substring(1);
                 if (hash) setTimeout(() => openModal(hash), 600);
-
-                const urlParams = new URLSearchParams(window.location.search);
-                const sharedQuote = urlParams.get('quote');
-                if (sharedQuote) {
-                    const items = sharedQuote.split(',');
-                    items.forEach(it => {
-                        const [ma, qty] = it.split(':');
-                        const p = products.find(x => x.ma.toString() === ma.toString());
-                        if (p) cart.push({ ...p, qty: parseInt(qty) || 1 });
-                    });
-                    updateCartUI();
-                    setTimeout(() => openCart(), 1000);
-                }
 
                 document.getElementById('loader').style.display = 'none';
             } catch (e) { console.error(e); }
@@ -391,6 +395,16 @@
             history.pushState("", document.title, window.location.pathname + window.location.search);
         }
 
+        function openProjModal(ma) {
+            const pj = allProjects.find(x => x.ma.toString() === ma.toString());
+            if(!pj) return;
+            document.getElementById('pj-title').innerText = pj.ten;
+            document.getElementById('pj-cat').innerText = pj.hangmuc + " | " + pj.nam;
+            document.getElementById('pj-content').innerHTML = pj.noidung;
+            document.getElementById('pj-main-preview').src = `${imgBase}${pj.ma}.jpg`;
+            document.getElementById('projModal').style.display = 'flex';
+        }
+
         function addToCart(ma) {
             const p = products.find(x => x.ma.toString() === ma.toString());
             if(!p) return;
@@ -426,7 +440,47 @@
 
         function preparePrint() {
             if (!cart.length) return alert("Giỏ hàng trống!");
-            window.print();
+            const n = new Date(); 
+            const qID = `${String(n.getDate()).padStart(2,'0')}${String(n.getMonth()+1).padStart(2,'0')}${String(n.getFullYear()).slice(-2)}/BG-KGP`;
+            document.getElementById('print-no').innerText = qID; 
+            document.getElementById('print-no-footer').innerText = "Thanh toán cho báo giá số: " + qID;
+            document.getElementById('print-date').innerText = n.toLocaleDateString('vi-VN');
+            
+            let sub = 0; 
+            document.getElementById('print-table-body').innerHTML = cart.map((item, i) => {
+                const t = item.gia * item.qty; sub += t;
+                return `<tr><td align="center">${i+1}</td><td><b>${item.ten}</b>\n${item.mota}</td><td align="center"><img src="${imgBase}${item.ma}.jpg" style="width:50px"></td><td align="center">Bộ/Cái</td><td align="center">${item.qty}</td><td align="right">${item.gia.toLocaleString()}</td><td align="right">${t.toLocaleString()}</td></tr>`;
+            }).join('');
+
+            const gt = Math.round(sub * 1.1);
+            document.getElementById('p-subtotal').innerText = sub.toLocaleString();
+            document.getElementById('p-vat').innerText = (sub * 0.1).toLocaleString();
+            document.getElementById('p-grandtotal').innerText = gt.toLocaleString();
+            document.getElementById('p-word').innerText = docSoTien(gt) + " đồng chẵn.";
+            document.getElementById('qr-payment').src = `https://img.vietqr.io/image/techcombank-1793418868-compact.png?amount=${gt}&addInfo=Thanh toan bao gia ${qID}`;
+            
+            setTimeout(() => window.print(), 800);
+        }
+
+        function docSoTien(number) {
+            if (number === 0) return "Không";
+            const digits = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"];
+            const units = ["", " nghìn", " triệu", " tỷ", " nghìn tỷ", " triệu tỷ"];
+            function read3(n, isFirst) {
+                let r = ""; const h = Math.floor(n/100), t = Math.floor((n%100)/10), d = n%10;
+                if (h > 0 || !isFirst) r += digits[h] + " trăm ";
+                if (t > 1) { r += digits[t] + " mươi "; if (d === 1) r += "mốt"; else if (d === 5) r += "lăm"; else if (d > 0) r += digits[d]; } 
+                else if (t === 1) { r += "mười "; if (d === 5) r += "lăm"; else if (d > 0) r += digits[d]; } 
+                else if (t === 0 && d > 0) { if (h > 0 || !isFirst) r += "lẻ "; r += digits[d]; }
+                return r;
+            }
+            let res = "", arr = [];
+            while (number > 0) { arr.push(number % 1000); number = Math.floor(number / 1000); }
+            for (let j = arr.length - 1; j >= 0; j--) {
+                let s = read3(arr[j], j === arr.length - 1);
+                if (s !== "") res += s + units[j] + " ";
+            }
+            return res.trim().charAt(0).toUpperCase() + res.trim().slice(1);
         }
 
         init();
