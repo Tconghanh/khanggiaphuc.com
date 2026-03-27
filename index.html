@@ -49,7 +49,6 @@
 
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
         .product-card { background: var(--white); border: 1px solid #f1f5f9; border-radius: var(--radius); padding: 15px; text-align: center; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; box-shadow: var(--shadow-sm); height: 100%; }
-        .product-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
         .product-card img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 12px; }
         .product-card h3 { font-size: 0.85rem; margin-bottom: 10px; height: 40px; overflow: hidden; color: #334155; font-weight: 700; }
         .product-card .price { color: var(--price-red); font-weight: 700; font-size: 1.1rem; margin-bottom: 12px; }
@@ -71,7 +70,7 @@
         .proj-card h4 { padding: 15px; font-size: 0.85rem; text-align: center; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        /* MODALS - TỐI ƯU CUỘN */
+        /* MODALS */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center; padding: 15px; backdrop-filter: blur(5px); }
         .modal-content { background: var(--white); width: 100%; max-width: 1000px; border-radius: 25px; display: grid; grid-template-columns: 45% 55%; position: relative; overflow: hidden; max-height: 90vh; box-shadow: var(--shadow-lg); }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 35px; color: #999; cursor: pointer; z-index: 10; }
@@ -99,7 +98,6 @@
             .modal-left { border-right: none; border-bottom: 1px solid #eee; padding: 15px; }
             .main-preview { height: 220px; }
             .modal-right { padding: 20px; overflow-y: visible; }
-            .intro-container { grid-template-columns: 1fr; padding: 20px; }
         }
 
         /* --- PRINT STYLES --- */
@@ -119,7 +117,11 @@
             .p-stamp-img { width: 180px; position: absolute; top: 0; left: 50%; transform: translateX(-50%); opacity: 0.9; }
         }
 
-        footer { background: #0f172a; color: #94a3b8; padding: 50px 20px; }
+        /* --- FOOTER OPTIMIZED --- */
+        footer { background: #0f172a; color: #94a3b8; padding: 60px 20px; }
+        .footer-grid { max-width: 1300px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; align-items: start; }
+        .footer-col h4 { color: #fff; margin-bottom: 20px; font-size: 1.1rem; border-left: 3px solid var(--primary); padding-left: 10px; }
+        
         #loader { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .spinner { width: 45px; height: 45px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -197,7 +199,7 @@
 
     <div id="projModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="modal-content"><span class="close-btn" onclick="document.getElementById('projModal').style.display='none'">&times;</span><div class="modal-left"><img id="pj-main-preview" class="main-preview" src=""><div class="thumbs" id="pj-thumb-box"></div></div><div class="modal-right"><div id="pj-cat" style="color: var(--primary); font-weight: 700; font-size: 0.9rem; text-transform: uppercase;"></div><h2 id="pj-title" style="margin-bottom: 20px; color: var(--dark-gray); border-bottom: 2px solid #eee; padding-bottom: 15px;"></h2><div style="color: var(--btn-orange); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; margin-bottom: 15px;">📄 CHI TIẾT DỰ ÁN</div><div id="pj-content" style="white-space: pre-line; font-size: 1rem; color: #555; line-height: 1.8;"></div></div></div></div>
 
-    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position: relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height: 400px; overflow-y: auto;"><table style="width:100%; border-collapse:collapse; margin-bottom: 20px;"><thead><tr style="border-bottom:2px solid #eee; text-align:left;"><th>Sản phẩm</th><th style="width: 80px;">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align: right;"><h3>Tổng: <span id="cart-total-web" style="color: var(--price-red)">0đ</span></h3><div style="display: flex; flex-direction: column; gap: 8px; margin-top: 20px;"><button onclick="shareCart()" style="background: #3498db; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem;">🔗 CHIA SẺ GIỎ HÀNG</button><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"><button onclick="preparePrint(true)" style="background: #e67e22; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">🏢 BÁO GIÁ CÔNG TY (VAT)</button><button onclick="preparePrint(false)" style="background: #27ae60; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">👤 BÁO GIÁ CÁ NHÂN (KO VAT)</button></div></div></div></div></div>
+    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position: relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height: 400px; overflow-y: auto;"><table style="width:100%; border-collapse:collapse; margin-bottom: 20px;"><thead><tr style="border-bottom:2px solid #eee; text-align:left;"><th>Sản phẩm</th><th style="width: 80px;">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align: right;"><h3>Tổng: <span id="cart-total-web" style="color: var(--price-red)">0đ</span></h3><div style="display: flex; flex-direction: column; gap: 8px; margin-top: 20px;"><button onclick="shareCart()" style="background: #3498db; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem;">🔗 CHIA SẺ GIỎ HÀNG</button><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"><button onclick="preparePrint(true)" style="background: #e67e22; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">🏢 BÁO GIÁ CÔNG TY</button><button onclick="preparePrint(false)" style="background: #27ae60; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">👤 BÁO GIÁ CÁ NHÂN</button></div></div></div></div></div>
 
     <!-- PRINT SECTION -->
     <div id="print-section">
@@ -229,10 +231,10 @@
             </table>
             <p style="font-style: italic; margin-top: 10px; font-size: 13px;">Bằng chữ: <b id="p-word" style="text-transform: capitalize;">...</b></p>
             <div class="p-payment-box">
-                <div style="font-size: 12px; line-height: 1.7; flex: 1;">
+                <div id="p-payment-info" style="font-size: 12px; line-height: 1.7; flex: 1;">
                     <b style="text-decoration: underline;">Thanh toán chuyển khoản:</b><br>
-                    Đơn vị: <span style="color: red; font-weight: 700;">CÔNG TY TNHH KHANG GIA PHÚC</span><br>
-                    <b>Techcombank</b> | STK: <b>1793418868</b><br>
+                    <span id="p-receiver">Đơn vị: <span style="color: red; font-weight: 700;">CÔNG TY TNHH KHANG GIA PHÚC</span></span><br>
+                    <span id="p-bank-stk"><b>Techcombank</b> | STK: <b>1793418868</b></span><br>
                     Nội dung: <span id="print-no-footer" style="font-weight: 700;">...</span>
                 </div>
                 <div style="text-align: right;"><img id="qr-payment" style="width: 110px; border: 1px solid #eee;"></div>
@@ -246,9 +248,18 @@
 
     <footer id="footer" class="no-print">
         <div class="footer-grid">
-            <div class="footer-col"><img src="https://khanggiaphuc.com/Data/logo.jpg" style="height: 60px; margin-bottom: 20px;"><div id="f1"></div></div>
-            <div class="footer-col"><h4>THÔNG TIN LIÊN HỆ</h4><ul id="f2-contact" style="list-style: none; margin-top:15px"></ul></div>
-            <div class="footer-col"><h4>FACEBOOK PAGE</h4><div id="f3-fb" style="background:#fff; border-radius:10px; overflow:hidden; margin-top:15px"></div></div>
+            <div class="footer-col">
+                <img src="https://khanggiaphuc.com/Data/logo.jpg" style="height: 50px; margin-bottom: 20px;">
+                <div id="f1" style="font-size: 0.9rem; line-height: 1.8;"></div>
+            </div>
+            <div class="footer-col">
+                <h4>THÔNG TIN LIÊN HỆ</h4>
+                <ul id="f2-contact" style="list-style: none; padding: 0;"></ul>
+            </div>
+            <div class="footer-col">
+                <h4>KẾT NỐI VỚI CHÚNG TÔI</h4>
+                <div id="f3-fb" style="background:#fff; border-radius:10px; overflow:hidden;"></div>
+            </div>
         </div>
     </footer>
 
@@ -279,7 +290,7 @@
 
                 document.getElementById('f1').innerHTML = home[4]?.c[1]?.v || "";
                 const cLines = (home[5]?.c[1]?.v || "").split('\n').filter(l => l.trim());
-                let cH = ""; cLines.forEach(l => cH += `<li style="margin-bottom:12px; display:flex; gap:10px"><i class="fa-solid fa-location-dot" style="color:var(--primary)"></i>${l}</li>`);
+                let cH = ""; cLines.forEach(l => cH += `<li style="margin-bottom:12px; display:flex; gap:10px; color: inherit;"><i class="fa-solid fa-check-circle" style="color:var(--primary); margin-top: 4px;"></i><span>${l}</span></li>`);
                 document.getElementById('f2-contact').innerHTML = cH;
 
                 const fb = home[6]?.c[1]?.v || "";
@@ -464,11 +475,18 @@
             document.getElementById('p-vat').innerText = vat.toLocaleString();
             document.getElementById('p-grandtotal').innerText = gt.toLocaleString();
             document.getElementById('p-word').innerText = docSoTien(gt) + " đồng chẵn.";
-            
-            // Ẩn/Hiện dòng VAT dựa vào loại báo giá
             document.getElementById('p-vat-row').style.display = isCompany ? 'table-row' : 'none';
             
-            document.getElementById('qr-payment').src = `https://img.vietqr.io/image/techcombank-1793418868-compact.png?amount=${gt}&addInfo=Thanh toan bao gia ${qID}`;
+            // Thay đổi thông tin thanh toán theo loại báo giá
+            if(isCompany) {
+                document.getElementById('p-receiver').innerHTML = 'Đơn vị: <span style="color: red; font-weight: 700;">CÔNG TY TNHH KHANG GIA PHÚC</span>';
+                document.getElementById('p-bank-stk').innerHTML = '<b>Techcombank</b> | STK: <b>1793418868</b>';
+                document.getElementById('qr-payment').src = `https://img.vietqr.io/image/techcombank-1793418868-compact.png?amount=${gt}&addInfo=Thanh toan bao gia ${qID}`;
+            } else {
+                document.getElementById('p-receiver').innerHTML = 'Chủ tài khoản: <span style="color: red; font-weight: 700;">TRAN CONG HANH</span>';
+                document.getElementById('p-bank-stk').innerHTML = '<b>Ngân hàng VIB</b> | STK: <b>024845</b>';
+                document.getElementById('qr-payment').src = `https://img.vietqr.io/image/VIB-024845-compact.png?amount=${gt}&addInfo=Bao gia ca nhan ${qID}`;
+            }
             
             setTimeout(() => window.print(), 800);
         }
