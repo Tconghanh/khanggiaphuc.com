@@ -42,10 +42,7 @@
             box-shadow: var(--shadow-lg); border-radius: 8px; display: none; 
             list-style: none; padding: 10px 0; z-index: 1100; border: 1px solid #eee;
         }
-        .dropdown-menu li a { 
-            padding: 8px 20px; font-size: 0.75rem; color: #555; text-transform: none; 
-            font-weight: 500; border-bottom: none; 
-        }
+        .dropdown-menu li a { padding: 8px 20px; font-size: 0.75rem; color: #555; text-transform: none; font-weight: 500; border-bottom: none; }
         .dropdown-menu li a:hover { background: var(--light-bg); color: var(--primary); }
         .dropdown:hover .dropdown-menu { display: block; }
 
@@ -61,6 +58,11 @@
         section { padding: 60px 20px; max-width: 1300px; margin: auto; scroll-margin-top: 80px; }
         .section-title h2 { font-size: 2.2rem; color: var(--primary); text-align: center; text-transform: uppercase; font-style: italic; }
         .underline { width: 70px; height: 4px; background: var(--btn-orange); margin: 10px auto 40px; border-radius: 2px; }
+
+        /* FILTER BUTTONS */
+        .filter-container { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 35px; }
+        .filter-btn { padding: 8px 20px; border: 1px solid #ddd; background: #fff; border-radius: 25px; cursor: pointer; font-weight: 700; font-size: 0.75rem; transition: 0.3s; text-transform: uppercase; }
+        .filter-btn.active, .filter-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
 
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
         .product-card { background: var(--white); border: 1px solid #f1f5f9; border-radius: var(--radius); padding: 15px; text-align: center; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; box-shadow: var(--shadow-sm); height: 100%; }
@@ -307,9 +309,9 @@
                     mota: r.c[4]?.v || "" 
                 })).filter(x => x.ma && x.ma.toLowerCase() !== "mã");
                 
-                const cats = new Set(); 
-                products.forEach(p => p.cats.forEach(c => cats.add(c.trim())));
-                let catList = Array.from(cats).sort();
+                const catsSet = new Set(); 
+                products.forEach(p => p.cats.forEach(c => catsSet.add(c.trim())));
+                let catList = Array.from(catsSet).sort();
 
                 // NẠP MENU CON DYNAMICALY
                 const submenu = document.getElementById('submenu-products');
@@ -321,7 +323,9 @@
                     const b = document.createElement('button'); b.className='filter-btn'; b.innerText=c.toUpperCase();
                     b.onclick = () => filterProducts(c, b); document.getElementById('filter-box').appendChild(b);
                 });
-                renderProducts(products);
+                
+                // HIỂN THỊ MẶC ĐỊNH LÀ "TẤT CẢ" (CÓ ƯU TIÊN NỔI BẬT)
+                filterProducts('TẤT CẢ', document.querySelector('.filter-btn'));
 
                 const dr = await fetchData('Du_An');
                 allProjects = dr.slice(1).map(r => ({ 
@@ -393,17 +397,28 @@
         }
 
         function filterProducts(c, btn) {
+            // Xử lý active button
             if(btn) {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); 
                 btn.classList.add('active');
             } else {
-                // Nếu gọi từ menu con, tìm nút tương ứng trong filter-box để active
                 document.querySelectorAll('.filter-btn').forEach(b => {
                     if(b.innerText === c.toUpperCase()) b.classList.add('active');
                     else b.classList.remove('active');
                 });
             }
-            renderProducts(c === 'TẤT CẢ' ? products : products.filter(p => p.cats.some(cat => cat.trim() === c)));
+
+            let filteredList = [];
+            if (c === 'TẤT CẢ') {
+                // ƯU TIÊN 20 SẢN PHẨM NỔI BẬT ĐẦU TIÊN
+                const featured = products.filter(p => p.cats.some(cat => cat.trim().toUpperCase() === "NỔI BẬT")).slice(0, 20);
+                const others = products.filter(p => !p.cats.some(cat => cat.trim().toUpperCase() === "NỔI BẬT"));
+                filteredList = [...featured, ...others];
+            } else {
+                filteredList = products.filter(p => p.cats.some(cat => cat.trim() === c));
+            }
+
+            renderProducts(filteredList);
             window.location.href = "#products";
         }
 
