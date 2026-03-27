@@ -3,128 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sách Điện Tử - Flipbook PDF</title>
+    <title>Hồ Sơ Năng Lực - Khang Gia Phúc</title>
     
-    <!-- Thư viện Jquery và Turn.js để tạo hiệu ứng lật sách -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
-    <script src="https://raw.rawgit.com/blasten/turn.js/master/lib/turn.min.js"></script>
+    <!-- Load thư viện từ CDN ổn định -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/blasten/turn.js@master/lib/turn.min.js"></script>
 
     <style>
         body {
-            background-color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: #525659;
             margin: 0;
-            overflow: hidden;
-            /* Chống bôi đen văn bản */
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            -webkit-user-select: none; /* Chống copy */
             user-select: none;
         }
 
-        #flipbook {
-            width: 900px;
-            height: 600px;
+        #canvas-container {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none; /* Ẩn khi đang load */
         }
 
         .page {
             background-color: white;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            width: 100%;
+            height: 100%;
         }
 
         canvas {
             width: 100%;
             height: 100%;
+            display: block;
         }
 
         #loading {
-            position: fixed;
             color: white;
-            font-family: Arial, sans-serif;
-            font-size: 20px;
+            font-size: 1.2rem;
         }
 
-        /* Vô hiệu hóa in ấn */
+        .controls {
+            margin-top: 20px;
+            color: white;
+        }
+
         @media print {
-            body { display: none; }
+            body { display: none !important; }
         }
     </style>
 </head>
 <body oncontextmenu="return false;"> <!-- Chặn chuột phải -->
 
-    <div id="loading">Đang tải sách, vui lòng chờ...</div>
-    <div id="flipbook"></div>
+    <div id="loading">Đang khởi tạo hồ sơ, vui lòng chờ... <span id="percent">0%</span></div>
+    
+    <div id="canvas-container">
+        <div id="flipbook">
+            <!-- Các trang sẽ tự động chèn vào đây -->
+        </div>
+    </div>
+
+    <div class="controls">
+        Dùng chuột hoặc phím mũi tên để lật trang
+    </div>
 
     <script>
-        // Cấu hình PDF.js
+        // --- CẤU HÌNH TẠI ĐÂY ---
+        // Nếu bạn để file PDF cùng thư mục với file html, chỉ cần điền tên file
+        const pdfUrl = 'ho-so-nang-luc.pdf'; 
+
         const pdfjsLib = window['pdfjs-dist/build/pdf'];
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-        // Link Proxy để tránh lỗi CORS (Google Drive không cho phép lấy file trực tiếp từ server khác)
-        // Lưu ý: ID file lấy từ link của bạn
-        const fileId = '1-xF5PRpQQUf93pISxuEVHAkhTTsK0hok';
-        const url = `https://corsproxy.io/?https://drive.google.com/uc?export=download&id=${fileId}`;
-
-        async function renderPDF() {
+        async function initFlipbook() {
             try {
-                const loadingTask = pdfjsLib.getDocument(url);
+                const loadingTask = pdfjsLib.getDocument(pdfUrl);
+                
+                // Theo dõi tiến trình tải
+                loadingTask.onProgress = function(progress) {
+                    const percent = Math.round((progress.loaded / progress.total) * 100);
+                    if (!isNaN(percent)) $('#percent').text(percent + '%');
+                };
+
                 const pdf = await loadingTask.promise;
                 const flipbook = $('#flipbook');
+                const container = $('#canvas-container');
+
+                // Lấy thông số trang đầu tiên để định dạng khung
+                const firstPage = await pdf.getPage(1);
+                const viewport = firstPage.getViewport({ scale: 1.5 });
                 
-                document.getElementById('loading').style.display = 'none';
+                // Thiết lập kích thước flipbook (2 trang)
+                const bookWidth = viewport.width * 2;
+                const bookHeight = viewport.height;
 
                 for (let i = 1; i <= pdf.numPages; i++) {
                     const page = await pdf.getPage(i);
-                    const viewport = page.getViewport({ scale: 1.5 });
+                    const v = page.getViewport({ scale: 1.5 });
                     
-                    const div = document.createElement('div');
-                    div.className = 'page';
+                    const pageDiv = $('<div class="page"></div>');
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
+                    canvas.height = v.height;
+                    canvas.width = v.width;
 
-                    const renderContext = {
-                        canvasContext: context,
-                        viewport: viewport
-                    };
-                    
-                    await page.render(renderContext).promise;
-                    div.appendChild(canvas);
-                    flipbook.append(div);
+                    await page.render({ canvasContext: context, viewport: v }).promise;
+                    pageDiv.append(canvas);
+                    flipbook.append(pageDiv);
                 }
+
+                $('#loading').hide();
+                container.show();
 
                 // Khởi tạo hiệu ứng lật sách
                 flipbook.turn({
-                    width: 1000,
+                    width: 1000, // Bạn có thể điều chỉnh lại tỉ lệ này
                     height: 700,
                     autoCenter: true,
                     acceleration: true,
+                    elevation: 50,
                     gradients: true,
-                    elevation: 50
+                    when: {
+                        turning: function(e, page, view) {
+                            // Âm thanh hoặc hiệu ứng khi lật
+                        }
+                    }
+                });
+
+                // Cho phép lật bằng phím mũi tên
+                $(window).bind('keydown', function(e){
+                    if (e.keyCode == 37) $('#flipbook').turn('previous');
+                    else if (e.keyCode == 39) $('#flipbook').turn('next');
                 });
 
             } catch (error) {
-                console.error('Lỗi khi tải PDF:', error);
-                document.getElementById('loading').innerText = 'Không thể tải file PDF. Hãy kiểm tra quyền chia sẻ file.';
+                console.error(error);
+                $('#loading').html('Lỗi: Không thể đọc file PDF.<br>Lưu ý: Bạn cần tải file PDF lên cùng Hosting để tránh lỗi bảo mật.');
             }
         }
 
-        // Chặn phím tắt (Ctrl+C, Ctrl+U, Ctrl+S, F12)
+        // Chống phím tắt Copy, In, Save
         document.onkeydown = function(e) {
-            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 80)) {
+            if (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 80 || e.keyCode === 73)) {
                 return false;
             }
-            if (e.keyCode === 123) { // F12
-                return false;
-            }
+            if (e.keyCode === 123) return false; // F12
         };
 
-        renderPDF();
+        $(window).ready(initFlipbook);
     </script>
 </body>
 </html>
