@@ -21,12 +21,13 @@
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         body { font-family: 'Roboto', sans-serif; line-height: 1.6; color: var(--dark-gray); background: #fff; overflow-x: hidden; }
 
-        /* --- HEADER & NAV --- */
+        /* --- HEADER & NAV (MOBILE OPTIMIZED) --- */
         header { background: rgba(255,255,255,0.96); backdrop-filter: blur(15px); box-shadow: var(--shadow-sm); position: fixed; width: 100%; top: 0; z-index: 1000; height: 70px; display: flex; align-items: center; }
         nav { max-width: 1400px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; width: 100%; gap: 10px; }
         .nav-left { display: flex; align-items: center; gap: 10px; flex: 1; }
         .logo img { height: 45px; width: auto; transition: 0.3s; }
         .search-container { position: relative; flex: 1; max-width: 350px; }
+        .search-box { position: relative; width: 100%; }
         .search-box input { width: 100%; padding: 10px 40px 10px 15px; border-radius: 25px; border: 1.5px solid #eee; outline: none; font-size: 0.85rem; transition: 0.3s; background: #f1f5f9; }
         .search-box input:focus { border-color: var(--primary); background: #fff; }
         .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); cursor: pointer; }
@@ -59,7 +60,7 @@
         .section-title h2 { font-size: 2.2rem; color: var(--primary); text-align: center; text-transform: uppercase; font-style: italic; }
         .underline { width: 70px; height: 4px; background: var(--btn-orange); margin: 10px auto 30px; border-radius: 2px; }
 
-        /* --- BỘ LỌC NÂNG CẤP --- */
+        /* --- BỘ LỌC (DROPDOWNS) --- */
         .filter-bar { 
             background: var(--light-bg); padding: 20px; border-radius: var(--radius); 
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
@@ -74,7 +75,6 @@
             background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
             background-repeat: no-repeat; background-position: right 15px center; background-size: 15px;
         }
-        .filter-bar select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,113,186,0.1); }
 
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
         .product-card { background: var(--white); border: 1px solid #f1f5f9; border-radius: var(--radius); padding: 15px; text-align: center; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; box-shadow: var(--shadow-sm); height: 100%; }
@@ -84,20 +84,17 @@
         .product-card .price { color: var(--price-red); font-weight: 700; font-size: 1.1rem; margin-bottom: 12px; }
         .btn-add-cart { background: var(--primary); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 
-        .activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .activity-item { background: #fff; padding: 30px 20px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow-sm); border-top: 4px solid var(--primary); }
-
-        #projects { background: #0f172a; color: #fff; overflow: hidden; padding: 60px 0; }
-        .marquee { display: flex; width: max-content; animation: scroll 40s linear infinite; gap: 20px; }
-        .proj-card { width: 300px; border-radius: var(--radius); overflow: hidden; background: #1e293b; cursor: pointer; }
-        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
         /* MODALS */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center; padding: 15px; backdrop-filter: blur(5px); }
         .modal-content { background: var(--white); width: 100%; max-width: 1000px; border-radius: 25px; display: grid; grid-template-columns: 45% 55%; position: relative; overflow: hidden; max-height: 90vh; box-shadow: var(--shadow-lg); }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 35px; color: #999; cursor: pointer; z-index: 10; }
         .modal-left { padding: 30px; border-right: 1px solid #eee; background: #fff; display: flex; flex-direction: column; align-items: center; overflow-y: auto; }
-        .modal-right { padding: 40px; overflow-y: auto; }
+        .modal-right { padding: 40px; overflow-y: auto; display: flex; flex-direction: column; }
+        .main-preview { width: 100%; height: 350px; object-fit: contain; margin-bottom: 20px; flex-shrink: 0; }
+        .thumbs img { width: 60px; height: 60px; border: 1px solid #eee; border-radius: 8px; margin: 4px; cursor: pointer; }
+        .specs-list { list-style: none; margin-top: 15px; }
+        .specs-list li { position: relative; padding-left: 25px; margin-bottom: 8px; font-size: 0.95rem; }
+        .specs-list li::before { content: '✓'; position: absolute; left: 0; color: #2ecc71; font-weight: 700; }
 
         .cart-icon { position: fixed; bottom: 25px; right: 25px; background: var(--btn-orange); color: var(--white); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 1001; }
         .cart-count { position: absolute; top: -2px; right: -2px; background: var(--price-red); color: var(--white); border-radius: 50%; padding: 2px 7px; font-size: 11px; font-weight: 700; border: 2px solid var(--white); }
@@ -112,6 +109,7 @@
             .slider-container { height: 200px; margin-top: 65px; }
             .modal-content { grid-template-columns: 1fr; overflow-y: auto; }
             .modal-left { border-right: none; border-bottom: 1px solid #eee; padding: 15px; }
+            .main-preview { height: 220px; }
             .modal-right { padding: 20px; }
             .filter-bar { grid-template-columns: 1fr; }
         }
@@ -186,7 +184,6 @@
     <section id="products" class="no-print">
         <div class="section-title"><h2>Sản phẩm tiêu biểu</h2><div class="underline"></div></div>
         
-        <!-- THANH LỌC NÂNG CẤP -->
         <div class="filter-bar">
             <div class="filter-group">
                 <label>Danh mục</label>
@@ -240,7 +237,7 @@
 
     <div id="projModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="modal-content"><span class="close-btn" onclick="document.getElementById('projModal').style.display='none'">&times;</span><div class="modal-left"><img id="pj-main-preview" class="main-preview" src=""><div class="thumbs" id="pj-thumb-box"></div></div><div class="modal-right"><div id="pj-cat" style="color: var(--primary); font-weight: 700; font-size: 0.9rem; text-transform: uppercase;"></div><h2 id="pj-title" style="margin-bottom: 20px; color: var(--dark-gray); border-bottom: 2px solid #eee; padding-bottom: 15px;"></h2><div style="color: var(--btn-orange); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; margin-bottom: 15px;">📄 CHI TIẾT DỰ ÁN</div><div id="pj-content" style="white-space: pre-line; font-size: 1rem; color: #555; line-height: 1.8;"></div></div></div></div>
 
-    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position: relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height: 400px; overflow-y: auto;"><table style="width:100%; border-collapse:collapse; margin-bottom: 20px;"><thead><tr style="border-bottom:2px solid #eee; text-align:left;"><th>Sản phẩm</th><th style="width: 80px;">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align: right;"><h3>Tổng: <span id="cart-total-web" style="color: var(--price-red)">0đ</span></h3><div style="display: flex; flex-direction: column; gap: 8px; margin-top: 20px;"><button onclick="shareCart()" style="background: #3498db; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem;">🔗 CHIA SẺ GIỎ HÀNG</button><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"><button onclick="preparePrint(true)" style="background: #e67e22; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">🏢 BÁO GIÁ CÔNG TY</button><button onclick="preparePrint(false)" style="background: #27ae60; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">👤 BÁO GIÁ CÁ NHÂN</button></div></div></div></div></div>
+    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position: relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height: 400px; overflow-y: auto;"><table style="width:100%; border-collapse:collapse; margin-bottom: 20px;"><thead><tr style="border-bottom:2px solid #eee; text-align:left;"><th>Sản phẩm</th><th style="width: 80px;">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align: right;"><h3>Tổng: <span id="cart-total-web" style="color: var(--price-red)">0đ</span></h3><div style="display: flex; flex-direction: column; gap: 8px; margin-top: 20px;"><button onclick="shareCart()" style="background: #3498db; color: white; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.9rem;">🔗 CHIA SẺ GIỎ HÀNG</button><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"><button onclick="preparePrint(true)" style="background: #e67e22; color: white; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">🏢 BÁO GIÁ CÔNG TY</button><button onclick="preparePrint(false)" style="background: #27ae60; color: white; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">👤 BÁO GIÁ CÁ NHÂN</button></div></div></div></div></div>
 
     <!-- PRINT SECTION -->
     <div id="print-section">
@@ -340,12 +337,12 @@
                 const pr = await fetchData('San_Pham');
                 products = pr.map(r => {
                     const ten = r.c[1]?.v || "";
-                    // Tách thương hiệu: Lấy từ đầu tiên của tên sản phẩm
-                    const brand = ten.split(' ')[0].toUpperCase();
+                    // LẤY THƯƠNG HIỆU TỪ CỘT F (CHỈ SỐ 5)
+                    const brandFromSheet = r.c[5]?.v ? r.c[5].v.toString().trim().toUpperCase() : "KHÁC";
                     return {
                         ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", 
                         ten: ten, 
-                        brand: brand,
+                        brand: brandFromSheet,
                         cats: r.c[2]?.v ? r.c[2].v.toString().split(';') : [], 
                         gia: r.c[3]?.v || 0, 
                         mota: r.c[4]?.v || "" 
@@ -377,7 +374,7 @@
                     selectBrand.innerHTML += `<option value="${b}">${b}</option>`;
                 });
 
-                applyFilters(); // Render lần đầu
+                applyFilters();
 
                 const dr = await fetchData('Du_An');
                 allProjects = dr.slice(1).map(r => ({ 
@@ -392,7 +389,6 @@
                 allProjects.forEach(pj => pjH += `<div class="proj-card" onclick="openProjModal('${pj.ma}')"><img src="${imgBase}${pj.ma}.jpg"><h4>${pj.ten}</h4></div>`);
                 document.getElementById('project-list').innerHTML = pjH + pjH;
 
-                // Live Search
                 const searchInp = document.getElementById('product-search');
                 const searchRes = document.getElementById('search-results');
                 searchInp.addEventListener('input', (e) => {
@@ -434,14 +430,12 @@
                 return matchCat && matchBrand;
             });
 
-            // Ưu tiên nổi bật khi ở chế độ "Tất cả"
             if (cat === 'TẤT CẢ' && brand === 'TẤT CẢ' && sort === 'DEFAULT') {
                 const featured = filtered.filter(p => p.cats.some(c => c.trim().toUpperCase() === "NỔI BẬT")).slice(0, 20);
                 const others = filtered.filter(p => !p.cats.some(c => c.trim().toUpperCase() === "NỔI BẬT"));
                 filtered = [...featured, ...others];
             }
 
-            // Sắp xếp theo giá
             if (sort === 'LOW_HIGH') filtered.sort((a, b) => a.gia - b.gia);
             if (sort === 'HIGH_LOW') filtered.sort((a, b) => b.gia - a.gia);
 
