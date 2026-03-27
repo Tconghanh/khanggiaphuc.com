@@ -197,7 +197,7 @@
 
     <div id="projModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="modal-content"><span class="close-btn" onclick="document.getElementById('projModal').style.display='none'">&times;</span><div class="modal-left"><img id="pj-main-preview" class="main-preview" src=""><div class="thumbs" id="pj-thumb-box"></div></div><div class="modal-right"><div id="pj-cat" style="color: var(--primary); font-weight: 700; font-size: 0.9rem; text-transform: uppercase;"></div><h2 id="pj-title" style="margin-bottom: 20px; color: var(--dark-gray); border-bottom: 2px solid #eee; padding-bottom: 15px;"></h2><div style="color: var(--btn-orange); font-weight: 700; font-size: 0.95rem; text-transform: uppercase; margin-bottom: 15px;">📄 CHI TIẾT DỰ ÁN</div><div id="pj-content" style="white-space: pre-line; font-size: 1rem; color: #555; line-height: 1.8;"></div></div></div></div>
 
-    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position: relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height: 400px; overflow-y: auto;"><table style="width:100%; border-collapse:collapse; margin-bottom: 20px;"><thead><tr style="border-bottom:2px solid #eee; text-align:left;"><th>Sản phẩm</th><th style="width: 80px;">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align: right;"><h3>Tổng cộng: <span id="cart-total-web" style="color: var(--price-red)">0đ</span></h3><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;"><button onclick="shareCart()" style="background: #3498db; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700;">🔗 CHIA SẺ</button><button onclick="preparePrint()" style="background: #27ae60; color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700;">XUẤT BÁO GIÁ</button></div></div></div></div>
+    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position: relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height: 400px; overflow-y: auto;"><table style="width:100%; border-collapse:collapse; margin-bottom: 20px;"><thead><tr style="border-bottom:2px solid #eee; text-align:left;"><th>Sản phẩm</th><th style="width: 80px;">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align: right;"><h3>Tổng: <span id="cart-total-web" style="color: var(--price-red)">0đ</span></h3><div style="display: flex; flex-direction: column; gap: 8px; margin-top: 20px;"><button onclick="shareCart()" style="background: #3498db; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem;">🔗 CHIA SẺ GIỎ HÀNG</button><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"><button onclick="preparePrint(true)" style="background: #e67e22; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">🏢 BÁO GIÁ CÔNG TY (VAT)</button><button onclick="preparePrint(false)" style="background: #27ae60; color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem;">👤 BÁO GIÁ CÁ NHÂN (KO VAT)</button></div></div></div></div></div>
 
     <!-- PRINT SECTION -->
     <div id="print-section">
@@ -223,9 +223,9 @@
         </table>
         <div class="p-footer-block">
             <table class="p-table" style="margin-top: -1px;">
-                <tr><td colspan="6" style="text-align: right; font-weight: 700;">Tổng cộng tiền hàng (chưa VAT):</td><td id="p-subtotal" style="text-align: right; font-weight: 700;"></td></tr>
-                <tr><td colspan="6" style="text-align: right; font-weight: 700;">Thuế GTGT (VAT 10%):</td><td id="p-vat" style="text-align: right; font-weight: 700;"></td></tr>
-                <tr style="background-color: #f2f2f2 !important;"><td colspan="6" style="text-align: right; font-weight: 800; font-size: 13px;">TỔNG GIÁ TRỊ THANH TOÁN:</td><td id="p-grandtotal" style="text-align: right; font-weight: 800; font-size: 13px;"></td></tr>
+                <tr><td colspan="6" style="text-align: right; font-weight: 700;">Tổng cộng tiền hàng:</td><td id="p-subtotal" style="text-align: right; font-weight: 700;"></td></tr>
+                <tr id="p-vat-row"><td colspan="6" style="text-align: right; font-weight: 700;">Thuế GTGT (VAT 10%):</td><td id="p-vat" style="text-align: right; font-weight: 700;"></td></tr>
+                <tr style="background-color: #f2f2f2 !important;"><td colspan="6" style="text-align: right; font-weight: 800; font-size: 12px;">TỔNG GIÁ TRỊ THANH TOÁN:</td><td id="p-grandtotal" style="text-align: right; font-weight: 800; font-size: 12px;"></td></tr>
             </table>
             <p style="font-style: italic; margin-top: 10px; font-size: 13px;">Bằng chữ: <b id="p-word" style="text-transform: capitalize;">...</b></p>
             <div class="p-payment-box">
@@ -337,6 +337,19 @@
                 const hash = window.location.hash.substring(1);
                 if (hash) setTimeout(() => openModal(hash), 600);
 
+                const urlParams = new URLSearchParams(window.location.search);
+                const sharedQuote = urlParams.get('quote');
+                if (sharedQuote) {
+                    const items = sharedQuote.split(',');
+                    items.forEach(it => {
+                        const [ma, qty] = it.split(':');
+                        const p = products.find(x => x.ma.toString() === ma.toString());
+                        if (p) cart.push({ ...p, qty: parseInt(qty) || 1 });
+                    });
+                    updateCartUI();
+                    setTimeout(() => openCart(), 1000);
+                }
+
                 document.getElementById('loader').style.display = 'none';
             } catch (e) { console.error(e); }
         }
@@ -430,7 +443,7 @@
             navigator.clipboard.writeText(shareUrl).then(() => alert("Đã sao chép link báo giá!"));
         }
 
-        function preparePrint() {
+        function preparePrint(isCompany) {
             if (!cart.length) return alert("Giỏ hàng trống!");
             const n = new Date(); 
             const qID = `${String(n.getDate()).padStart(2,'0')}${String(n.getMonth()+1).padStart(2,'0')}${String(n.getFullYear()).slice(-2)}/BG-KGP`;
@@ -444,11 +457,17 @@
                 return `<tr><td align="center">${i+1}</td><td><b>${item.ten}</b>\n${item.mota}</td><td align="center"><img src="${imgBase}${item.ma}.jpg" style="width:50px"></td><td align="center">Bộ/Cái</td><td align="center">${item.qty}</td><td align="right">${item.gia.toLocaleString()}</td><td align="right">${t.toLocaleString()}</td></tr>`;
             }).join('');
 
-            const gt = Math.round(sub * 1.1);
+            const vat = isCompany ? Math.round(sub * 0.1) : 0;
+            const gt = sub + vat;
+
             document.getElementById('p-subtotal').innerText = sub.toLocaleString();
-            document.getElementById('p-vat').innerText = (sub * 0.1).toLocaleString();
+            document.getElementById('p-vat').innerText = vat.toLocaleString();
             document.getElementById('p-grandtotal').innerText = gt.toLocaleString();
             document.getElementById('p-word').innerText = docSoTien(gt) + " đồng chẵn.";
+            
+            // Ẩn/Hiện dòng VAT dựa vào loại báo giá
+            document.getElementById('p-vat-row').style.display = isCompany ? 'table-row' : 'none';
+            
             document.getElementById('qr-payment').src = `https://img.vietqr.io/image/techcombank-1793418868-compact.png?amount=${gt}&addInfo=Thanh toan bao gia ${qID}`;
             
             setTimeout(() => window.print(), 800);
