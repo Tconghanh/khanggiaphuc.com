@@ -21,7 +21,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         body { font-family: 'Roboto', sans-serif; line-height: 1.6; color: var(--dark-gray); background: #fff; overflow-x: hidden; }
 
-        /* --- HEADER --- */
+        /* --- HEADER & NAV --- */
         header { background: rgba(255,255,255,0.96); backdrop-filter: blur(15px); box-shadow: var(--shadow-sm); position: fixed; width: 100%; top: 0; z-index: 1000; height: 70px; display: flex; align-items: center; }
         nav { max-width: 1400px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; width: 100%; gap: 10px; }
         .nav-left { display: flex; align-items: center; gap: 10px; flex: 1; }
@@ -32,59 +32,65 @@
         .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); cursor: pointer; }
         .search-results { position: absolute; top: 110%; left: 0; width: 100%; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow-lg); max-height: 350px; overflow-y: auto; display: none; z-index: 1001; border: 1px solid #eee; }
 
+        /* --- MENU & DROPDOWN --- */
         nav ul { display: flex; list-style: none; gap: 15px; align-items: center; }
+        nav ul li { position: relative; }
         nav ul li a { text-decoration: none; color: var(--dark-gray); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; padding: 10px 0; display: block; }
-        .dropdown-menu { position: absolute; top: 100%; left: 0; background: #fff; min-width: 200px; box-shadow: var(--shadow-lg); border-radius: 8px; display: none; list-style: none; padding: 10px 0; z-index: 1100; border: 1px solid #eee; }
+        
+        .dropdown-menu { 
+            position: absolute; top: 100%; left: 0; background: #fff; min-width: 220px; 
+            box-shadow: var(--shadow-lg); border-radius: 8px; display: none; 
+            list-style: none; padding: 10px 0; z-index: 1100; border: 1px solid #eee;
+        }
+        .dropdown-menu li a { padding: 8px 20px; font-size: 0.75rem; color: #555; text-transform: none; font-weight: 500; border-bottom: none; }
+        .dropdown-menu li a:hover { background: var(--light-bg); color: var(--primary); }
         .dropdown:hover .dropdown-menu { display: block; }
-        .dropdown-menu li a { padding: 8px 20px; font-size: 0.75rem; text-transform: none; font-weight: 500; }
-        .nav-hotline { color: var(--price-red) !important; border: 1.5px solid var(--price-red); padding: 6px 15px !important; border-radius: 20px; font-size: 0.75rem; display: flex !important; align-items: center; gap: 6px; }
-        .nav-zalo { color: #0068ff !important; border: 1.5px solid #0068ff; padding: 6px 15px !important; border-radius: 20px; font-size: 0.75rem; display: flex !important; align-items: center; gap: 6px; }
+
+        .nav-hotline { color: var(--price-red) !important; border: 1.5px solid var(--price-red); padding: 6px 15px !important; border-radius: 20px; display: flex !important; align-items: center; gap: 6px; font-size: 0.75rem; }
+        .nav-zalo { color: #0068ff !important; border: 1.5px solid #0068ff; padding: 6px 15px !important; border-radius: 20px; display: flex !important; align-items: center; gap: 6px; font-size: 0.75rem; }
         .menu-toggle { display: none; font-size: 1.5rem; color: var(--primary); cursor: pointer; }
 
-        /* --- SLIDER (IMPROVED) --- */
+        /* --- SLIDER --- */
         .slider-container { width: 100%; height: 500px; margin-top: 70px; overflow: hidden; position: relative; }
         .slider { display: flex; width: 100%; height: 100%; transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1); }
-        .slide { min-width: 100%; height: 100%; position: relative; }
+        .slide { min-width: 100%; height: 100%; }
         .slide img { width: 100%; height: 100%; object-fit: cover; }
-        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.3); color: #fff; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; z-index: 10; transition: 0.3s; backdrop-filter: blur(5px); }
-        .slider-btn:hover { background: var(--primary); color: #fff; }
-        .prev-btn { left: 20px; }
-        .next-btn { right: 20px; }
-        .slider-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
-        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; transition: 0.3s; }
-        .dot.active { background: #fff; width: 30px; border-radius: 10px; }
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.4); color: #fff; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; z-index: 10; backdrop-filter: blur(5px); }
+        .prev-btn { left: 20px; } .next-btn { right: 20px; }
+        .slider-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+        .dot { width: 10px; height: 10px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; }
+        .dot.active { background: #fff; width: 25px; border-radius: 10px; }
 
-        /* --- FILTERS & GRID --- */
+        /* --- PRODUCT SECTION --- */
         section { padding: 60px 20px; max-width: 1300px; margin: auto; scroll-margin-top: 80px; }
         .section-title h2 { font-size: 2.2rem; color: var(--primary); text-align: center; text-transform: uppercase; font-style: italic; }
         .underline { width: 70px; height: 4px; background: var(--btn-orange); margin: 10px auto 30px; border-radius: 2px; }
         
         .filter-bar { background: var(--light-bg); padding: 20px; border-radius: var(--radius); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; box-shadow: var(--shadow-sm); }
-        .filter-group select { padding: 12px 15px; border-radius: 12px; border: 1px solid #ddd; width: 100%; outline: none; background: #fff; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; background-size: 15px; }
+        .filter-group label { font-size: 0.7rem; font-weight: 700; color: var(--light-gray); text-transform: uppercase; padding-left: 5px; }
+        .filter-bar select { padding: 12px; border-radius: 10px; border: 1px solid #ddd; outline: none; background: #fff; cursor: pointer; }
 
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; min-height: 400px; }
         .product-card { background: var(--white); border: 1px solid #f1f5f9; border-radius: var(--radius); padding: 15px; text-align: center; transition: 0.3s; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; cursor: pointer; }
         .product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
         .product-card img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 12px; }
-        .product-card h3 { font-size: 0.85rem; height: 40px; overflow: hidden; margin-bottom: 10px; }
+        .product-card h3 { font-size: 0.85rem; height: 40px; overflow: hidden; margin-bottom: 10px; font-weight: 700; }
         .product-card .price { color: var(--price-red); font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; }
         .btn-add-cart { background: var(--primary); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 
-        /* --- PAGINATION --- */
-        .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 40px; flex-wrap: wrap; }
-        .page-btn { padding: 10px 18px; border: 1px solid #ddd; background: #fff; border-radius: 10px; cursor: pointer; font-weight: 700; transition: 0.3s; }
-        .page-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
+        .page-btn { padding: 8px 15px; border: 1px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; font-weight: 700; }
         .page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-        /* --- OTHERS --- */
+        /* --- INTRO & ACTIVITY --- */
         .intro-container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
         .intro-img-box { border-radius: var(--radius); overflow: hidden; height: 380px; box-shadow: var(--shadow-lg); }
         .intro-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        
         .activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .activity-item { background: #fff; padding: 30px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow-sm); border-top: 4px solid var(--primary); }
         .activity-icon { font-size: 3rem; color: var(--primary); margin-bottom: 15px; }
 
+        /* --- PROJECTS --- */
         #projects { background: #0f172a; color: #fff; overflow: hidden; padding: 60px 0; }
         .marquee { display: flex; width: max-content; animation: scroll 40s linear infinite; gap: 20px; }
         .proj-card { width: 300px; border-radius: var(--radius); overflow: hidden; background: #1e293b; }
@@ -108,13 +114,12 @@
             header { height: 65px; }
             .logo img { height: 35px; }
             .menu-toggle { display: block; order: 3; }
-            nav ul { position: fixed; top: 0; right: -100%; width: 75%; height: 100vh; background: #fff; flex-direction: column; padding: 80px 20px; transition: 0.4s; z-index: 1002; box-shadow: -10px 0 20px rgba(0,0,0,0.1); }
+            nav ul { position: fixed; top: 0; right: -100%; width: 75%; height: 100vh; background: #fff; flex-direction: column; padding: 80px 20px; transition: 0.4s; z-index: 1002; box-shadow: -10px 0 20px rgba(0,0,0,0.1); align-items: flex-start; }
             nav ul.active { right: 0; }
             .dropdown-menu { position: static; display: block; box-shadow: none; border: none; padding-left: 15px; }
             .slider-container { height: 200px; margin-top: 65px; }
             .intro-container { grid-template-columns: 1fr; }
-            .modal-content { grid-template-columns: 1fr; overflow-y: auto; }
-            .modal-left { border-right: none; border-bottom: 1px solid #eee; }
+            .modal-content { grid-template-columns: 1fr; }
         }
 
         /* PRINT */
@@ -186,13 +191,11 @@
     <!-- SẢN PHẨM -->
     <section id="products" class="no-print">
         <div class="section-title"><h2>Sản phẩm tiêu biểu</h2><div class="underline"></div></div>
-        
         <div class="filter-bar">
             <div class="filter-group"><label>Danh mục</label><select id="filter-category" onchange="applyFilters()"><option value="TẤT CẢ">-- Tất cả danh mục --</option></select></div>
             <div class="filter-group"><label>Thương hiệu</label><select id="filter-brand" onchange="applyFilters()"><option value="TẤT CẢ">-- Tất cả thương hiệu --</option></select></div>
             <div class="filter-group"><label>Giá</label><select id="filter-price" onchange="applyFilters()"><option value="DEFAULT">-- Mặc định --</option><option value="LOW_HIGH">Thấp đến Cao</option><option value="HIGH_LOW">Cao đến Thấp</option></select></div>
         </div>
-
         <div class="product-grid" id="product-grid"></div>
         <div class="pagination" id="pagination"></div>
     </section>
@@ -223,9 +226,9 @@
     <div class="cart-icon no-print" onclick="openCart()"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count" id="cart-count">0</span></div>
 
     <!-- MODALS -->
-    <div id="pModal" class="modal no-print" onclick="if(event.target==this) closeModal()"><div class="modal-content"><span class="close-btn" onclick="closeModal()">&times;</span><div class="modal-left"><img id="main-preview" style="width:100%; height:300px; object-fit:contain" src=""><div id="thumb-box" style="margin-top:15px; display:flex; gap:5px; justify-content:center; flex-wrap:wrap"></div></div><div class="modal-right"><div id="m-cat" style="color:var(--btn-orange); font-weight:700; font-size:0.8rem"></div><h2 id="m-title" style="margin:10px 0"></h2><div id="m-price" style="color:var(--price-red); font-size:2rem; font-weight:700"></div><div style="margin-top:20px; font-weight:700; border-bottom:2px solid #eee">⚙ THÔNG SỐ KỸ THUẬT</div><ul id="m-specs" class="specs-list"></ul><button onclick="addToCartModal()" style="background:var(--btn-orange); color:#fff; border:none; padding:18px; border-radius:12px; font-weight:700; cursor:pointer; margin-top:30px">🛒 THÊM VÀO GIỎ HÀNG</button></div></div></div>
+    <div id="pModal" class="modal no-print" onclick="if(event.target==this) closeModal()"><div class="modal-content"><span class="close-btn" onclick="closeModal()">&times;</span><div class="modal-left"><img id="main-preview" style="width:100%; height:300px; object-fit:contain" src=""><div id="thumb-box" style="margin-top:15px; display:flex; gap:5px; justify-content:center; flex-wrap:wrap"></div></div><div class="modal-right"><div id="m-cat" style="color:var(--btn-orange); font-weight:700; font-size:0.8rem"></div><h2 id="m-title" style="margin:10px 0"></h2><div id="m-price" style="color:var(--price-red); font-size:2rem; font-weight:700"></div><ul id="m-specs" class="specs-list"></ul><button onclick="addToCartModal()" style="background:var(--btn-orange); color:#fff; border:none; padding:18px; border-radius:12px; font-weight:700; cursor:pointer; margin-top:30px">🛒 THÊM VÀO GIỎ HÀNG</button></div></div></div>
 
-    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position:relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align:center; color:var(--primary); margin-bottom:20px">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height:400px; overflow-y:auto"><table style="width:100%; border-collapse:collapse"><thead><tr style="border-bottom:2px solid #eee; text-align:left"><th>Sản phẩm</th><th style="width:80px">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align:right; margin-top:20px"><h3>Tổng: <span id="cart-total-web" style="color:var(--price-red)">0đ</span></h3><div style="display:flex; flex-direction:column; gap:8px; margin-top:20px"><button onclick="shareCart()" style="background:#3498db; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">🔗 CHIA SẺ GIỎ HÀNG</button><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px"><button onclick="preparePrint(true)" style="background:#e67e22; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">🏢 BÁO GIÁ CÔNG TY</button><button onclick="preparePrint(false)" style="background:#27ae60; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">👤 BÁO GIÁ CÁ NHÂN</button></div></div></div></div></div>
+    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position:relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align:center; color:var(--primary); margin-bottom:20px">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height:400px; overflow-y:auto"><table style="width:100%; border-collapse:collapse"><thead><tr style="border-bottom:2px solid #eee; text-align:left"><th>Sản phẩm</th><th style="width:80px">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align:right; margin-top:20px"><h3>Tổng: <span id="cart-total-web" style="color:var(--price-red)">0đ</span></h3><div style="display:flex; flex-direction:column; gap:8px; margin-top:20px"><button onclick="shareCart()" style="background:#3498db; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">🔗 CHIA SẺ GIỎ HÀNG (ZALO/FB)</button><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px"><button onclick="preparePrint(true)" style="background:#e67e22; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">🏢 BÁO GIÁ CÔNG TY</button><button onclick="preparePrint(false)" style="background:#27ae60; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">👤 BÁO GIÁ CÁ NHÂN</button></div></div></div></div></div>
 
     <div id="projModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="modal-content"><span class="close-btn" onclick="document.getElementById('projModal').style.display='none'">&times;</span><div class="modal-left"><img id="pj-main-preview" style="width:100%; height:300px; object-fit:contain" src=""></div><div class="modal-right"><div id="pj-cat" style="color:var(--primary); font-weight:700; font-size:0.9rem"></div><h2 id="pj-title" style="margin:15px 0"></h2><div id="pj-content" style="white-space:pre-line; color:#555"></div></div></div></div>
 
@@ -296,12 +299,10 @@
         function toggleMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
         function closeMenu() { document.getElementById('nav-menu').classList.remove('active'); }
 
-        // --- SLIDER LOGIC ---
+        // --- SLIDER ---
         function initSlider() {
-            const slider = document.getElementById('slider');
             const dots = document.getElementById('slider-dots');
-            const slidesCount = 5;
-            for(let i=0; i<slidesCount; i++) {
+            for(let i=0; i<5; i++) {
                 const dot = document.createElement('div');
                 dot.className = `dot ${i===0?'active':''}`;
                 dot.onclick = () => goToSlide(i);
@@ -319,25 +320,21 @@
         function startSlider() { sliderInterval = setInterval(() => moveSlide(1), 5000); }
         function resetSliderTimer() { clearInterval(sliderInterval); startSlider(); }
 
-        // --- INIT DATA ---
+        // --- INIT ---
         async function init() {
             try {
-                // Intro & Contact
                 const home = await fetchData('Trang_Chu');
                 document.getElementById('intro-text').innerHTML = home[2]?.c[1]?.v || "";
-                
                 const actLines = (home[3]?.c[1]?.v || "").split('\n').filter(l => l.trim());
                 let actH = ""; actLines.forEach((l, i) => {
                     let p = l.split(':');
-                    actH += `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${icons[i % icons.length]}"></i></div><h4>${p[0].trim()}</h4><p style="font-size:0.8rem; color:#888; margin-top:5px">${p[1] ? p[1].trim() : ""}</p></div>`;
+                    actH += `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${icons[i % icons.length]}"></i></div><h4>${p[0].trim()}</h4><p style="font-size:0.8rem; color:#888">${p[1] ? p[1].trim() : ""}</p></div>`;
                 });
                 document.getElementById('activity-list').innerHTML = actH;
-
                 document.getElementById('f1').innerHTML = home[4]?.c[1]?.v || "";
                 const cLines = (home[5]?.c[1]?.v || "").split('\n').filter(l => l.trim());
                 let cH = ""; cLines.forEach(l => cH += `<li style="margin-bottom:12px; display:flex; gap:10px; color:inherit"><i class="fa-solid fa-check-circle" style="color:var(--primary); margin-top:4px"></i><span>${l}</span></li>`);
                 document.getElementById('f2-contact').innerHTML = cH;
-
                 const fb = home[6]?.c[1]?.v || "";
                 document.getElementById('f3-fb').innerHTML = `<iframe src="https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=340&height=250&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true" width="100%" height="250" style="border:none;overflow:hidden" scrolling="no" frameborder="0"></iframe>`;
 
@@ -346,17 +343,9 @@
                 products = pr.map(r => {
                     const ten = r.c[1]?.v || "";
                     const brand = r.c[5]?.v ? r.c[5].v.toString().trim().toUpperCase() : "KHÁC";
-                    return {
-                        ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", 
-                        ten: ten, 
-                        brand: brand,
-                        cats: r.c[2]?.v ? r.c[2].v.toString().split(';') : [], 
-                        gia: r.c[3]?.v || 0, 
-                        mota: r.c[4]?.v || "" 
-                    };
+                    return { ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", ten: ten, brand: brand, cats: r.c[2]?.v ? r.c[2].v.toString().split(';') : [], gia: r.c[3]?.v || 0, mota: r.c[4]?.v || "" };
                 }).filter(x => x.ma && x.ma.toLowerCase() !== "mã");
                 
-                // Filters
                 const catsSet = new Set(), brandsSet = new Set();
                 products.forEach(p => { p.cats.forEach(c => catsSet.add(c.trim())); brandsSet.add(p.brand); });
                 const catList = Array.from(catsSet).sort(), brandList = Array.from(brandsSet).sort();
@@ -371,14 +360,26 @@
 
                 applyFilters();
 
-                // Projects
+                // Logic Chia sẻ giỏ hàng (Khôi phục từ URL)
+                const urlParams = new URLSearchParams(window.location.search);
+                const sharedQuote = urlParams.get('quote');
+                if (sharedQuote) {
+                    const items = sharedQuote.split(',');
+                    items.forEach(it => {
+                        const [ma, qty] = it.split(':');
+                        const p = products.find(x => x.ma.toString() === ma.toString());
+                        if (p) cart.push({ ...p, qty: parseInt(qty) || 1 });
+                    });
+                    updateCartUI();
+                    setTimeout(() => openCart(), 1000);
+                }
+
+                // Projects & Search
                 const dr = await fetchData('Du_An');
                 allProjects = dr.slice(1).map(r => ({ ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", ten: r.c[1]?.v || "", hangmuc: r.c[2]?.v || "", noidung: r.c[3]?.v || "", nam: r.c[4]?.v || "" })).filter(x => x.ma);
-                let pjH = ""; 
-                allProjects.forEach(pj => pjH += `<div class="proj-card" onclick="openProjModal('${pj.ma}')"><img src="${imgBase}${pj.ma}.jpg"><h4>${pj.ten}</h4></div>`);
+                let pjH = ""; allProjects.forEach(pj => pjH += `<div class="proj-card" onclick="openProjModal('${pj.ma}')"><img src="${imgBase}${pj.ma}.jpg"><h4>${pj.ten}</h4></div>`);
                 document.getElementById('project-list').innerHTML = pjH + pjH;
 
-                // Search
                 const searchInp = document.getElementById('product-search'), searchRes = document.getElementById('search-results');
                 searchInp.addEventListener('input', (e) => {
                     const k = e.target.value.toLowerCase().trim();
@@ -399,72 +400,43 @@
             } catch (e) { console.error(e); }
         }
 
-        // --- FILTER & PAGINATION ---
-        function setFilter(type, val) {
-            if(type === 'cat') document.getElementById('filter-category').value = val;
-            applyFilters(); closeMenu();
-        }
+        function setFilter(type, val) { if(type === 'cat') document.getElementById('filter-category').value = val; applyFilters(); closeMenu(); }
 
         function applyFilters() {
             const cat = document.getElementById('filter-category').value;
             const brand = document.getElementById('filter-brand').value;
             const sort = document.getElementById('filter-price').value;
-
-            let filtered = products.filter(p => {
-                const matchCat = (cat === 'TẤT CẢ' || p.cats.some(c => c.trim() === cat));
-                const matchBrand = (brand === 'TẤT CẢ' || p.brand === brand);
-                return matchCat && matchBrand;
-            });
-
+            let filtered = products.filter(p => (cat === 'TẤT CẢ' || p.cats.some(c => c.trim() === cat)) && (brand === 'TẤT CẢ' || p.brand === brand));
             if (cat === 'TẤT CẢ' && brand === 'TẤT CẢ' && sort === 'DEFAULT') {
                 const featured = filtered.filter(p => p.cats.some(c => c.trim().toUpperCase() === "NỔI BẬT")).slice(0, 20);
                 const others = filtered.filter(p => !p.cats.some(c => c.trim().toUpperCase() === "NỔI BẬT"));
                 filtered = [...featured, ...others];
             }
-
             if (sort === 'LOW_HIGH') filtered.sort((a, b) => a.gia - b.gia);
             if (sort === 'HIGH_LOW') filtered.sort((a, b) => b.gia - a.gia);
-
-            filteredProductsGlobal = filtered;
-            currentPage = 1;
-            displayPaginatedItems();
+            filteredProductsGlobal = filtered; currentPage = 1; displayPaginatedItems();
         }
 
         function displayPaginatedItems() {
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
-            const currentItems = filteredProductsGlobal.slice(start, end);
-            
-            renderProducts(currentItems);
+            renderProducts(filteredProductsGlobal.slice(start, end));
             renderPagination(filteredProductsGlobal.length);
         }
 
         function renderProducts(data) {
-            document.getElementById('product-grid').innerHTML = data.map(p => `
-                <div class="product-card">
-                    <img src="${imgBase}${p.ma}.jpg" onclick="openModal('${p.ma}')" onerror="this.src='https://via.placeholder.com/200'">
-                    <h3 onclick="openModal('${p.ma}')">${p.ten}</h3>
-                    <div class="price">${p.gia.toLocaleString()}đ</div>
-                    <button class="btn-add-cart" onclick="addToCart('${p.ma}')">🛒 THÊM GIỎ HÀNG</button>
-                </div>`).join('');
+            document.getElementById('product-grid').innerHTML = data.map(p => `<div class="product-card"><img src="${imgBase}${p.ma}.jpg" onclick="openModal('${p.ma}')" onerror="this.src='https://via.placeholder.com/200'"><h3 onclick="openModal('${p.ma}')">${p.ten}</h3><div class="price">${p.gia.toLocaleString()}đ</div><button class="btn-add-cart" onclick="addToCart('${p.ma}')">🛒 THÊM GIỎ HÀNG</button></div>`).join('');
         }
 
         function renderPagination(totalItems) {
             const totalPages = Math.ceil(totalItems / itemsPerPage);
             const container = document.getElementById('pagination');
             container.innerHTML = "";
-            
             if (totalPages <= 1) return;
-
             for (let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement('button');
-                btn.innerText = i;
-                btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-                btn.onclick = () => {
-                    currentPage = i;
-                    displayPaginatedItems();
-                    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-                };
+                btn.innerText = i; btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                btn.onclick = () => { currentPage = i; displayPaginatedItems(); document.getElementById('products').scrollIntoView({ behavior: 'smooth' }); };
                 container.appendChild(btn);
             }
         }
@@ -472,48 +444,29 @@
         function handleSearch() {
             const query = document.getElementById('product-search').value.toLowerCase().trim();
             if(!query) return;
-            const filtered = products.filter(p => p.ten.toLowerCase().includes(query) || p.ma.toLowerCase().includes(query));
-            filteredProductsGlobal = filtered;
-            currentPage = 1;
-            displayPaginatedItems();
+            filteredProductsGlobal = products.filter(p => p.ten.toLowerCase().includes(query) || p.ma.toLowerCase().includes(query));
+            currentPage = 1; displayPaginatedItems();
             document.getElementById('search-results').style.display = 'none';
             window.location.href = "#products";
         }
 
-        // --- PRODUCT MODAL ---
         function openModal(ma) {
             const p = products.find(x => x.ma.toString() === ma.toString());
             if(!p) return;
-            window.location.hash = ma;
-            currentProductMA = p.ma;
+            window.location.hash = ma; currentProductMA = p.ma;
             document.getElementById('m-title').innerText = p.ten;
             document.getElementById('m-price').innerText = p.gia.toLocaleString() + ' đ';
             document.getElementById('m-cat').innerText = p.cats.join(' | ');
             document.getElementById('main-preview').src = `${imgBase}${p.ma}.jpg`;
             document.getElementById('m-specs').innerHTML = p.mota.split('\n').filter(l => l.trim()).map(l => `<li>${l}</li>`).join('');
-            
             let th = `<img src="${imgBase}${p.ma}.jpg" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onclick="document.getElementById('main-preview').src=this.src">`;
             [1,2,3,4].forEach(n => th += `<img src="${imgBase}${p.ma}.${n}.jpg" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onerror="this.style.display='none'" onclick="document.getElementById('main-preview').src=this.src">`);
             document.getElementById('thumb-box').innerHTML = th;
             document.getElementById('pModal').style.display = 'flex';
         }
 
-        function closeModal() { 
-            document.getElementById('pModal').style.display = 'none'; 
-            history.pushState("", document.title, window.location.pathname + window.location.search);
-        }
+        function closeModal() { document.getElementById('pModal').style.display = 'none'; history.pushState("", document.title, window.location.pathname + window.location.search); }
 
-        function openProjModal(ma) {
-            const pj = allProjects.find(x => x.ma.toString() === ma.toString());
-            if(!pj) return;
-            document.getElementById('pj-title').innerText = pj.ten;
-            document.getElementById('pj-cat').innerText = pj.hangmuc + " | " + pj.nam;
-            document.getElementById('pj-content').innerHTML = pj.noidung;
-            document.getElementById('pj-main-preview').src = `${imgBase}${pj.ma}.jpg`;
-            document.getElementById('projModal').style.display = 'flex';
-        }
-
-        // --- CART LOGIC ---
         function addToCart(ma) {
             const p = products.find(x => x.ma.toString() === ma.toString());
             if(!p) return;
@@ -527,12 +480,7 @@
             let total = 0;
             document.getElementById('cart-items').innerHTML = cart.map((item, i) => {
                 const sub = item.gia * item.qty; total += sub;
-                return `<tr style="border-bottom:1px solid #eee">
-                    <td style="padding:10px 0"><b style="color:var(--primary);cursor:pointer" onclick="openModal('${item.ma}')">${item.ten}</b></td>
-                    <td><input type="number" value="${item.qty}" min="1" style="width:40px; padding:3px" onchange="cart[${i}].qty=parseInt(this.value);updateCartUI()"></td>
-                    <td>${sub.toLocaleString()}đ</td>
-                    <td><button onclick="cart.splice(${i},1);updateCartUI()" style="border:none;background:none;color:red;cursor:pointer">❌</button></td>
-                </tr>`;
+                return `<tr style="border-bottom:1px solid #eee"><td style="padding:10px 0"><b style="color:var(--primary);cursor:pointer" onclick="openModal('${item.ma}')">${item.ten}</b></td><td><input type="number" value="${item.qty}" min="1" style="width:40px" onchange="cart[${i}].qty=parseInt(this.value);updateCartUI()"></td><td>${sub.toLocaleString()}đ</td><td><button onclick="cart.splice(${i},1);updateCartUI()" style="border:none;background:none;color:red;cursor:pointer">❌</button></td></tr>`;
             }).join('');
             document.getElementById('cart-total-web').innerText = total.toLocaleString() + 'đ';
         }
@@ -544,32 +492,22 @@
             if (cart.length === 0) return alert("Giỏ hàng trống!");
             const data = cart.map(item => `${item.ma}:${item.qty}`).join(',');
             const shareUrl = window.location.origin + window.location.pathname + "?quote=" + encodeURIComponent(data);
-            navigator.clipboard.writeText(shareUrl).then(() => alert("Đã sao chép link báo giá!"));
+            navigator.clipboard.writeText(shareUrl).then(() => alert("Đã sao chép link báo giá! Hãy gửi link này cho khách hàng qua Zalo/Facebook."));
         }
 
         function preparePrint(isCompany) {
             if (!cart.length) return alert("Giỏ hàng trống!");
-            const n = new Date(); 
-            const qID = `${String(n.getDate()).padStart(2,'0')}${String(n.getMonth()+1).padStart(2,'0')}${String(n.getFullYear()).slice(-2)}/BG-KGP`;
-            document.getElementById('print-no').innerText = qID; 
-            document.getElementById('print-no-footer').innerText = "Thanh toán cho báo giá số: " + qID;
+            const n = new Date(); const qID = `${String(n.getDate()).padStart(2,'0')}${String(n.getMonth()+1).padStart(2,'0')}${String(n.getFullYear()).slice(-2)}/BG-KGP`;
+            document.getElementById('print-no').innerText = qID; document.getElementById('print-no-footer').innerText = "Thanh toán cho báo giá số: " + qID;
             document.getElementById('print-date').innerText = n.toLocaleDateString('vi-VN');
-            
-            let sub = 0; 
-            document.getElementById('print-table-body').innerHTML = cart.map((item, i) => {
+            let sub = 0; document.getElementById('print-table-body').innerHTML = cart.map((item, i) => {
                 const t = item.gia * item.qty; sub += t;
-                return `<tr><td align="center">${i+1}</td><td><b>${item.ten}</b>\n${item.mota}</td><td align="center"><img src="${imgBase}${item.ma}.jpg" style="width:50px"></td><td align="center">Bộ/Cái</td><td align="center">${item.qty}</td><td align="right">${item.gia.toLocaleString()}</td><td align="right">${t.toLocaleString()}</td></tr>`;
+                return `<tr><td align="center">${i+1}</td><td><b>${item.ten}</b>\n${item.mota}</td><td align="center"><img src="${imgBase}${item.ma}.jpg" style="width:50px"></td><td align="center">Bộ</td><td align="center">${item.qty}</td><td align="right">${item.gia.toLocaleString()}</td><td align="right">${t.toLocaleString()}</td></tr>`;
             }).join('');
-
-            const vat = isCompany ? Math.round(sub * 0.1) : 0;
-            const gt = sub + vat;
-
-            document.getElementById('p-subtotal').innerText = sub.toLocaleString();
-            document.getElementById('p-vat').innerText = vat.toLocaleString();
-            document.getElementById('p-grandtotal').innerText = gt.toLocaleString();
-            document.getElementById('p-word').innerText = docSoTien(gt) + " đồng chẵn.";
+            const vat = isCompany ? Math.round(sub * 0.1) : 0; const gt = sub + vat;
+            document.getElementById('p-subtotal').innerText = sub.toLocaleString(); document.getElementById('p-vat').innerText = vat.toLocaleString();
+            document.getElementById('p-grandtotal').innerText = gt.toLocaleString(); document.getElementById('p-word').innerText = docSoTien(gt) + " đồng chẵn.";
             document.getElementById('p-vat-row').style.display = isCompany ? 'table-row' : 'none';
-            
             if(isCompany) {
                 document.getElementById('p-receiver').innerHTML = 'Đơn vị: <span style="color:red; font-weight:700">CÔNG TY TNHH KHANG GIA PHÚC</span>';
                 document.getElementById('p-bank-stk').innerHTML = '<b>Techcombank</b> | STK: <b>1793418868</b>';
@@ -579,8 +517,15 @@
                 document.getElementById('p-bank-stk').innerHTML = '<b>Ngân hàng VIB</b> | STK: <b>024845</b>';
                 document.getElementById('qr-payment').src = `https://img.vietqr.io/image/VIB-024845-compact.png?amount=${gt}&addInfo=Bao gia ca nhan ${qID}`;
             }
-            
             setTimeout(() => window.print(), 800);
+        }
+
+        function openProjModal(ma) {
+            const pj = allProjects.find(x => x.ma.toString() === ma.toString());
+            if(!pj) return;
+            document.getElementById('pj-title').innerText = pj.ten; document.getElementById('pj-cat').innerText = pj.hangmuc + " | " + pj.nam;
+            document.getElementById('pj-content').innerHTML = pj.noidung; document.getElementById('pj-main-preview').src = `${imgBase}${pj.ma}.jpg`;
+            document.getElementById('projModal').style.display = 'flex';
         }
 
         function docSoTien(number) {
