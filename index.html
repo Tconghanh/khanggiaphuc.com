@@ -31,16 +31,19 @@
         .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); cursor: pointer; }
         .search-results { position: absolute; top: 110%; left: 0; width: 100%; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow-lg); max-height: 350px; overflow-y: auto; display: none; z-index: 1001; border: 1px solid #eee; }
 
-        /* MENU */
+        /* MENU DESKTOP */
         nav ul { display: flex; list-style: none; gap: 15px; align-items: center; }
+        nav ul li { position: relative; }
         nav ul li a { text-decoration: none; color: var(--dark-gray); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; padding: 10px 0; display: block; }
         
+        /* Dropdown Desktop */
         .dropdown-menu { 
             position: absolute; top: 100%; left: 0; background: #fff; min-width: 220px; 
             box-shadow: var(--shadow-lg); border-radius: 8px; display: none; 
             list-style: none; padding: 10px 0; z-index: 1100; border: 1px solid #eee;
         }
         .dropdown-menu li a { padding: 8px 20px; font-size: 0.75rem; color: #555; text-transform: none; font-weight: 500; border-bottom: none; }
+        .dropdown-menu li a:hover { background: var(--light-bg); color: var(--primary); }
         .dropdown:hover .dropdown-menu { display: block; }
 
         .nav-hotline { color: var(--price-red) !important; border: 1.5px solid var(--price-red); padding: 6px 15px !important; border-radius: 20px; display: flex !important; align-items: center; gap: 6px; font-size: 0.75rem; }
@@ -88,7 +91,6 @@
         .intro-img-box img { width: 100%; height: 100%; object-fit: cover; }
         .activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .activity-item { background: #fff; padding: 30px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow-sm); border-top: 4px solid var(--primary); }
-        .activity-icon { font-size: 3rem; color: var(--primary); margin-bottom: 15px; }
 
         /* --- PROJECTS --- */
         #projects { background: #0f172a; color: #fff; overflow: hidden; padding: 60px 0; }
@@ -117,21 +119,22 @@
             .menu-toggle { display: block; order: 3; }
             nav ul { 
                 position: fixed; top: 0; right: -100%; width: 75%; height: 100vh; 
-                background: #fff; flex-direction: column; padding: 80px 25px; 
-                transition: 0.4s; z-index: 1002; box-shadow: -10px 0 30px rgba(0,0,0,0.15); 
+                background: #fff; flex-direction: column; padding: 80px 20px; 
+                transition: 0.4s; z-index: 1002; box-shadow: -10px 0 20px rgba(0,0,0,0.1); 
                 align-items: flex-start; 
             }
             nav ul.active { right: 0; }
             nav ul li { width: 100%; }
-            nav ul li a { font-size: 1rem; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
+            nav ul li a { font-size: 1rem; border-bottom: 1px solid #f1f5f9; width: 100%; padding: 12px 0; }
             
-            /* Submenu mobile logic: hide by default */
+            /* Mobile Dropdown Logic */
             .dropdown-menu { 
                 position: static; display: none; box-shadow: none; border: none; 
-                padding-left: 20px; min-width: 100%;
+                padding: 0 0 0 20px; width: 100%; 
             }
-            .dropdown.open .dropdown-menu { display: block; } /* Show when parent has 'open' class */
-            
+            .dropdown.open .dropdown-menu { display: block; }
+            .dropdown-menu li a { border-bottom: none; font-weight: 400; color: #666; font-size: 0.9rem; padding: 8px 0; }
+
             .slider-container { height: 200px; margin-top: 65px; }
             .intro-container { grid-template-columns: 1fr; }
             .modal-content { grid-template-columns: 1fr; overflow-y: auto; }
@@ -178,8 +181,8 @@
             <div class="menu-toggle" onclick="toggleMenu()"><i class="fa-solid fa-bars-staggered"></i></div>
             <ul id="nav-menu">
                 <li><a href="#" onclick="closeMenu()"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" onclick="toggleSubmenu(this)"><i class="fa-solid fa-box"></i> Sản phẩm <i class="fa-solid fa-chevron-down" style="font-size: 0.6rem;"></i></a>
+                <li class="dropdown" id="dropdown-li">
+                    <a href="javascript:void(0)" onclick="handleDropdownClick(this)"><i class="fa-solid fa-box"></i> Sản phẩm <i class="fa-solid fa-chevron-down" style="font-size: 0.6rem;"></i></a>
                     <ul class="dropdown-menu" id="submenu-products"></ul>
                 </li>
                 <li><a href="#intro" onclick="closeMenu()"><i class="fa-solid fa-info-circle"></i> Giới thiệu</a></li>
@@ -204,7 +207,6 @@
         <div class="slider-dots" id="slider-dots"></div>
     </div>
 
-    <!-- SẢN PHẨM -->
     <section id="products" class="no-print">
         <div class="section-title"><h2>Sản phẩm tiêu biểu</h2><div class="underline"></div></div>
         <div class="filter-bar">
@@ -216,7 +218,6 @@
         <div class="pagination" id="pagination"></div>
     </section>
 
-    <!-- GIỚI THIỆU -->
     <section id="intro" class="no-print">
         <div class="section-title"><h2>Giới thiệu</h2><div class="underline"></div></div>
         <div class="intro-container">
@@ -225,7 +226,6 @@
         </div>
     </section>
 
-    <!-- LĨNH VỰC -->
     <section id="activity" class="no-print" style="background: var(--light-bg); max-width: 100%;">
         <div style="max-width: 1300px; margin: auto;">
             <div class="section-title"><h2>Lĩnh vực hoạt động</h2><div class="underline"></div></div>
@@ -233,7 +233,6 @@
         </div>
     </section>
 
-    <!-- DỰ ÁN -->
     <section id="projects" class="no-print">
         <div class="section-title"><h2 style="color: white;">Dự án đã triển khai</h2><div class="underline"></div></div>
         <div class="marquee" id="project-list"></div>
@@ -251,25 +250,14 @@
     <!-- PRINT SECTION -->
     <div id="print-section">
         <table style="width: 100%; border: none !important;">
-            <tr style="border: none !important;">
-                <td style="border: none !important; width: 45%;"><img src="https://khanggiaphuc.com/Data/logo.jpg" style="width: 250px;"></td>
-                <td style="border: none !important; width: 55%; text-align: right; vertical-align: top;">
-                    <div class="p-company-red">CÔNG TY TNHH KHANG GIA PHÚC</div>
-                    <div style="color: #0071ba; text-decoration: underline; font-weight: bold; font-size: 13px;">www.khanggiaphuc.com</div>
-                </td>
-            </tr>
+            <tr><td style="width: 45%; border:none"><img src="https://khanggiaphuc.com/Data/logo.jpg" style="width: 250px;"></td><td style="width: 55%; text-align: right; border:none"><div class="p-company-red">CÔNG TY TNHH KHANG GIA PHÚC</div><div style="color: #0071ba; text-decoration: underline; font-weight: bold; font-size: 13px;">www.khanggiaphuc.com</div></td></tr>
         </table>
         <div class="p-title-blue">BẢNG BÁO GIÁ</div>
         <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
             <div>Số: <b id="print-no">...</b></div>
             <div>TP.HCM, Ngày <span id="print-date">...</span></div>
         </div>
-        <table class="p-table">
-            <thead>
-                <tr><th style="width: 5%;">STT</th><th style="width: 42%;">Thiết bị và dịch vụ</th><th style="width: 13%;">Hình ảnh</th><th style="width: 7%;">ĐVT</th><th style="width: 6%;">SL</th><th style="width: 13.5%;">Đơn giá</th><th style="width: 13.5%;">Thành tiền</th></tr>
-            </thead>
-            <tbody id="print-table-body"></tbody>
-        </table>
+        <table class="p-table"><thead id="p-thead"><tr><th style="width: 5%;">STT</th><th style="width: 42%;">Thiết bị và dịch vụ</th><th style="width: 13%;">Hình ảnh</th><th style="width: 7%;">ĐVT</th><th style="width: 6%;">SL</th><th style="width: 13.5%;">Đơn giá</th><th style="width: 13.5%;">Thành tiền</th></tr></thead><tbody id="print-table-body"></tbody></table>
         <div class="p-footer-block">
             <table class="p-table" style="margin-top: -1px;">
                 <tr><td colspan="6" style="text-align: right; font-weight: 700;">Tổng cộng tiền hàng:</td><td id="p-subtotal" style="text-align: right; font-weight: 700;"></td></tr>
@@ -278,18 +266,10 @@
             </table>
             <p style="font-style: italic; margin-top: 10px; font-size: 13px;">Bằng chữ: <b id="p-word" style="text-transform: capitalize;">...</b></p>
             <div style="border: 1px solid black; padding: 10px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
-                <div id="p-payment-info" style="font-size: 12px; line-height: 1.7; flex: 1;">
-                    <b style="text-decoration: underline;">Thanh toán chuyển khoản:</b><br>
-                    <span id="p-receiver">...</span><br>
-                    <span id="p-bank-stk">...</span><br>
-                    Nội dung: <span id="print-no-footer" style="font-weight: 700;">...</span>
-                </div>
+                <div id="p-payment-info" style="font-size: 12px; line-height: 1.7; flex: 1;"><b style="text-decoration: underline;">Thanh toán chuyển khoản:</b><br><span id="p-receiver">...</span><br><span id="p-bank-stk">...</span><br>Nội dung: <span id="print-no-footer" style="font-weight: 700;">...</span></div>
                 <div><img id="qr-payment" style="width: 110px; border: 1px solid #eee;"></div>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; text-align: center; margin-top: 30px;">
-                <div><b>ĐẠI DIỆN KGP TELECOM</b><div style="height:120px; position:relative"><img src="https://khanggiaphuc.com/Data/dau.png" style="width:180px; position:absolute; top:0; left:50%; transform:translateX(-50%); opacity:0.9"></div></div>
-                <div><b>XÁC NHẬN KHÁCH HÀNG</b><div style="height:120px"></div><div style="font-style:italic; font-size:11px">(Ký tên và đóng dấu)</div></div>
-            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; text-align: center; margin-top: 30px;"><div><b>ĐẠI DIỆN KGP TELECOM</b><div style="height:120px; position:relative"><img src="https://khanggiaphuc.com/Data/dau.png" style="width:180px; position:absolute; top:0; left:50%; transform:translateX(-50%); opacity:0.9"></div></div><div><b>XÁC NHẬN KHÁCH HÀNG</b><div style="height: 120px"></div><div style="font-style:italic; font-size:11px">(Ký tên và đóng dấu)</div></div></div>
         </div>
     </div>
 
@@ -313,13 +293,9 @@
         async function fetchData(s) { const r = await fetch(`${base}&sheet=${encodeURIComponent(s)}`); return JSON.parse((await r.text()).substring(47).slice(0,-2)).table.rows; }
 
         function toggleMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
-        function closeMenu() { 
-            document.getElementById('nav-menu').classList.remove('active'); 
-            document.querySelector('.dropdown').classList.remove('open');
-        }
+        function closeMenu() { document.getElementById('nav-menu').classList.remove('active'); document.getElementById('dropdown-li').classList.remove('open'); }
 
-        // Handle Mobile Submenu
-        function toggleSubmenu(el) {
+        function handleDropdownClick(el) {
             if (window.innerWidth <= 768) {
                 el.parentElement.classList.toggle('open');
             } else {
@@ -357,7 +333,7 @@
                 const actLines = (home[3]?.c[1]?.v || "").split('\n').filter(l => l.trim());
                 let actH = ""; actLines.forEach((l, i) => {
                     let p = l.split(':');
-                    actH += `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${icons[i % icons.length]}"></i></div><h4>${p[0].trim()}</h4><p style="font-size:0.8rem; color:#888; margin-top:5px">${p[1] ? p[1].trim() : ""}</p></div>`;
+                    actH += `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${icons[i % icons.length]}"></i></div><h4>${p[0].trim()}</h4><p style="font-size:0.8rem; color:#888">${p[1] ? p[1].trim() : ""}</p></div>`;
                 });
                 document.getElementById('activity-list').innerHTML = actH;
                 document.getElementById('f1').innerHTML = home[4]?.c[1]?.v || "";
@@ -389,7 +365,7 @@
 
                 applyFilters();
 
-                // Restore Cart from URL
+                // Logic Chia sẻ giỏ hàng (Khôi phục từ URL)
                 const urlParams = new URLSearchParams(window.location.search);
                 const sharedQuote = urlParams.get('quote');
                 if (sharedQuote) {
