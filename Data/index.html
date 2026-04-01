@@ -252,28 +252,33 @@
     <script src="data.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // Load Local Files
-        function renderFiles() {
-            const container = document.getElementById('fileContainer');
-            if (typeof myFiles === 'undefined' || myFiles.length === 0) {
-                container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #444;">Chưa có dữ liệu. Hãy chạy Update.ps1!</div>';
-                return;
-            }
-            container.innerHTML = myFiles.map(file => {
-                let icon = 'fa-file';
-                if(file.type === 'folder') icon = 'fa-folder';
-                if(file.type === 'iso') icon = 'fa-compact-disc';
-                if(file.type === 'archive') icon = 'fa-file-archive';
-                if(file.type === 'code') icon = 'fa-file-code';
-                return `
-                    <a href="${file.link}" class="file-item" download>
-                        <i class="fas ${icon}"></i>
-                        <span>${file.name}</span>
-                        <div class="file-size">${file.size}</div>
-                    </a>
-                `;
-            }).join('');
-        }
+// Cập nhật lại hàm hiển thị file
+function renderFiles() {
+    const container = document.getElementById('fileContainer');
+    if (typeof myFiles === 'undefined' || myFiles.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #444;">Chưa có dữ liệu. Hãy chạy Update.ps1!</div>';
+        return;
+    }
+    container.innerHTML = myFiles.map(file => {
+        let icon = 'fa-file';
+        if(file.type === 'folder') icon = 'fa-folder';
+        if(file.type === 'iso') icon = 'fa-compact-disc';
+        if(file.type === 'archive') icon = 'fa-file-archive';
+        if(file.type === 'code') icon = 'fa-file-code';
+        if(file.type === 'pdf') icon = 'fa-file-pdf';
+
+        // CHỈNH SỬA TẠI ĐÂY: 
+        // - Xóa bỏ thuộc tính 'download'
+        // - Thêm thuộc tính target="_blank" để luôn mở tab mới
+        return `
+            <a href="${file.link}" class="file-item" target="_blank">
+                <i class="fas ${icon}"></i>
+                <span>${file.name}</span>
+                <div class="file-size">${file.size}</div>
+            </a>
+        `;
+    }).join('');
+}
 
         renderFiles();
 
