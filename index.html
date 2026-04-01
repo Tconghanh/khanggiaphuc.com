@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KGP Telecom - Giải Pháp Công Nghệ Toàn Diện</title>
+    <title>KGP Telecom - Công Nghệ Trong Tầm Tay</title>
     
     <link rel="icon" type="image/x-icon" href="https://khanggiaphuc.com/Data/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -203,6 +203,7 @@
             <div class="slide"><img src="https://khanggiaphuc.com/Data/SL3.jpg"></div>
             <div class="slide"><img src="https://khanggiaphuc.com/Data/SL4.jpg"></div>
             <div class="slide"><img src="https://khanggiaphuc.com/Data/SL5.jpg"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL6.jpg"></div>
         </div>
         <div class="slider-dots" id="slider-dots"></div>
     </div>
@@ -221,7 +222,7 @@
     <section id="intro" class="no-print">
         <div class="section-title"><h2>Giới thiệu</h2><div class="underline"></div></div>
         <div class="intro-container">
-            <div class="intro-img-box"><img src="https://khanggiaphuc.com/Data/SL5.jpg"></div>
+            <div class="intro-img-box"><img src="https://khanggiaphuc.com/Data/GioiThieu.jpg"></div>
             <div id="intro-text"></div>
         </div>
     </section>
@@ -307,7 +308,7 @@
         // --- SLIDER ---
         function initSlider() {
             const dots = document.getElementById('slider-dots');
-            for(let i=0; i<5; i++) {
+            for(let i=0; i<6; i++) {
                 const dot = document.createElement('div');
                 dot.className = `dot ${i===0?'active':''}`;
                 dot.onclick = () => goToSlide(i);
@@ -315,7 +316,7 @@
             }
             startSlider();
         }
-        function moveSlide(dir) { curSlide = (curSlide + dir + 5) % 5; updateSliderUI(); resetSliderTimer(); }
+        function moveSlide(dir) { curSlide = (curSlide + dir + 6) % 5; updateSliderUI(); resetSliderTimer(); }
         function goToSlide(idx) { curSlide = idx; updateSliderUI(); resetSliderTimer(); }
         function updateSliderUI() {
             document.getElementById('slider').style.transform = `translateX(-${curSlide * 100}%)`;
