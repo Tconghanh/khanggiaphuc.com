@@ -308,7 +308,7 @@
         // --- SLIDER ---
         function initSlider() {
             const dots = document.getElementById('slider-dots');
-            for(let i=0; i<5; i++) {
+            for(let i=0; i<6; i++) {
                 const dot = document.createElement('div');
                 dot.className = `dot ${i===0?'active':''}`;
                 dot.onclick = () => goToSlide(i);
@@ -316,7 +316,7 @@
             }
             startSlider();
         }
-        function moveSlide(dir) { curSlide = (curSlide + dir + 5) % 5; updateSliderUI(); resetSliderTimer(); }
+        function moveSlide(dir) { curSlide = (curSlide + dir + 6) % 5; updateSliderUI(); resetSliderTimer(); }
         function goToSlide(idx) { curSlide = idx; updateSliderUI(); resetSliderTimer(); }
         function updateSliderUI() {
             document.getElementById('slider').style.transform = `translateX(-${curSlide * 100}%)`;
