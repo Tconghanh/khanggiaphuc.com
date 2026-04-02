@@ -1,9 +1,27 @@
+--- START OF FILE index.html ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KGP Telecom - Công Nghệ Trong Tầm Tay</title>
+    
+    <!-- SEO Tối ưu -->
+    <title>KGP Telecom - Giải Pháp Viễn Thông & Công Nghệ Hàng Đầu</title>
+    <meta name="description" content="KGP Telecom chuyên cung cấp giải pháp viễn thông, camera giám sát, hệ thống mạng và điện năng lượng mặt trời uy tín. Công nghệ trong tầm tay bạn.">
+    <meta name="keywords" content="KGP Telecom, viễn thông, camera, thiết bị mạng, điện mặt trời, Khang Gia Phúc">
+    <link rel="canonical" href="https://khanggiaphuc.com/">
+    
+    <!-- Open Graph SEO (Facebook, Zalo) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="KGP Telecom - Công Nghệ Trong Tầm Tay">
+    <meta property="og:description" content="Giải pháp viễn thông, thiết bị an ninh và năng lượng sạch chuyên nghiệp.">
+    <meta property="og:image" content="https://khanggiaphuc.com/Data/logo.jpg">
+    <meta property="og:url" content="https://khanggiaphuc.com/">
+
+    <!-- Preconnect tối ưu tốc độ -->
+    <link rel="preconnect" href="https://docs.google.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <link rel="icon" type="image/x-icon" href="https://khanggiaphuc.com/Data/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -25,7 +43,11 @@
         header { background: rgba(255,255,255,0.96); backdrop-filter: blur(15px); box-shadow: var(--shadow-sm); position: fixed; width: 100%; top: 0; z-index: 1000; height: 70px; display: flex; align-items: center; }
         nav { max-width: 1400px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; width: 100%; gap: 10px; }
         .nav-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+        
+        /* SEO: H1 cho Logo */
+        h1.logo-wrap { margin: 0; line-height: 0; }
         .logo img { height: 42px; width: auto; transition: 0.3s; }
+        
         .search-container { position: relative; flex: 1; max-width: 350px; }
         .search-box input { width: 100%; padding: 10px 40px 10px 15px; border-radius: 25px; border: 1.5px solid #eee; outline: none; font-size: 0.85rem; transition: 0.3s; background: #f1f5f9; height: 40px; }
         .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); cursor: pointer; }
@@ -36,7 +58,6 @@
         nav ul li { position: relative; }
         nav ul li a { text-decoration: none; color: var(--dark-gray); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; padding: 10px 0; display: block; }
         
-        /* Dropdown Desktop */
         .dropdown-menu { 
             position: absolute; top: 100%; left: 0; background: #fff; min-width: 220px; 
             box-shadow: var(--shadow-lg); border-radius: 8px; display: none; 
@@ -51,7 +72,7 @@
         .menu-toggle { display: none; font-size: 1.5rem; color: var(--primary); cursor: pointer; }
 
         /* --- SLIDER --- */
-        .slider-container { width: 100%; height: 500px; margin-top: 70px; overflow: hidden; position: relative; }
+        .slider-container { width: 100%; height: 500px; margin-top: 70px; overflow: hidden; position: relative; background: #eee; }
         .slider { display: flex; width: 100%; height: 100%; transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1); }
         .slide { min-width: 100%; height: 100%; }
         .slide img { width: 100%; height: 100%; object-fit: cover; }
@@ -127,11 +148,7 @@
             nav ul li { width: 100%; }
             nav ul li a { font-size: 1rem; border-bottom: 1px solid #f1f5f9; width: 100%; padding: 12px 0; }
             
-            /* Mobile Dropdown Logic */
-            .dropdown-menu { 
-                position: static; display: none; box-shadow: none; border: none; 
-                padding: 0 0 0 20px; width: 100%; 
-            }
+            .dropdown-menu { position: static; display: none; box-shadow: none; border: none; padding: 0 0 0 20px; width: 100%; }
             .dropdown.open .dropdown-menu { display: block; }
             .dropdown-menu li a { border-bottom: none; font-weight: 400; color: #666; font-size: 0.9rem; padding: 8px 0; }
 
@@ -169,16 +186,19 @@
     <header class="no-print">
         <nav>
             <div class="nav-left">
-                <a href="#" class="logo"><img src="https://khanggiaphuc.com/Data/logo.jpg" alt="Logo"></a>
+                <!-- SEO: Logo wrap h1 -->
+                <h1 class="logo-wrap">
+                    <a href="#" class="logo"><img src="https://khanggiaphuc.com/Data/logo.jpg" alt="KGP Telecom - Thiết bị viễn thông"></a>
+                </h1>
                 <div class="search-container">
                     <div class="search-box">
                         <input type="text" id="product-search" placeholder="Tìm sản phẩm..." autocomplete="off">
-                        <i class="fa-solid fa-magnifying-glass" onclick="handleSearch()"></i>
+                        <i class="fa-solid fa-magnifying-glass" onclick="handleSearch()" aria-label="Tìm kiếm"></i>
                     </div>
                     <div id="search-results" class="search-results"></div>
                 </div>
             </div>
-            <div class="menu-toggle" onclick="toggleMenu()"><i class="fa-solid fa-bars-staggered"></i></div>
+            <div class="menu-toggle" onclick="toggleMenu()" aria-label="Menu"><i class="fa-solid fa-bars-staggered"></i></div>
             <ul id="nav-menu">
                 <li><a href="#" onclick="closeMenu()"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
                 <li class="dropdown" id="dropdown-li">
@@ -195,15 +215,15 @@
     </header>
 
     <div class="slider-container no-print">
-        <button class="slider-btn prev-btn" onclick="moveSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-        <button class="slider-btn next-btn" onclick="moveSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+        <button class="slider-btn prev-btn" onclick="moveSlide(-1)" aria-label="Slide trước"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="slider-btn next-btn" onclick="moveSlide(1)" aria-label="Slide sau"><i class="fa-solid fa-chevron-right"></i></button>
         <div class="slider" id="slider">
-            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL1.jpg"></div>
-            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL2.jpg"></div>
-            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL3.jpg"></div>
-            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL4.jpg"></div>
-            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL5.jpg"></div>
-            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL6.jpg"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL1.jpg" alt="Slide 1"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL2.jpg" alt="Slide 2"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL3.jpg" alt="Slide 3"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL4.jpg" alt="Slide 4"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL5.jpg" alt="Slide 5"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/Data/SL6.jpg" alt="Slide 6"></div>
         </div>
         <div class="slider-dots" id="slider-dots"></div>
     </div>
@@ -222,7 +242,7 @@
     <section id="intro" class="no-print">
         <div class="section-title"><h2>Giới thiệu</h2><div class="underline"></div></div>
         <div class="intro-container">
-            <div class="intro-img-box"><img src="https://khanggiaphuc.com/Data/GioiThieu.jpg"></div>
+            <div class="intro-img-box"><img src="Data/GioiThieu.jpg" alt="Giới thiệu KGP Telecom"></div>
             <div id="intro-text"></div>
         </div>
     </section>
@@ -239,14 +259,14 @@
         <div class="marquee" id="project-list"></div>
     </section>
 
-    <div class="cart-icon no-print" onclick="openCart()"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count" id="cart-count">0</span></div>
+    <div class="cart-icon no-print" onclick="openCart()" aria-label="Giỏ hàng"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count" id="cart-count">0</span></div>
 
     <!-- MODALS -->
-    <div id="pModal" class="modal no-print" onclick="if(event.target==this) closeModal()"><div class="modal-content"><span class="close-btn" onclick="closeModal()">&times;</span><div class="modal-left"><img id="main-preview" style="width:100%; height:300px; object-fit:contain" src=""><div id="thumb-box" style="margin-top:15px; display:flex; gap:5px; justify-content:center; flex-wrap:wrap"></div></div><div class="modal-right"><div id="m-cat" style="color:var(--btn-orange); font-weight:700; font-size:0.8rem"></div><h2 id="m-title" style="margin:10px 0; line-height:1.3"></h2><div id="m-price" style="color:var(--price-red); font-size:2rem; font-weight:700"></div><div style="margin-top:20px; font-weight:700; border-bottom:2px solid #eee; padding-bottom:5px">⚙ THÔNG SỐ KỸ THUẬT</div><ul id="m-specs" class="specs-list"></ul><button onclick="addToCartModal()" style="background:var(--btn-orange); color:#fff; border:none; padding:18px; border-radius:12px; font-weight:700; cursor:pointer; margin-top:auto; position:sticky; bottom:0">🛒 THÊM VÀO GIỎ HÀNG</button></div></div></div>
+    <div id="pModal" class="modal no-print" onclick="if(event.target==this) closeModal()"><div class="modal-content"><span class="close-btn" onclick="closeModal()">&times;</span><div class="modal-left"><img id="main-preview" style="width:100%; height:300px; object-fit:contain" src="" alt="Sản phẩm"><div id="thumb-box" style="margin-top:15px; display:flex; gap:5px; justify-content:center; flex-wrap:wrap"></div></div><div class="modal-right"><div id="m-cat" style="color:var(--btn-orange); font-weight:700; font-size:0.8rem"></div><h2 id="m-title" style="margin:10px 0; line-height:1.3"></h2><div id="m-price" style="color:var(--price-red); font-size:2rem; font-weight:700"></div><div style="margin-top:20px; font-weight:700; border-bottom:2px solid #eee; padding-bottom:5px">⚙ THÔNG SỐ KỸ THUẬT</div><ul id="m-specs" class="specs-list"></ul><button onclick="addToCartModal()" style="background:var(--btn-orange); color:#fff; border:none; padding:18px; border-radius:12px; font-weight:700; cursor:pointer; margin-top:auto; position:sticky; bottom:0">🛒 THÊM VÀO GIỎ HÀNG</button></div></div></div>
 
     <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position:relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align:center; color:var(--primary); margin-bottom:20px">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height:400px; overflow-y:auto"><table style="width:100%; border-collapse:collapse"><thead><tr style="border-bottom:2px solid #eee; text-align:left"><th>Sản phẩm</th><th style="width:80px">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align:right; margin-top:20px"><h3>Tổng: <span id="cart-total-web" style="color:var(--price-red)">0đ</span></h3><div style="display:flex; flex-direction:column; gap:8px; margin-top:20px"><button onclick="shareCart()" style="background:#3498db; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">🔗 CHIA SẺ GIỎ HÀNG (ZALO/FB)</button><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px"><button onclick="preparePrint(true)" style="background:#e67e22; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">🏢 BÁO GIÁ CÔNG TY</button><button onclick="preparePrint(false)" style="background:#27ae60; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">👤 BÁO GIÁ CÁ NHÂN</button></div></div></div></div></div>
 
-    <div id="projModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="modal-content"><span class="close-btn" onclick="document.getElementById('projModal').style.display='none'">&times;</span><div class="modal-left"><img id="pj-main-preview" style="width:100%; height:300px; object-fit:contain" src=""></div><div class="modal-right"><div id="pj-cat" style="color:var(--primary); font-weight:700; font-size:0.9rem"></div><h2 id="pj-title" style="margin:15px 0"></h2><div id="pj-content" style="white-space:pre-line; color:#555; line-height:1.7"></div></div></div></div>
+    <div id="projModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="modal-content"><span class="close-btn" onclick="document.getElementById('projModal').style.display='none'">&times;</span><div class="modal-left"><img id="pj-main-preview" style="width:100%; height:300px; object-fit:contain" src="" alt="Dự án"></div><div class="modal-right"><div id="pj-cat" style="color:var(--primary); font-weight:700; font-size:0.9rem"></div><h2 id="pj-title" style="margin:15px 0"></h2><div id="pj-content" style="white-space:pre-line; color:#555; line-height:1.7"></div></div></div></div>
 
     <!-- PRINT SECTION -->
     <div id="print-section">
@@ -274,9 +294,27 @@
         </div>
     </div>
 
+    <!-- Schema Markup SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "KGP Telecom",
+      "image": "https://khanggiaphuc.com/Data/logo.jpg",
+      "telephone": "0844900099",
+      "email": "info@khanggiaphuc.com",
+      "url": "https://khanggiaphuc.com/",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Ho Chi Minh City",
+        "addressCountry": "VN"
+      }
+    }
+    </script>
+
     <footer id="footer" class="no-print">
         <div class="footer-grid">
-            <div class="footer-col"><img src="https://khanggiaphuc.com/Data/logo.jpg" style="height: 50px; margin-bottom: 20px;"><div id="f1" style="font-size:0.9rem"></div></div>
+            <div class="footer-col"><img src="https://khanggiaphuc.com/Data/logo.jpg" style="height: 50px; margin-bottom: 20px;" alt="KGP Telecom Logo Footer"><div id="f1" style="font-size:0.9rem"></div></div>
             <div class="footer-col"><h4>THÔNG TIN LIÊN HỆ</h4><ul id="f2-contact" style="list-style:none; padding:0"></ul></div>
             <div class="footer-col"><h4>KẾT NỐI VỚI CHÚNG TÔI</h4><div id="f3-fb" style="background:#fff; border-radius:10px; overflow:hidden"></div></div>
         </div>
@@ -291,7 +329,23 @@
         let curSlide = 0, sliderInterval, itemsPerPage = 20, currentPage = 1, filteredProductsGlobal = [];
         const icons = ["fa-camera", "fa-network-wired", "fa-solar-panel", "fa-shield-halved", "fa-microchip", "fa-tools", "fa-wifi"];
 
-        async function fetchData(s) { const r = await fetch(`${base}&sheet=${encodeURIComponent(s)}`); return JSON.parse((await r.text()).substring(47).slice(0,-2)).table.rows; }
+        // Performance: Fetch Data with Cache
+        async function fetchData(s) {
+            const cacheKey = `kgp_cache_${s}`;
+            const cached = localStorage.getItem(cacheKey);
+            if (cached) {
+                const parts = JSON.parse(cached);
+                if (Date.now() - parts.time < 300000) { // Cache 5 phút
+                    setTimeout(() => processInitialData(s, parts.data), 10);
+                    return parts.data;
+                }
+            }
+            const r = await fetch(`${base}&sheet=${encodeURIComponent(s)}`);
+            const text = await r.text();
+            const data = JSON.parse(text.substring(47).slice(0,-2)).table.rows;
+            localStorage.setItem(cacheKey, JSON.stringify({time: Date.now(), data: data}));
+            return data;
+        }
 
         function toggleMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
         function closeMenu() { document.getElementById('nav-menu').classList.remove('active'); document.getElementById('dropdown-li').classList.remove('open'); }
@@ -308,6 +362,7 @@
         // --- SLIDER ---
         function initSlider() {
             const dots = document.getElementById('slider-dots');
+            dots.innerHTML = "";
             for(let i=0; i<6; i++) {
                 const dot = document.createElement('div');
                 dot.className = `dot ${i===0?'active':''}`;
@@ -316,7 +371,7 @@
             }
             startSlider();
         }
-        function moveSlide(dir) { curSlide = (curSlide + dir + 6) % 5; updateSliderUI(); resetSliderTimer(); }
+        function moveSlide(dir) { curSlide = (curSlide + dir + 6) % 6; updateSliderUI(); resetSliderTimer(); }
         function goToSlide(idx) { curSlide = idx; updateSliderUI(); resetSliderTimer(); }
         function updateSliderUI() {
             document.getElementById('slider').style.transform = `translateX(-${curSlide * 100}%)`;
@@ -326,27 +381,25 @@
         function startSlider() { sliderInterval = setInterval(() => moveSlide(1), 5000); }
         function resetSliderTimer() { clearInterval(sliderInterval); startSlider(); }
 
-        // --- INIT ---
-        async function init() {
-            try {
-                const home = await fetchData('Trang_Chu');
-                document.getElementById('intro-text').innerHTML = home[2]?.c[1]?.v || "";
-                const actLines = (home[3]?.c[1]?.v || "").split('\n').filter(l => l.trim());
+        // --- PROCESS DATA ---
+        async function processInitialData(sheetName, data) {
+            if (sheetName === 'Trang_Chu') {
+                document.getElementById('intro-text').innerHTML = data[2]?.c[1]?.v || "";
+                const actLines = (data[3]?.c[1]?.v || "").split('\n').filter(l => l.trim());
                 let actH = ""; actLines.forEach((l, i) => {
                     let p = l.split(':');
                     actH += `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${icons[i % icons.length]}"></i></div><h4>${p[0].trim()}</h4><p style="font-size:0.8rem; color:#888">${p[1] ? p[1].trim() : ""}</p></div>`;
                 });
                 document.getElementById('activity-list').innerHTML = actH;
-                document.getElementById('f1').innerHTML = home[4]?.c[1]?.v || "";
-                const cLines = (home[5]?.c[1]?.v || "").split('\n').filter(l => l.trim());
+                document.getElementById('f1').innerHTML = data[4]?.c[1]?.v || "";
+                const cLines = (data[5]?.c[1]?.v || "").split('\n').filter(l => l.trim());
                 let cH = ""; cLines.forEach(l => cH += `<li style="margin-bottom:12px; display:flex; gap:10px; color:inherit"><i class="fa-solid fa-check-circle" style="color:var(--primary); margin-top:4px"></i><span>${l}</span></li>`);
                 document.getElementById('f2-contact').innerHTML = cH;
-                const fb = home[6]?.c[1]?.v || "";
+                const fb = data[6]?.c[1]?.v || "";
                 document.getElementById('f3-fb').innerHTML = `<iframe src="https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=340&height=250&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true" width="100%" height="250" style="border:none;overflow:hidden" scrolling="no" frameborder="0"></iframe>`;
-
-                // Products
-                const pr = await fetchData('San_Pham');
-                products = pr.map(r => {
+            }
+            if (sheetName === 'San_Pham') {
+                products = data.map(r => {
                     const ten = r.c[1]?.v || "";
                     const brand = r.c[5]?.v ? r.c[5].v.toString().trim().toUpperCase() : "KHÁC";
                     return { ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", ten: ten, brand: brand, cats: r.c[2]?.v ? r.c[2].v.toString().split(';') : [], gia: r.c[3]?.v || 0, mota: r.c[4]?.v || "" };
@@ -357,16 +410,36 @@
                 const catList = Array.from(catsSet).sort(), brandList = Array.from(brandsSet).sort();
                 
                 const submenu = document.getElementById('submenu-products'), selectCat = document.getElementById('filter-category');
+                submenu.innerHTML = ""; selectCat.innerHTML = '<option value="TẤT CẢ">-- Tất cả danh mục --</option>';
                 catList.forEach(c => {
                     submenu.innerHTML += `<li><a href="#products" onclick="setFilter('cat', '${c}')">${c}</a></li>`;
                     selectCat.innerHTML += `<option value="${c}">${c}</option>`;
                 });
                 const selectBrand = document.getElementById('filter-brand');
+                selectBrand.innerHTML = '<option value="TẤT CẢ">-- Tất cả thương hiệu --</option>';
                 brandList.forEach(b => { selectBrand.innerHTML += `<option value="${b}">${b}</option>`; });
-
                 applyFilters();
+            }
+            if (sheetName === 'Du_An') {
+                allProjects = data.slice(1).map(r => ({ ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", ten: r.c[1]?.v || "", hangmuc: r.c[2]?.v || "", noidung: r.c[3]?.v || "", nam: r.c[4]?.v || "" })).filter(x => x.ma);
+                let pjH = ""; allProjects.forEach(pj => pjH += `<div class="proj-card" onclick="openProjModal('${pj.ma}')"><img src="${imgBase}${pj.ma}.jpg" alt="${pj.ten}"><h4>${pj.ten}</h4></div>`);
+                document.getElementById('project-list').innerHTML = pjH + pjH;
+            }
+        }
 
-                // Logic Chia sẻ giỏ hàng (Khôi phục từ URL)
+        // --- INIT ---
+        async function init() {
+            try {
+                const homeData = await fetchData('Trang_Chu');
+                await processInitialData('Trang_Chu', homeData);
+
+                const prodData = await fetchData('San_Pham');
+                await processInitialData('San_Pham', prodData);
+
+                const projData = await fetchData('Du_An');
+                await processInitialData('Du_An', projData);
+
+                // Check Shared Quote
                 const urlParams = new URLSearchParams(window.location.search);
                 const sharedQuote = urlParams.get('quote');
                 if (sharedQuote) {
@@ -380,19 +453,14 @@
                     setTimeout(() => openCart(), 1000);
                 }
 
-                // Projects & Search
-                const dr = await fetchData('Du_An');
-                allProjects = dr.slice(1).map(r => ({ ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", ten: r.c[1]?.v || "", hangmuc: r.c[2]?.v || "", noidung: r.c[3]?.v || "", nam: r.c[4]?.v || "" })).filter(x => x.ma);
-                let pjH = ""; allProjects.forEach(pj => pjH += `<div class="proj-card" onclick="openProjModal('${pj.ma}')"><img src="${imgBase}${pj.ma}.jpg"><h4>${pj.ten}</h4></div>`);
-                document.getElementById('project-list').innerHTML = pjH + pjH;
-
+                // Search logic
                 const searchInp = document.getElementById('product-search'), searchRes = document.getElementById('search-results');
                 searchInp.addEventListener('input', (e) => {
                     const k = e.target.value.toLowerCase().trim();
                     if(k.length < 1) { searchRes.style.display = 'none'; return; }
                     const f = products.filter(p => p.ten.toLowerCase().includes(k) || p.ma.toLowerCase().includes(k)).slice(0, 8);
                     if(f.length > 0) {
-                        searchRes.innerHTML = f.map(p => `<div class="search-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #eee;cursor:pointer" onclick="openModal('${p.ma}'); searchRes.style.display='none'"><img src="${imgBase}${p.ma}.jpg" style="width:40px;height:40px;object-fit:contain"><div><b style="font-size:0.8rem">${p.ten}</b><br><span style="color:red;font-size:0.75rem">${p.gia.toLocaleString()}đ</span></div></div>`).join('');
+                        searchRes.innerHTML = f.map(p => `<div class="search-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #eee;cursor:pointer" onclick="openModal('${p.ma}'); searchRes.style.display='none'"><img src="${imgBase}${p.ma}.jpg" style="width:40px;height:40px;object-fit:contain" alt="${p.ten}"><div><b style="font-size:0.8rem">${p.ten}</b><br><span style="color:red;font-size:0.75rem">${p.gia.toLocaleString()}đ</span></div></div>`).join('');
                         searchRes.style.display = 'block';
                     } else searchRes.style.display = 'none';
                 });
@@ -430,8 +498,9 @@
             renderPagination(filteredProductsGlobal.length);
         }
 
+        // Performance: Add Alt text and Lazy load
         function renderProducts(data) {
-            document.getElementById('product-grid').innerHTML = data.map(p => `<div class="product-card"><img src="${imgBase}${p.ma}.jpg" onclick="openModal('${p.ma}')" onerror="this.src='https://via.placeholder.com/200'"><h3 onclick="openModal('${p.ma}')">${p.ten}</h3><div class="price">${p.gia.toLocaleString()}đ</div><button class="btn-add-cart" onclick="addToCart('${p.ma}')">🛒 THÊM GIỎ HÀNG</button></div>`).join('');
+            document.getElementById('product-grid').innerHTML = data.map(p => `<div class="product-card"><img src="${imgBase}${p.ma}.jpg" loading="lazy" alt="${p.ten}" onclick="openModal('${p.ma}')" onerror="this.src='https://via.placeholder.com/200'"><h3 onclick="openModal('${p.ma}')">${p.ten}</h3><div class="price">${p.gia.toLocaleString()}đ</div><button class="btn-add-cart" onclick="addToCart('${p.ma}')">🛒 THÊM GIỎ HÀNG</button></div>`).join('');
         }
 
         function renderPagination(totalItems) {
@@ -464,9 +533,10 @@
             document.getElementById('m-price').innerText = p.gia.toLocaleString() + ' đ';
             document.getElementById('m-cat').innerText = p.cats.join(' | ');
             document.getElementById('main-preview').src = `${imgBase}${p.ma}.jpg`;
+            document.getElementById('main-preview').alt = p.ten;
             document.getElementById('m-specs').innerHTML = p.mota.split('\n').filter(l => l.trim()).map(l => `<li>${l}</li>`).join('');
-            let th = `<img src="${imgBase}${p.ma}.jpg" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onclick="document.getElementById('main-preview').src=this.src">`;
-            [1,2,3,4].forEach(n => th += `<img src="${imgBase}${p.ma}.${n}.jpg" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onerror="this.style.display='none'" onclick="document.getElementById('main-preview').src=this.src">`);
+            let th = `<img src="${imgBase}${p.ma}.jpg" alt="thumbnail" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onclick="document.getElementById('main-preview').src=this.src">`;
+            [1,2,3,4].forEach(n => th += `<img src="${imgBase}${p.ma}.${n}.jpg" alt="thumbnail ${n}" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onerror="this.style.display='none'" onclick="document.getElementById('main-preview').src=this.src">`);
             document.getElementById('thumb-box').innerHTML = th;
             document.getElementById('pModal').style.display = 'flex';
         }
@@ -508,7 +578,7 @@
             document.getElementById('print-date').innerText = n.toLocaleDateString('vi-VN');
             let sub = 0; document.getElementById('print-table-body').innerHTML = cart.map((item, i) => {
                 const t = item.gia * item.qty; sub += t;
-                return `<tr><td align="center">${i+1}</td><td><b>${item.ten}</b>\n${item.mota}</td><td align="center"><img src="${imgBase}${item.ma}.jpg" style="width:50px"></td><td align="center">Bộ</td><td align="center">${item.qty}</td><td align="right">${item.gia.toLocaleString()}</td><td align="right">${t.toLocaleString()}</td></tr>`;
+                return `<tr><td align="center">${i+1}</td><td><b>${item.ten}</b>\n${item.mota}</td><td align="center"><img src="${imgBase}${item.ma}.jpg" style="width:50px" alt="img"></td><td align="center">Bộ</td><td align="center">${item.qty}</td><td align="right">${item.gia.toLocaleString()}</td><td align="right">${t.toLocaleString()}</td></tr>`;
             }).join('');
             const vat = isCompany ? Math.round(sub * 0.1) : 0; const gt = sub + vat;
             document.getElementById('p-subtotal').innerText = sub.toLocaleString(); document.getElementById('p-vat').innerText = vat.toLocaleString();
@@ -559,3 +629,4 @@
     </script>
 </body>
 </html>
+--- END OF FILE index.html ---
