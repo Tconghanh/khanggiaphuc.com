@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGP Dashboard | Hệ Thống Quản Trị</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        :root { --wp-sidebar: #1d2327; --wp-sidebar-hover: #2271b1; --wp-bg: #f0f0f1; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--wp-bg); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Sidebar */
+        .wp-sidebar { width: 160px; background: var(--wp-sidebar); color: #f0f0f1; flex-shrink: 0; display: flex; flex-direction: column; z-index: 100; }
+        .wp-brand { padding: 15px; background: #000; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+        .nav-item { padding: 12px 15px; display: flex; align-items: center; gap: 10px; font-size: 14px; color: #f0f0f1; transition: all 0.1s; cursor: pointer; border-left: 4px solid transparent; }
+        .nav-item:hover { background: rgba(255,255,255,0.1); color: #72aee6; }
+        .nav-item.active { background: var(--wp-sidebar-hover); color: white; border-left-color: white; }
+        
+        /* Layout */
+        .wp-main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .wp-toolbar { height: 32px; background: #1d2327; color: #c3c4c7; display: flex; align-items: center; padding: 0 20px; font-size: 13px; justify-content: space-between; }
+        .wp-content { padding: 20px; flex-grow: 1; overflow-y: auto; }
+        
+        .workspace-card { background: white; border: 1px solid #c3c4c7; box-shadow: 0 1px 1px rgba(0,0,0,.04); min-height: calc(100vh - 120px); position: relative; }
+        iframe { width: 100%; height: 100%; min-height: inherit; border: none; }
+        
+        /* Form & Button */
+        .wp-button { background: #2271b1; border: 1px solid #2271b1; color: #fff; padding: 6px 12px; border-radius: 3px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .wp-button:hover { background: #135e96; }
+        .wp-input { border: 1px solid #8c8f94; padding: 5px 10px; border-radius: 4px; font-size: 13px; }
+        
+        /* Table */
+        .wp-table { width: 100%; border-collapse: collapse; background: white; font-size: 13px; }
+        .wp-table th { text-align: left; padding: 12px; border-bottom: 2px solid #f0f0f1; color: #2c3338; background: #f9f9f9; }
+        .wp-table td { padding: 12px; border-bottom: 1px solid #f0f0f1; color: #50575e; }
+        .wp-table tr:hover { background: #f6f7f7; }
+        
+        .upload-section { border-bottom: 1px solid #e2e8f0; background: #fdfdfd; }
+    </style>
+</head>
+<body>
+
+    <aside class="wp-sidebar">
+        <div class="wp-brand"><i class="fa-solid fa-gauge-high"></i><span>KGP ADMIN</span></div>
+        <nav class="mt-4">
+            <div onclick="switchTab(this, '0')" class="nav-item active"><i class="fa-solid fa-house"></i> Bảng tin</div>
+            <div onclick="switchTab(this, '809858153')" class="nav-item"><i class="fa-solid fa-diagram-project"></i> Dự án</div>
+            <div onclick="switchTab(this, '895747298')" class="nav-item"><i class="fa-solid fa-box"></i> Sản phẩm</div>
+            <div onclick="switchTab(this, 'hosting')" class="nav-item"><i class="fa-solid fa-cloud-arrow-up"></i> Dữ liệu & Hosting</div>
+        </nav>
+    </aside>
+
+    <main class="wp-main">
+        <div class="wp-toolbar">
+            <div class="flex gap-4"><span><i class="fa-solid fa-earth-americas mr-1"></i> Khang Gia Phúc</span></div>
+            <div>Chào, Quản trị viên <i class="fa-solid fa-user-circle ml-1"></i></div>
+        </div>
+
+        <div class="wp-content">
+            <h2 id="page-title" class="text-2xl font-normal text-[#1d2327] mb-4">Bảng điều khiển</h2>
+            
+            <div class="workspace-card">
+                <iframe id="main-frame" src="https://docs.google.com/spreadsheets/d/1knLdhA1j69Qqfa6nMIe20vfufQnvGr4THpehnK0mHPk/edit?rm=minimal&gid=0"></iframe>
+                
+                <div id="hosting-ui" class="hidden h-full flex flex-col">
+                    
+                    <div class="upload-section p-6">
+                        <h3 class="text-sm font-bold text-gray-700 uppercase mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-plus-circle text-blue-600"></i> Tải tệp mới lên /data
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                            <div class="md:col-span-1">
+                                <label class="block text-[11px] font-bold text-gray-500 mb-1">GITHUB TOKEN</label>
+                                <input type="password" id="gh-token" class="wp-input w-full" placeholder="Dán token tại đây...">
+                            </div>
+                            <div class="md:col-span-1">
+                                <label class="block text-[11px] font-bold text-gray-500 mb-1">CHỌN TỆP TIN</label>
+                                <input type="file" id="gh-file" onchange="updatePath(this)" class="text-xs w-full">
+                            </div>
+                            <div class="md:col-span-1">
+                                <label class="block text-[11px] font-bold text-gray-500 mb-1">ĐƯỜNG DẪN ĐÍCH</label>
+                                <input type="text" id="gh-path" value="data/" class="wp-input w-full bg-gray-50 font-mono" readonly>
+                            </div>
+                            <div>
+                                <button onclick="uploadToGithub()" id="upload-btn" class="wp-button w-full py-2">
+                                    <i class="fa-solid fa-upload mr-1"></i> TẢI LÊN
+                                </button>
+                            </div>
+                        </div>
+                        <div id="upload-status" class="hidden mt-4 p-3 border-l-4 text-xs"></div>
+                    </div>
+
+                    <div class="p-6 flex-grow overflow-y-auto">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-gray-700 uppercase">Danh sách tệp tin hiện tại</h3>
+                            <button onclick="fetchFiles()" class="text-xs text-blue-600 hover:underline"><i class="fa-solid fa-sync-alt mr-1"></i> Làm mới danh sách</button>
+                        </div>
+                        <table class="wp-table">
+                            <thead>
+                                <tr>
+                                    <th>Tên tệp</th>
+                                    <th>Kích thước</th>
+                                    <th>Định dạng</th>
+                                    <th class="text-right">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="file-list">
+                                <tr><td colspan="4" class="text-center py-10 text-gray-400 font-italic">Chọn mục "Dữ liệu & Hosting" để tải danh sách.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const frame = document.getElementById('main-frame');
+        const hostingUI = document.getElementById('hosting-ui');
+        const pageTitle = document.getElementById('page-title');
+        const repo = "Tconghanh/khanggiaphuc.com";
+
+        function switchTab(el, target) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+            pageTitle.innerText = el.innerText.trim();
+            
+            if(target === 'hosting') {
+                frame.classList.add('hidden');
+                hostingUI.classList.remove('hidden');
+                fetchFiles();
+            } else {
+                frame.classList.remove('hidden');
+                hostingUI.classList.add('hidden');
+                frame.src = `https://docs.google.com/spreadsheets/d/1knLdhA1j69Qqfa6nMIe20vfufQnvGr4THpehnK0mHPk/edit?rm=minimal&gid=${target}`;
+            }
+        }
+
+        async function fetchFiles() {
+            const fileList = document.getElementById('file-list');
+            fileList.innerHTML = '<tr><td colspan="4" class="text-center py-10"><i class="fas fa-spinner fa-spin mr-2"></i> Đang đồng bộ với GitHub...</td></tr>';
+            
+            try {
+                const response = await fetch(`https://api.github.com/repos/${repo}/contents/data`);
+                const files = await response.json();
+
+                if(!Array.isArray(files)) throw new Error("Thư mục trống hoặc không tồn tại");
+
+                fileList.innerHTML = '';
+                files.forEach(file => {
+                    const size = (file.size / 1024).toFixed(1) + ' KB';
+                    const ext = file.name.split('.').pop().toUpperCase();
+                    const isImg = ['JPG','PNG','WEBP','GIF','SVG'].includes(ext);
+                    
+                    fileList.innerHTML += `
+                        <tr>
+                            <td class="font-medium">
+                                <i class="fa-solid ${isImg ? 'fa-image text-purple-500' : 'fa-file-code text-gray-400'} mr-2"></i>
+                                <span class="text-slate-700">${file.name}</span>
+                            </td>
+                            <td>${size}</td>
+                            <td><span class="px-2 py-0.5 bg-gray-100 rounded text-[10px] font-bold">${ext}</span></td>
+                            <td class="text-right">
+                                <a href="${file.download_url}" target="_blank" class="text-blue-500 hover:text-blue-700 mr-3 text-xs font-bold">XEM</a>
+                                <button onclick="deleteFile('${file.path}', '${file.sha}')" class="text-red-500 hover:text-red-700 text-xs font-bold">XÓA</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                fileList.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-red-500 text-xs">Không thể tải danh sách: ${e.message}</td></tr>`;
+            }
+        }
+
+        async function deleteFile(path, sha) {
+            const token = document.getElementById('gh-token').value;
+            if(!token) return alert("Vui lòng nhập Token vào ô GITHUB TOKEN ở phía trên để xóa!");
+            if(!confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn tệp: ${path}?`)) return;
+
+            try {
+                const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `Admin deleted: ${path}`, sha: sha })
+                });
+                if(res.ok) { fetchFiles(); }
+                else alert("Lỗi xóa tệp. Token có thể sai hoặc hết hạn.");
+            } catch (e) { alert("Lỗi: " + e.message); }
+        }
+
+        function updatePath(input) {
+            const pathInput = document.getElementById('gh-path');
+            if (input.files && input.files[0]) pathInput.value = "data/" + input.files[0].name;
+            else pathInput.value = "data/";
+        }
+
+        async function uploadToGithub() {
+            const token = document.getElementById('gh-token').value;
+            const fileInput = document.getElementById('gh-file');
+            const path = document.getElementById('gh-path').value;
+            const status = document.getElementById('upload-status');
+            const btn = document.getElementById('upload-btn');
+
+            if(!token || !fileInput.files[0]) return alert("Vui lòng nhập Token và chọn file!");
+
+            status.classList.remove('hidden', 'border-green-500', 'border-red-500');
+            status.className = "mt-4 p-3 border-l-4 border-blue-500 bg-blue-50 text-blue-700 text-xs";
+            status.innerHTML = "<i class='fa-solid fa-circle-notch fa-spin mr-2'></i> Đang tải lên server GitHub...";
+            btn.disabled = true;
+
+            const reader = new FileReader();
+            reader.onload = async function() {
+                const content = reader.result.split(',')[1];
+                try {
+                    let sha = "";
+                    const check = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+                        headers: { 'Authorization': `token ${token}` }
+                    });
+                    if (check.ok) sha = (await check.json()).sha;
+
+                    const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: `Update: ${path}`, content, sha })
+                    });
+
+                    if(res.ok) {
+                        status.className = "mt-4 p-3 border-l-4 border-green-500 bg-green-50 text-green-700 text-xs";
+                        status.innerHTML = "<strong>THÀNH CÔNG!</strong> Tệp tin đã được lưu vào /data.";
+                        fileInput.value = ""; 
+                        fetchFiles(); // Làm mới danh sách ngay lập tức
+                    } else throw new Error("GitHub từ chối yêu cầu (Kiểm tra Token)");
+                } catch (e) {
+                    status.className = "mt-4 p-3 border-l-4 border-red-500 bg-red-50 text-red-700 text-xs";
+                    status.innerText = "LỖI: " + e.message;
+                } finally { btn.disabled = false; }
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    </script>
+</body>
+</html>
