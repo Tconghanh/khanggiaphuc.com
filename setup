@@ -1,0 +1,181 @@
+# =========================================================================
+# SCRIPT TỰ ĐỘNG BACKUP ĐA NĂNG & TỰ KHỞI TẠO FILE CẤU HÌNH UNATTEND.XML
+# Thiết kế tối ưu riêng cho Windows 11 - Không bao giờ lỗi font
+# =========================================================================
+$OutputEncoding = [System.Text.Encoding]::UTF8
+Host.UI.RawUI.WindowTitle = "Quy trình Tự động hóa Cài đặt & Backup"
+Clear-Host
+
+Write-Host "=========================================================================" -ForegroundColor Cyan
+Write-Host "    ĐANG KHỞI TẠO QUY TRÌNH TỰ ĐỘNG HÓA TOÀN DIỆN - VUI LÒNG CHỜ..." -ForegroundColor Cyan
+Write-Host "=========================================================================" -ForegroundColor Cyan
+Write-Host ""
+
+# 1. Định nghĩa các thư mục backup
+$BackupDir = "D:\Backup"
+$InfoDir = "$BackupDir\System_Info"
+$DriverDir = "$BackupDir\Drivers"
+$DesktopDir = "$BackupDir\Desktop_Data"
+$UnattendPath = "$BackupDir\unattend.xml"
+
+# Tạo cấu trúc thư mục nếu chưa có
+if (-not (Test-Path $BackupDir)) { New-Item -ItemType Directory -Path $BackupDir | Out-Null }
+if (-not (Test-Path $InfoDir)) { New-Item -ItemType Directory -Path $InfoDir | Out-Null }
+if (-not (Test-Path $DriverDir)) { New-Item -ItemType Directory -Path $DriverDir | Out-Null }
+if (-not (Test-Path $DesktopDir)) { New-Item -ItemType Directory -Path $DesktopDir | Out-Null }
+
+# =========================================================================
+# BƯỚC 1: TỰ ĐỘNG THU THẬP THÔNG TIN MẠNG ĐANG HOẠT ĐỘNG
+# =========================================================================
+Write-Host "[+] Đang quét và đọc cấu hình mạng hiện tại..." -ForegroundColor Yellow
+
+$NetAdapter = Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -First 1
+if ($NetAdapter) {
+    $IPInfo = Get-NetIPAddress -InterfaceIndex $NetAdapter.InterfaceIndex -AddressFamily IPv4 | Where-Object {$_.IPAddress -notlike '169.254.*'} | Select-Object -First 1
+    $Gateway = (Get-NetRoute -InterfaceIndex $NetAdapter.InterfaceIndex -DestinationPrefix '0.0.0.0/0').NextHop | Select-Object -First 1
+    $DNSAddresses = (Get-DnsClientServerAddress -InterfaceIndex $NetAdapter.InterfaceIndex -AddressFamily IPv4).ServerAddresses
+    $DNS = $DNSAddresses -join ','
+
+    $CurrIP = $IPInfo.IPAddress
+    $CurrPrefix = $IPInfo.PrefixLength
+    $CurrGW = $Gateway
+    $CurrDNS = $DNS
+
+    Write-Host "     - Phát hiện IP: $CurrIP (Prefix: $CurrPrefix)" -ForegroundColor Green
+    Write-Host "     - Phát hiện Gateway: $CurrGW" -ForegroundColor Green
+    Write-Host "     - Phát hiện DNS: $CurrDNS" -ForegroundColor Green
+} else {
+    Write-Host " [!] KHÔNG LẤY ĐƯỢC IP TỰ ĐỘNG! Sử dụng IP mặc định." -ForegroundColor Red
+    $CurrIP = "192.168.100.222"
+    $CurrPrefix = "24"
+    $CurrGW = "192.168.100.1"
+    $CurrDNS = "8.8.8.8,8.8.4.4"
+}
+
+# Ghi file báo cáo mạng
+ipconfig /all | Out-File -FilePath "$InfoDir\IP_Configuration.txt" -Encoding utf8
+Write-Host "[OK] Đã lưu log cấu hình mạng." -ForegroundColor Green
+Write-Host ""
+
+# =========================================================================
+# BƯỚC 2: TỰ ĐỘNG TẠO FILE UNATTEND.XML CHÍNH XÁC THEO IP ĐANG CÓ
+# =========================================================================
+Write-Host "[+] Đang tự động tạo file unattend.xml..." -ForegroundColor Yellow
+
+$XmlContent = @"
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+    <settings pass="specialize">
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ComputerName>*</ComputerName>
+        </component>
+        <component name="Microsoft-Windows-TerminalServices-LocalSessionManager" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <fDenyTSConnections>false</fDenyTSConnections>
+        </component>
+        <component name="Microsoft-Windows-TerminalServices-RDP-To-Guest" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <UserAuthentication>1</UserAuthentication>
+        </component>
+    </settings>
+    <settings pass="oobeSystem">
+        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <InputLocale>en-US</InputLocale>
+            <SystemLocale>en-US</SystemLocale>
+            <UILanguage>en-US</UILanguage>
+            <UserLocale>en-US</UserLocale>
+        </component>
+        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <OOBE>
+                <HideEULAPage>true</HideEULAPage>
+                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+                <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
+                <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+                <NetworkLocation>Work</NetworkLocation>
+                <ProtectYourPC>1</ProtectYourPC>
+            </OOBE>
+            <UserAccounts>
+                <AdministratorPassword>
+                    <Value>Ht210917</Value>
+                    <PlainText>true</PlainText>
+                </AdministratorPassword>
+                <LocalAccounts>
+                    <LocalAccount wcm:action="add">
+                        <Password>
+                            <Value>Ht210917</Value>
+                            <PlainText>true</PlainText>
+                        </Password>
+                        <Description>Local Administrator Account</Description>
+                        <DisplayName>Administrator</DisplayName>
+                        <Group>Administrators</Group>
+                        <Name>Administrator</Name>
+                    </LocalAccount>
+                </LocalAccounts>
+            </UserAccounts>
+            <AutoLogon>
+                <Password>
+                    <Value>Ht210917</Value>
+                    <PlainText>true</PlainText>
+                </Password>
+                <Enabled>true</Enabled>
+                <LogonCount>1</LogonCount>
+                <Username>Administrator</Username>
+            </AutoLogon>
+            <FirstLogonCommands>
+                <SynchronousCommand wcm:action="add">
+                    <Order>1</Order>
+                    <CommandLine>netsh advfirewall firewall set rule group="remote desktop" new enable=Yes</CommandLine>
+                    <Description>Mo Firewall RDP</Description>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>2</Order>
+                    <CommandLine>powershell.exe -Command "Get-NetAdapter | Where-Status Up | Set-NetIPInterface -DHCP Disabled; Get-NetAdapter | Where-Status Up | New-NetIPAddress -IPAddress '$CurrIP' -PrefixLength $CurrPrefix -DefaultGateway '$CurrGW'"</CommandLine>
+                    <Description>Dat IP Tinh tu dong</Description>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>3</Order>
+                    <CommandLine>powershell.exe -Command "Get-NetAdapter | Where-Status Up | Set-DnsClientServerAddress -ServerAddresses $CurrDNS"</CommandLine>
+                    <Description>Cau hinh DNS</Description>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <Order>4</Order>
+                    <CommandLine>powershell.exe -Command "Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private"</CommandLine>
+                    <Description>Chuyen mang sang Private</Description>
+                </SynchronousCommand>
+            </FirstLogonCommands>
+        </component>
+    </settings>
+</unattend>
+"@
+
+$XmlContent | Out-File -FilePath $UnattendPath -Encoding utf8
+Write-Host "[OK] Đã xuất file cấu hình thành công tại: $UnattendPath" -ForegroundColor Green
+Write-Host ""
+
+# =========================================================================
+# BƯỚC 3: TRÍCH XUẤT DRIVER HỆ THỐNG
+# =========================================================================
+Write-Host "[+] Đang trích xuất toàn bộ Driver hệ thống (DISM)..." -ForegroundColor Yellow
+Write-Host "     (Quá trình này mất khoảng 1-2 phút, vui lòng chờ)" -ForegroundColor Gray
+$DriverLog = Start-Process dism -ArgumentList "/online /export-driver /destination:`"$DriverDir`"" -NoNewWindow -Wait -PassThru
+
+if ($DriverLog.ExitCode -eq 0) {
+    Write-Host "[OK] Đã trích xuất Driver thành công vào: $DriverDir" -ForegroundColor Green
+} else {
+    Write-Host "[!] CẢNH BÁO: Không thể trích xuất Driver hệ thống." -ForegroundColor Red
+}
+Write-Host ""
+
+# =========================================================================
+# BƯỚC 4: SAO LƯU DỮ LIỆU DESKTOP
+# =========================================================================
+Write-Host "[+] Đang tiến hành sao lưu dữ liệu ngoài Desktop..." -ForegroundColor Yellow
+$DesktopPath = [Environment]::GetFolderPath("Desktop")
+robocopy $DesktopPath $DesktopDir /E /COPY:DAT /R:3 /W:5 /XF desktop.ini /NDL /NFL | Out-Null
+
+Write-Host "[OK] Đã hoàn thành sao lưu dữ liệu Desktop vào: $DesktopDir" -ForegroundColor Green
+Write-Host ""
+
+Write-Host "=========================================================================" -ForegroundColor Cyan
+Write-Host " HOÀN THÀNH! TOÀN BỘ FILE UNATTEND.XML VÀ DATA ĐÃ ĐƯỢC LƯU TẠI D:\BACKUP" -ForegroundColor Cyan
+Write-Host "=========================================================================" -ForegroundColor Cyan
+Write-Host ""
+Read-Host "Bấm phím Enter để thoát"
