@@ -1,180 +1,352 @@
-# =========================================================================
-# SCRIPT TU DONG BACKUP CHO WINDOWS 11 - TOI UU CHAY QUA CLOUD (KHONG DAU)
-# =========================================================================
-$OutputEncoding = [System.Text.Encoding]::UTF8
-Host.UI.RawUI.WindowTitle = "Quy trinh Tu dong hoa Cai dat & Backup"
-Clear-Host
+# ==============================================================================
+# BỘ CÀI ĐẶT WINDOWS 11 SONG SONG (DUAL BOOT) - TRỰC TIẾP TỪ FILE ISO
+# Phiên bản: 2.1 (Tối ưu hóa tốc độ)
+# Cách chạy: powershell -ExecutionPolicy Bypass -File .\SetupWin.ps1
+# ==============================================================================
 
-Write-Host "=========================================================================" -ForegroundColor Cyan
-Write-Host "    DANG KHOI TAO QUY TRINH TU DONG HOA TOAN DIEN - VUI LONG CHO..." -ForegroundColor Cyan
-Write-Host "=========================================================================" -ForegroundColor Cyan
-Write-Host ""
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+[System.Windows.Forms.Application]::EnableVisualStyles()
 
-# 1. Dinh nghia cac thu muc backup
-$BackupDir = "D:\Backup"
-$InfoDir = "$BackupDir\System_Info"
-$DriverDir = "$BackupDir\Drivers"
-$DesktopDir = "$BackupDir\Desktop_Data"
-$UnattendPath = "$BackupDir\unattend.xml"
-
-# Tao cau truc thu muc neu chua co
-if (-not (Test-Path $BackupDir)) { New-Item -ItemType Directory -Path $BackupDir | Out-Null }
-if (-not (Test-Path $InfoDir)) { New-Item -ItemType Directory -Path $InfoDir | Out-Null }
-if (-not (Test-Path $DriverDir)) { New-Item -ItemType Directory -Path $DriverDir | Out-Null }
-if (-not (Test-Path $DesktopDir)) { New-Item -ItemType Directory -Path $DesktopDir | Out-Null }
-
-# =========================================================================
-# BUOC 1: TU DUONG THU THAP THONG TIN MANG DANG HOAT DONG
-# =========================================================================
-Write-Host "[+] Dang quet va doc cau hinh mang hien tai..." -ForegroundColor Yellow
-
-$NetAdapter = Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -First 1
-if ($NetAdapter) {
-    $IPInfo = Get-NetIPAddress -InterfaceIndex $NetAdapter.InterfaceIndex -AddressFamily IPv4 | Where-Object {$_.IPAddress -notlike '169.254.*'} | Select-Object -First 1
-    $Gateway = (Get-NetRoute -InterfaceIndex $NetAdapter.InterfaceIndex -DestinationPrefix '0.0.0.0/0').NextHop | Select-Object -First 1
-    $DNSAddresses = (Get-DnsClientServerAddress -InterfaceIndex $NetAdapter.InterfaceIndex -AddressFamily IPv4).ServerAddresses
-    $DNS = $DNSAddresses -join ','
-
-    $CurrIP = $IPInfo.IPAddress
-    $CurrPrefix = $IPInfo.PrefixLength
-    $CurrGW = $Gateway
-    $CurrDNS = $DNS
-
-    Write-Host "     - Phat hien IP: $CurrIP (Prefix: $CurrPrefix)" -ForegroundColor Green
-    Write-Host "     - Phat hien Gateway: $CurrGW" -ForegroundColor Green
-    Write-Host "     - Phat hien DNS: $CurrDNS" -ForegroundColor Green
-} else {
-    Write-Host " [!] KHONG LAY DUOC IP TU DONG! Su dung IP mac dinh." -ForegroundColor Red
-    $CurrIP = "192.168.100.222"
-    $CurrPrefix = "24"
-    $CurrGW = "192.168.100.1"
-    $CurrDNS = "8.8.8.8,8.8.4.4"
+# 1. KIỂM TRA QUYỀN ADMINISTRATOR
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    [System.Windows.Forms.MessageBox]::Show("Bạn bắt buộc phải chạy script này với quyền Administrator (Run as Administrator)!", "Thiếu Quyền Hạn", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+    exit
 }
 
-# Ghi file bao cao mang
-ipconfig /all | Out-File -FilePath "$InfoDir\IP_Configuration.txt" -Encoding utf8
-Write-Host "[OK] Da luu log cau hinh mang." -ForegroundColor Green
-Write-Host ""
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+if ([string]::IsNullOrEmpty($ScriptDir)) { $ScriptDir = Get-Location }
+$IsoPath = Join-Path $ScriptDir "Win11.iso"
 
-# =========================================================================
-# BUOC 2: TU DONG TAO FILE UNATTEND.XML CHINH XAC THEO IP DANG CO
-# =========================================================================
-Write-Host "[+] Dang tu dong tao file unattend.xml..." -ForegroundColor Yellow
+# 2. KHỞI TẠO GIAO DIỆN ĐỒ HỌA (GUI) CỰC ĐẸP (DARK THEME CHUYÊN NGHIỆP)
+$form = New-Object System.Windows.Forms.Form
+$form.Text = "Windows 11 Dual-Boot Auto-Installer Engine v2.1 (Fast Mode)"
+$form.Size = New-Object System.Drawing.Size(650, 600)
+$form.BackColor = [System.Drawing.Color]::FromArgb(20, 20, 20)
+$form.ForeColor = [System.Drawing.Color]::White
+$form.StartPosition = "CenterScreen"
+$form.FormBorderStyle = "FixedSingle"
+$form.MaximizeBox = $false
 
-$XmlContent = @"
-<?xml version="1.0" encoding="utf-8"?>
-<unattend xmlns="urn:schemas-microsoft-com:unattend">
-    <settings pass="specialize">
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ComputerName>*</ComputerName>
-        </component>
-        <component name="Microsoft-Windows-TerminalServices-LocalSessionManager" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <fDenyTSConnections>false</fDenyTSConnections>
-        </component>
-        <component name="Microsoft-Windows-TerminalServices-RDP-To-Guest" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <UserAuthentication>1</UserAuthentication>
-        </component>
-    </settings>
-    <settings pass="oobeSystem">
-        <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <InputLocale>en-US</InputLocale>
-            <SystemLocale>en-US</SystemLocale>
-            <UILanguage>en-US</UILanguage>
-            <UserLocale>en-US</UserLocale>
-        </component>
-        <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <OOBE>
-                <HideEULAPage>true</HideEULAPage>
-                <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
-                <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
-                <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
-                <NetworkLocation>Work</NetworkLocation>
-                <ProtectYourPC>1</ProtectYourPC>
-            </OOBE>
-            <UserAccounts>
-                <AdministratorPassword>
-                    <Value>Ht210917</Value>
-                    <PlainText>true</PlainText>
-                </AdministratorPassword>
-                <LocalAccounts>
-                    <LocalAccount wcm:action="add">
-                        <Password>
-                            <Value>Ht210917</Value>
-                            <PlainText>true</PlainText>
-                        </Password>
-                        <Description>Local Administrator Account</Description>
-                        <DisplayName>Administrator</DisplayName>
-                        <Group>Administrators</Group>
-                        <Name>Administrator</Name>
-                    </LocalAccount>
-                </LocalAccounts>
-            </UserAccounts>
-            <AutoLogon>
-                <Password>
-                    <Value>Ht210917</Value>
-                    <PlainText>true</PlainText>
-                </Password>
-                <Enabled>true</Enabled>
-                <LogonCount>1</LogonCount>
-                <Username>Administrator</Username>
-            </AutoLogon>
-            <FirstLogonCommands>
-                <SynchronousCommand wcm:action="add">
-                    <Order>1</Order>
-                    <CommandLine>netsh advfirewall firewall set rule group="remote desktop" new enable=Yes</CommandLine>
-                    <Description>Mo Firewall RDP</Description>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Order>2</Order>
-                    <CommandLine>powershell.exe -Command "Get-NetAdapter | Where-Status Up | Set-NetIPInterface -DHCP Disabled; Get-NetAdapter | Where-Status Up | New-NetIPAddress -IPAddress '$CurrIP' -PrefixLength $CurrPrefix -DefaultGateway '$CurrGW'"</CommandLine>
-                    <Description>Dat IP Tinh tu dong</Description>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Order>3</Order>
-                    <CommandLine>powershell.exe -Command "Get-NetAdapter | Where-Status Up | Set-DnsClientServerAddress -ServerAddresses $CurrDNS"</CommandLine>
-                    <Description>Cau hinh DNS</Description>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
-                    <Order>4</Order>
-                    <CommandLine>powershell.exe -Command "Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private"</CommandLine>
-                    <Description>Chuyen mang sang Private</Description>
-                </SynchronousCommand>
-            </FirstLogonCommands>
-        </component>
-    </settings>
-</unattend>
+$lblTitle = New-Object System.Windows.Forms.Label
+$lblTitle.Text = "CÀI ĐẶT WINDOWS 11 SONG SONG (SIÊU TỐC)"
+$lblTitle.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
+$lblTitle.ForeColor = [System.Drawing.Color]::FromArgb(0, 150, 255)
+$lblTitle.Location = New-Object System.Drawing.Point(30, 20)
+$lblTitle.Size = New-Object System.Drawing.Size(580, 35)
+$form.Controls.Add($lblTitle)
+
+$lblIsoStatus = New-Object System.Windows.Forms.Label
+$lblIsoStatus.Location = New-Object System.Drawing.Point(30, 60)
+$lblIsoStatus.Size = New-Object System.Drawing.Size(580, 25)
+$lblIsoStatus.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Italic)
+$form.Controls.Add($lblIsoStatus)
+
+$lblEdition = New-Object System.Windows.Forms.Label
+$lblEdition.Text = "Bước 1: Chọn phiên bản Windows 11 muốn cài:"
+$lblEdition.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
+$lblEdition.Location = New-Object System.Drawing.Point(30, 100)
+$lblEdition.Size = New-Object System.Drawing.Size(580, 25)
+$form.Controls.Add($lblEdition)
+
+$cmbEdition = New-Object System.Windows.Forms.ComboBox
+$cmbEdition.Location = New-Object System.Drawing.Point(30, 130)
+$cmbEdition.Size = New-Object System.Drawing.Size(570, 30)
+$cmbEdition.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+$cmbEdition.BackColor = [System.Drawing.Color]::FromArgb(45, 45, 48)
+$cmbEdition.ForeColor = [System.Drawing.Color]::White
+$cmbEdition.Font = New-Object System.Drawing.Font("Segoe UI", 10)
+$form.Controls.Add($cmbEdition)
+
+$lblDrive = New-Object System.Windows.Forms.Label
+$lblDrive.Text = "Bước 2: Chọn phân vùng cài đặt mục tiêu (Yêu cầu trống > 64GB):"
+$lblDrive.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
+$lblDrive.Location = New-Object System.Drawing.Point(30, 180)
+$lblDrive.Size = New-Object System.Drawing.Size(580, 25)
+$form.Controls.Add($lblDrive)
+
+$cmbDrive = New-Object System.Windows.Forms.ComboBox
+$cmbDrive.Location = New-Object System.Drawing.Point(30, 210)
+$cmbDrive.Size = New-Object System.Drawing.Size(570, 30)
+$cmbDrive.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+$cmbDrive.BackColor = [System.Drawing.Color]::FromArgb(45, 45, 48)
+$cmbDrive.ForeColor = [System.Drawing.Color]::White
+$cmbDrive.Font = New-Object System.Drawing.Font("Segoe UI", 10)
+$form.Controls.Add($cmbDrive)
+
+# --- CÁC TUỲ CHỌN NÂNG CAO MỚI ---
+$chkFormat = New-Object System.Windows.Forms.CheckBox
+$chkFormat.Text = "Định dạng NHANH (Format NTFS) phân vùng để sạch dữ liệu cũ"
+$chkFormat.Location = New-Object System.Drawing.Point(30, 255)
+$chkFormat.Size = New-Object System.Drawing.Size(570, 25)
+$chkFormat.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Regular)
+$chkFormat.ForeColor = [System.Drawing.Color]::FromArgb(255, 120, 120)
+$form.Controls.Add($chkFormat)
+
+$chkBackupDriver = New-Object System.Windows.Forms.CheckBox
+$chkBackupDriver.Text = "Tự động trích xuất Driver từ máy hiện tại và Cấy (Inject) sang Windows 11 mới"
+$chkBackupDriver.Location = New-Object System.Drawing.Point(30, 285)
+$chkBackupDriver.Size = New-Object System.Drawing.Size(570, 25)
+$chkBackupDriver.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$chkBackupDriver.ForeColor = [System.Drawing.Color]::FromArgb(150, 255, 150)
+$chkBackupDriver.Checked = $true
+$form.Controls.Add($chkBackupDriver)
+
+$chkInstallApps = New-Object System.Windows.Forms.CheckBox
+$chkInstallApps.Text = "Gói quà tặng: Tạo công cụ tự động cài (EVKey, 7zip, Foxit, Cốc Cốc) trên Win mới"
+$chkInstallApps.Location = New-Object System.Drawing.Point(30, 315)
+$chkInstallApps.Size = New-Object System.Drawing.Size(570, 25)
+$chkInstallApps.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$chkInstallApps.ForeColor = [System.Drawing.Color]::FromArgb(150, 200, 255)
+$chkInstallApps.Checked = $true
+$form.Controls.Add($chkInstallApps)
+# ---------------------------------
+
+$txtLog = New-Object System.Windows.Forms.TextBox
+$txtLog.Location = New-Object System.Drawing.Point(30, 350)
+$txtLog.Size = New-Object System.Drawing.Size(570, 110)
+$txtLog.Multiline = $true
+$txtLog.ReadOnly = $true
+$txtLog.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
+$txtLog.ForeColor = [System.Drawing.Color]::FromArgb(0, 255, 128)
+$txtLog.Font = New-Object System.Drawing.Font("Consolas", 9.5)
+$txtLog.ScrollBars = [System.Windows.Forms.ScrollBars]::Vertical
+$txtLog.Text = "[Hệ thống] Trình theo dõi tiến trình đã sẵn sàng...\r\n"
+$form.Controls.Add($txtLog)
+
+$btnInstall = New-Object System.Windows.Forms.Button
+$btnInstall.Text = "KÍCH HOẠT QUÁ TRÌNH CÀI ĐẶT SONG SONG"
+$btnInstall.Location = New-Object System.Drawing.Point(30, 480)
+$btnInstall.Size = New-Object System.Drawing.Size(570, 45)
+$btnInstall.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+$btnInstall.FlatAppearance.BorderSize = 0
+$btnInstall.BackColor = [System.Drawing.Color]::FromArgb(0, 122, 215)
+$btnInstall.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
+$btnInstall.Cursor = [System.Windows.Forms.Cursors]::Hand
+$form.Controls.Add($btnInstall)
+
+$script:MountedDrive = $null
+$script:WimPath = ""
+
+# 3. NẠP ISO
+$form.Add_Load({
+    if (-not (Test-Path $IsoPath)) {
+        $lblIsoStatus.Text = "LỖI: Không tìm thấy file 'Win11.iso' trong cùng thư mục!"
+        $lblIsoStatus.ForeColor = [System.Drawing.Color]::LightCoral
+        $btnInstall.Enabled = $false
+        return
+    }
+
+    $lblIsoStatus.Text = "Đang phân tích file bộ cài Win11.iso, vui lòng đợi..."
+    $lblIsoStatus.ForeColor = [System.Drawing.Color]::Orange
+    $form.Refresh()
+
+    try {
+        $mountResult = Mount-DiskImage -ImagePath $IsoPath -StorageType ISO -PassThru -ErrorAction Stop
+        $volInfo = $mountResult | Get-Volume
+        $script:MountedDrive = $volInfo.DriveLetter
+
+        $wim = Join-Path "$($script:MountedDrive):\sources" "install.wim"
+        if (-not (Test-Path $wim)) { $wim = Join-Path "$($script:MountedDrive):\sources" "install.esd" }
+        if (-not (Test-Path $wim)) { throw "Không tìm thấy file install.wim/esd." }
+
+        $script:WimPath = $wim
+
+        $images = Get-WindowsImage -ImagePath $script:WimPath
+        foreach ($img in $images) { [void]$cmbEdition.Items.Add("$($img.ImageIndex). $($img.ImageName)") }
+        if ($cmbEdition.Items.Count -gt 0) { $cmbEdition.SelectedIndex = 0 }
+
+        $systemDriveLetter = $env:SystemDrive[0]
+        $vols = Get-Volume | Where-Object { $_.DriveType -eq "Fixed" -and $_.FileSystem -eq "NTFS" -and $_.DriveLetter -ne $systemDriveLetter }
+        
+        foreach ($v in $vols) {
+            $freeSpace = [math]::Round($v.SizeRemaining / 1GB, 2)
+            $totalSpace = [math]::Round($v.Size / 1GB, 2)
+            [void]$cmbDrive.Items.Add("$($v.DriveLetter): [$($v.FileSystemLabel)] - Trống $freeSpace GB / Tổng $totalSpace GB")
+        }
+
+        if ($cmbDrive.Items.Count -gt 0) {
+            $cmbDrive.SelectedIndex = 0
+            $lblIsoStatus.Text = "KẾT NỐI ISO THÀNH CÔNG! Sẵn sàng cấu hình cài đặt."
+            $lblIsoStatus.ForeColor = [System.Drawing.Color]::LimeGreen
+        } else {
+            [void]$cmbDrive.Items.Add("Không tìm thấy phân vùng hợp lệ!")
+            $btnInstall.Enabled = $false
+            $lblIsoStatus.Text = "CẢNH BÁO: Hãy chia thêm 1 phân vùng trống độc lập trước!"
+        }
+    } catch {
+        $lblIsoStatus.Text = "Lỗi nghiêm trọng khi nạp ISO: $_"
+        $btnInstall.Enabled = $false
+    }
+})
+
+$form.Add_FormClosing({
+    if (Test-Path $IsoPath) { try { Dismount-DiskImage -ImagePath $IsoPath -ErrorAction SilentlyContinue } catch {} }
+})
+
+# 4. THỰC THI CÀI ĐẶT
+$btnInstall.Add_Click({
+    $selectedDriveStr = $cmbDrive.SelectedItem.ToString()
+    if ($selectedDriveStr -match 'Không tìm thấy') { return }
+    $targetDrive = $selectedDriveStr.Substring(0, 1)
+    $imageIndex = $cmbEdition.SelectedItem.ToString().Split('.')[0].Trim()
+
+    $msgText = "Bạn đang yêu cầu cài đặt song song Windows 11 lên phân vùng ($($targetDrive):)`r`n`r`n" +
+               "Xác nhận kích hoạt tiến trình này?"
+    if ([System.Windows.Forms.MessageBox]::Show($msgText, "Xác Nhận", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Warning) -eq [System.Windows.Forms.DialogResult]::Yes) {
+        
+        $btnInstall.Enabled = $false; $cmbDrive.Enabled = $false; $cmbEdition.Enabled = $false; 
+        $chkFormat.Enabled = $false; $chkBackupDriver.Enabled = $false; $chkInstallApps.Enabled = $false
+        $form.Refresh()
+
+        # BƯỚC 1: Format
+        if ($chkFormat.Checked) {
+            $txtLog.AppendText("[1] Đang Format phân vùng $($targetDrive):...`r`n")
+            $form.Refresh()
+            try { Format-Volume -DriveLetter $targetDrive -FileSystem NTFS -NewFileSystemLabel "Windows 11 Dual" -Force -Confirm:$false -ErrorAction Stop } 
+            catch { 
+                [System.Windows.Forms.MessageBox]::Show("Lỗi định dạng: $_", "Lỗi", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+                $btnInstall.Enabled = $true; return 
+            }
+        }
+
+        # BƯỚC 2: Export Driver
+        $driverBackupPath = "$($targetDrive):\DriverBackup_Temp"
+        if ($chkBackupDriver.Checked) {
+            $txtLog.AppendText("[2] Đang trích xuất Driver từ máy hiện tại. Chờ chút nhé...`r`n")
+            $form.Refresh()
+            New-Item -ItemType Directory -Force -Path $driverBackupPath | Out-Null
+            Export-WindowsDriver -Online -Destination $driverBackupPath | Out-Null
+            $txtLog.AppendText(" -> Hoàn tất sao lưu Driver!`r`n")
+        }
+
+        # BƯỚC 3: Bung WIM (Sử dụng tham số Compact để tăng tốc nếu là WIM, nếu ESD thì mặc định)
+        $txtLog.AppendText("[3] Đang bung Windows 11 vào ổ $($targetDrive): (Vui lòng xem % ở cửa sổ đen)...`r`n")
+        $form.Refresh()
+        $psi = New-Object System.Diagnostics.ProcessStartInfo
+        $psi.FileName = "dism.exe"
+        
+        # Thêm /Compact giúp quá trình bung nhanh hơn và tiết kiệm dung lượng đĩa đích
+        $psi.Arguments = "/Apply-Image /ImageFile:`"$script:WimPath`" /Index:$imageIndex /ApplyDir:$($targetDrive):\ /Compact"
+        
+        $psi.UseShellExecute = $false
+        $proc = [System.Diagnostics.Process]::Start($psi)
+        $proc.WaitForExit()
+
+        if ($proc.ExitCode -ne 0) {
+            # Thử lại không có /Compact nếu gặp lỗi (một số bản WIM/ESD cũ không hỗ trợ)
+            $txtLog.AppendText(" -> Lệnh Compact thất bại, đang thử lại chế độ chuẩn...`r`n")
+            $form.Refresh()
+            $psi.Arguments = "/Apply-Image /ImageFile:`"$script:WimPath`" /Index:$imageIndex /ApplyDir:$($targetDrive):\"
+            $proc = [System.Diagnostics.Process]::Start($psi)
+            $proc.WaitForExit()
+            if ($proc.ExitCode -ne 0) {
+                [System.Windows.Forms.MessageBox]::Show("Lỗi bung DISM!", "Lỗi", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+                $btnInstall.Enabled = $true; return
+            }
+        }
+
+        # BƯỚC 4: Inject Driver Offline
+        if ($chkBackupDriver.Checked) {
+            $txtLog.AppendText("[4] Đang cấy (Inject) Driver vừa sao lưu vào Windows 11 mới...`r`n")
+            $form.Refresh()
+            $psiDrv = New-Object System.Diagnostics.ProcessStartInfo
+            $psiDrv.FileName = "dism.exe"
+            $psiDrv.Arguments = "/Image:$($targetDrive):\ /Add-Driver /Driver:`"$driverBackupPath`" /Recurse"
+            $psiDrv.UseShellExecute = $false
+            $procDrv = [System.Diagnostics.Process]::Start($psiDrv)
+            $procDrv.WaitForExit()
+            Remove-Item -Path $driverBackupPath -Recurse -Force -ErrorAction SilentlyContinue # Xóa temp
+            $txtLog.AppendText(" -> Đã tích hợp Driver thành công!`r`n")
+        }
+
+        # BƯỚC 5: Tạo Script cài phần mềm OOBE
+        if ($chkInstallApps.Checked) {
+            $txtLog.AppendText("[5] Đang khởi tạo bộ cài tự động phần mềm (EVKey, 7Zip, Cốc Cốc, Foxit)...`r`n")
+            $form.Refresh()
+            
+            # Đảm bảo thư mục Desktop Public tồn tại trong Win mới
+            $publicDesktop = "$($targetDrive):\Users\Public\Desktop"
+            if (-not (Test-Path $publicDesktop)) { New-Item -ItemType Directory -Force -Path $publicDesktop | Out-Null }
+            
+            $psScriptPath = "$publicDesktop\1_CAI_PHAN_MEM_TU_DONG.ps1"
+            $cmdScriptPath = "$publicDesktop\NHAN_VAO_DAY_DE_CAI_PHAN_MEM.cmd"
+
+            $psCode = @"
+Write-Host "================================================================" -ForegroundColor Cyan
+Write-Host " TỰ ĐỘNG CÀI ĐẶT PHẦN MỀM - ENGINE V2.0" -ForegroundColor Yellow
+Write-Host " LƯU Ý: Vui lòng kết nối Wi-Fi/Mạng trước khi để tiến trình chạy" -ForegroundColor Red
+Write-Host "================================================================" -ForegroundColor Cyan
+`$ProgressPreference = 'SilentlyContinue'
+
+Write-Host "`n[1/4] Đang cài đặt Cốc Cốc Browser..." -ForegroundColor Green
+winget install CocCoc.CocCocBrowser --accept-package-agreements --accept-source-agreements --silent
+
+Write-Host "`n[2/4] Đang cài đặt 7-Zip..." -ForegroundColor Green
+winget install 7zip.7zip --accept-package-agreements --accept-source-agreements --silent
+
+Write-Host "`n[3/4] Đang cài đặt Foxit PDF (PhantomPDF / Editor)..." -ForegroundColor Green
+winget install Foxit.PDFEditor --accept-package-agreements --accept-source-agreements --silent
+
+Write-Host "`n[4/4] Đang tải EVKey..." -ForegroundColor Green
+try {
+    # Lấy link download bộ gõ EVKey mới nhất từ Github API
+    `$release = Invoke-RestMethod -Uri "https://api.github.com/repos/lamquangminh/evkey/releases/latest"
+    `$asset = `$release.assets | Where-Object { `$_.name -like "*.zip" } | Select-Object -First 1
+    `$zipPath = "C:\EVKey.zip"
+    `$extractPath = "C:\EVKey_BoGo"
+    
+    Invoke-WebRequest -Uri `$asset.browser_download_url -OutFile `$zipPath
+    Expand-Archive -Path `$zipPath -DestinationPath `$extractPath -Force
+    
+    # Tạo shortcut ra Desktop cho người dùng
+    `$WshShell = New-Object -comObject WScript.Shell
+    `$Shortcut = `$WshShell.CreateShortcut("C:\Users\Public\Desktop\EVKey.lnk")
+    `$Shortcut.TargetPath = "`$extractPath\EVKey64.exe"
+    `$Shortcut.Save()
+    Write-Host " -> Tải EVKey thành công, đã xuất icon ra Màn hình!" -ForegroundColor Green
+} catch {
+    Write-Host " Lỗi không tải được EVKey: `$_" -ForegroundColor Red
+}
+
+Write-Host "`n================================================================" -ForegroundColor Cyan
+Write-Host " HOÀN TẤT CÀI ĐẶT! BẠN CÓ THỂ ĐÓNG CỬA SỔ NÀY BẰNG CÁCH NHẤN PHÍM BẤT KỲ." -ForegroundColor Yellow
+pause
 "@
+            Set-Content -Path $psScriptPath -Value $psCode -Encoding UTF8
 
-$XmlContent | Out-File -FilePath $UnattendPath -Encoding utf8
-Write-Host "[OK] Da xuat file cau hinh thanh cong tai: $UnattendPath" -ForegroundColor Green
-Write-Host ""
+            $cmdCode = @"
+@echo off
+color 0a
+title TRINH CAI DAT PHAN MEM TU DONG CHUYEN SAU
+:: Kiem tra quyen Admin
+net session >nul 2>&1
+if %errorLevel% == 0 (
+    echo Dang bat dau chuoi cai dat...
+) else (
+    echo [LOI] BAN PHAI CHAY FILE NAY VOI QUYEN ADMIN.
+    echo Vui long Click chuot phai vao file nay - Chon "Run as administrator"
+    pause
+    exit
+)
+powershell -ExecutionPolicy Bypass -File "%~dp01_CAI_PHAN_MEM_TU_DONG.ps1"
+"@
+            Set-Content -Path $cmdScriptPath -Value $cmdCode -Encoding ASCII
+        }
 
-# =========================================================================
-# BUOC 3: TRICH XUAT DRIVER HE THONG
-# =========================================================================
-Write-Host "[+] Dang trich xuat toan bo Driver he thong (DISM)..." -ForegroundColor Yellow
-Write-Host "     (Qua trinh nay mat khoang 1-2 phut, vui long cho)" -ForegroundColor Gray
-$DriverLog = Start-Process dism -ArgumentList "/online /export-driver /destination:`"$DriverDir`"" -NoNewWindow -Wait -PassThru
+        # BƯỚC 6: BCDBoot
+        $txtLog.AppendText("[6] Đang đăng ký vào Menu Boot song song...`r`n")
+        $form.Refresh()
+        $bcdProcess = Start-Process bcdboot.exe -ArgumentList "`"$($targetDrive):\Windows`"" -NoNewWindow -PassThru -Wait
+        
+        if ($bcdProcess.ExitCode -eq 0) {
+            $txtLog.AppendText("HOÀN THÀNH HOÀN HẢO! Hệ thống Dual-Boot đã thiết lập xong.`r`n")
+            [System.Windows.Forms.MessageBox]::Show("QUÁ TRÌNH CÀI ĐẶT SONG SONG ĐÃ XONG!\r\n\r\nKhởi động lại máy để thưởng thức Windows 11 mới.", "Thành Công", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+        } else {
+            [System.Windows.Forms.MessageBox]::Show("Lỗi tạo BCD Boot!", "Cảnh Báo", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+        }
+        $btnInstall.Enabled = $true
+    }
+})
 
-if ($DriverLog.ExitCode -eq 0) {
-    Write-Host "[OK] Da trich xuat Driver thanh cong vao: $DriverDir" -ForegroundColor Green
-} else {
-    Write-Host "[!] CANH BAO: Khong the trich xuat Driver he thong." -ForegroundColor Red
-}
-Write-Host ""
-
-# =========================================================================
-# BUOC 4: SAO LƯU DU LIEU DESKTOP
-# =========================================================================
-Write-Host "[+] Dang tien hanh sao luu du lieu ngoai Desktop..." -ForegroundColor Yellow
-$DesktopPath = [Environment]::GetFolderPath("Desktop")
-robocopy $DesktopPath $DesktopDir /E /COPY:DAT /R:3 /W:5 /XF desktop.ini /NDL /NFL | Out-Null
-
-Write-Host "[OK] Da hoan thanh sao luu du lieu Desktop vao: $DesktopDir" -ForegroundColor Green
-Write-Host ""
-
-Write-Host "=========================================================================" -ForegroundColor Cyan
-Write-Host " HOAN THANH! TOAN BO FILE UNATTEND.XML VA DATA DA DUOC LUU TAI D:\BACKUP" -ForegroundColor Cyan
-Write-Host "=========================================================================" -ForegroundColor Cyan
-Write-Host ""
-Read-Host "Bam phim Enter de thoat"
+$form.ShowDialog() | Out-Null
