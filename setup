@@ -1,12 +1,12 @@
 # =========================================================================
 # TCONGHANH TOOLS V3.0 - AUTOMATION & DEPLOYMENT ENGINE
-# Toi uu chay qua Cloud (khanggiaphuc.com/setup) - Khong bao gio loi font
+# Toi uu chay qua Cloud (khanggiaphuc.com/setup)
 # =========================================================================
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
-# --- DOAN CODE LOGIC SULY HE THONG ---
+# --- DOAN CODE LOGIC SU LY HE THONG ---
 function Start-TconghanhDeployment {
     $targetDir = $txtPath.Text.Trim()
     if ([string]::IsNullOrEmpty($targetDir)) {
@@ -190,11 +190,11 @@ function Start-TconghanhDeployment {
     # Hoan thanh
     $progressBar.Value = 100
     $txtLog.AppendText("\r\n=======================================================\r\n")
-    $txtLog.AppendText(" TIEN TRINH HOAN THANH AN TOAN XONG!\r\n")
+    $txtLog.AppendText(" TIEN TRINH HOAN THANH AN TOAN XONG!")
     $txtLog.AppendText("=======================================================\r\n")
     
     $btnStart.Enabled = $true
-    $btnStart.Text = "KICH HOAT LAI ENGINE"
+    $btnStart.Text = "KICH HOAT LAI CONG CU"
     $btnStart.BackColor = [System.Drawing.Color]::FromArgb(0, 166, 90)
     
     [System.Windows.Forms.MessageBox]::Show("Toan bo cac muc tuy chon duoc xu ly thanh cong tai: $targetDir", "Tconghanh Tools Notification", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
@@ -235,7 +235,7 @@ $form.Controls.Add($lblTitle)
 
 # --- KHU VỰC CẤU HÌNH ĐƯỜNG DẪN ---
 $lblPath = New-Object System.Windows.Forms.Label
-$lblPath.Text = "Duong dan luu file backup hệ thong:"
+$lblPath.Text = "Duong dan luu file backup he thong:"
 $lblPath.Location = New-Object System.Drawing.Point(22, 55)
 $lblPath.Size = New-Object System.Drawing.Size(250, 20)
 $lblPath.Font = $fontBold
@@ -354,7 +354,7 @@ $txtLog.ScrollBars = "Vertical"
 $txtLog.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
 $txtLog.ForeColor = [System.Drawing.Color]::FromArgb(0, 255, 0)
 $txtLog.Font = $fontConsole
-$txtLog.Text = "--- He thong da san sang. Tich chon cac muc tren va an [KICH HOAT ENGINE] ---\r\n"
+$txtLog.Text = "--- He thong da san sang. Tich chon cac muc tren va an cong cu"
 $form.Controls.Add($txtLog)
 
 # Progress Bar
@@ -368,7 +368,7 @@ $form.Controls.Add($progressBar)
 $btnStart = New-Object System.Windows.Forms.Button
 $btnStart.Location = New-Object System.Drawing.Point(22, 468)
 $btnStart.Size = New-Object System.Drawing.Size(618, 38)
-$btnStart.Text = "KICH HOAT ENGINE HỆ THONG"
+$btnStart.Text = "KICH HOAT CONG CU HE THONG"
 $btnStart.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Bold)
 $btnStart.BackColor = [System.Drawing.Color]::FromArgb(0, 166, 90)
 $btnStart.ForeColor = [System.Drawing.Color]::White
