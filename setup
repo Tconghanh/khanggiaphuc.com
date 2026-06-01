@@ -1,33 +1,32 @@
 # =========================================================================
-# SCRIPT TỰ ĐỘNG BACKUP ĐA NĂNG & TỰ KHỞI TẠO FILE CẤU HÌNH UNATTEND.XML
-# Thiết kế tối ưu riêng cho Windows 11 - Không bao giờ lỗi font
+# SCRIPT TU DONG BACKUP CHO WINDOWS 11 - TOI UU CHAY QUA CLOUD (KHONG DAU)
 # =========================================================================
 $OutputEncoding = [System.Text.Encoding]::UTF8
-Host.UI.RawUI.WindowTitle = "Quy trình Tự động hóa Cài đặt & Backup"
+Host.UI.RawUI.WindowTitle = "Quy trinh Tu dong hoa Cai dat & Backup"
 Clear-Host
 
 Write-Host "=========================================================================" -ForegroundColor Cyan
-Write-Host "    ĐANG KHỞI TẠO QUY TRÌNH TỰ ĐỘNG HÓA TOÀN DIỆN - VUI LÒNG CHỜ..." -ForegroundColor Cyan
+Write-Host "    DANG KHOI TAO QUY TRINH TU DONG HOA TOAN DIEN - VUI LONG CHO..." -ForegroundColor Cyan
 Write-Host "=========================================================================" -ForegroundColor Cyan
 Write-Host ""
 
-# 1. Định nghĩa các thư mục backup
+# 1. Dinh nghia cac thu muc backup
 $BackupDir = "D:\Backup"
 $InfoDir = "$BackupDir\System_Info"
 $DriverDir = "$BackupDir\Drivers"
 $DesktopDir = "$BackupDir\Desktop_Data"
 $UnattendPath = "$BackupDir\unattend.xml"
 
-# Tạo cấu trúc thư mục nếu chưa có
+# Tao cau truc thu muc neu chua co
 if (-not (Test-Path $BackupDir)) { New-Item -ItemType Directory -Path $BackupDir | Out-Null }
 if (-not (Test-Path $InfoDir)) { New-Item -ItemType Directory -Path $InfoDir | Out-Null }
 if (-not (Test-Path $DriverDir)) { New-Item -ItemType Directory -Path $DriverDir | Out-Null }
 if (-not (Test-Path $DesktopDir)) { New-Item -ItemType Directory -Path $DesktopDir | Out-Null }
 
 # =========================================================================
-# BƯỚC 1: TỰ ĐỘNG THU THẬP THÔNG TIN MẠNG ĐANG HOẠT ĐỘNG
+# BUOC 1: TU DUONG THU THAP THONG TIN MANG DANG HOAT DONG
 # =========================================================================
-Write-Host "[+] Đang quét và đọc cấu hình mạng hiện tại..." -ForegroundColor Yellow
+Write-Host "[+] Dang quet va doc cau hinh mang hien tai..." -ForegroundColor Yellow
 
 $NetAdapter = Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -First 1
 if ($NetAdapter) {
@@ -41,26 +40,26 @@ if ($NetAdapter) {
     $CurrGW = $Gateway
     $CurrDNS = $DNS
 
-    Write-Host "     - Phát hiện IP: $CurrIP (Prefix: $CurrPrefix)" -ForegroundColor Green
-    Write-Host "     - Phát hiện Gateway: $CurrGW" -ForegroundColor Green
-    Write-Host "     - Phát hiện DNS: $CurrDNS" -ForegroundColor Green
+    Write-Host "     - Phat hien IP: $CurrIP (Prefix: $CurrPrefix)" -ForegroundColor Green
+    Write-Host "     - Phat hien Gateway: $CurrGW" -ForegroundColor Green
+    Write-Host "     - Phat hien DNS: $CurrDNS" -ForegroundColor Green
 } else {
-    Write-Host " [!] KHÔNG LẤY ĐƯỢC IP TỰ ĐỘNG! Sử dụng IP mặc định." -ForegroundColor Red
+    Write-Host " [!] KHONG LAY DUOC IP TU DONG! Su dung IP mac dinh." -ForegroundColor Red
     $CurrIP = "192.168.100.222"
     $CurrPrefix = "24"
     $CurrGW = "192.168.100.1"
     $CurrDNS = "8.8.8.8,8.8.4.4"
 }
 
-# Ghi file báo cáo mạng
+# Ghi file bao cao mang
 ipconfig /all | Out-File -FilePath "$InfoDir\IP_Configuration.txt" -Encoding utf8
-Write-Host "[OK] Đã lưu log cấu hình mạng." -ForegroundColor Green
+Write-Host "[OK] Da luu log cau hinh mang." -ForegroundColor Green
 Write-Host ""
 
 # =========================================================================
-# BƯỚC 2: TỰ ĐỘNG TẠO FILE UNATTEND.XML CHÍNH XÁC THEO IP ĐANG CÓ
+# BUOC 2: TU DONG TAO FILE UNATTEND.XML CHINH XAC THEO IP DANG CO
 # =========================================================================
-Write-Host "[+] Đang tự động tạo file unattend.xml..." -ForegroundColor Yellow
+Write-Host "[+] Dang tu dong tao file unattend.xml..." -ForegroundColor Yellow
 
 $XmlContent = @"
 <?xml version="1.0" encoding="utf-8"?>
@@ -147,35 +146,35 @@ $XmlContent = @"
 "@
 
 $XmlContent | Out-File -FilePath $UnattendPath -Encoding utf8
-Write-Host "[OK] Đã xuất file cấu hình thành công tại: $UnattendPath" -ForegroundColor Green
+Write-Host "[OK] Da xuat file cau hinh thanh cong tai: $UnattendPath" -ForegroundColor Green
 Write-Host ""
 
 # =========================================================================
-# BƯỚC 3: TRÍCH XUẤT DRIVER HỆ THỐNG
+# BUOC 3: TRICH XUAT DRIVER HE THONG
 # =========================================================================
-Write-Host "[+] Đang trích xuất toàn bộ Driver hệ thống (DISM)..." -ForegroundColor Yellow
-Write-Host "     (Quá trình này mất khoảng 1-2 phút, vui lòng chờ)" -ForegroundColor Gray
+Write-Host "[+] Dang trich xuat toan bo Driver he thong (DISM)..." -ForegroundColor Yellow
+Write-Host "     (Qua trinh nay mat khoang 1-2 phut, vui long cho)" -ForegroundColor Gray
 $DriverLog = Start-Process dism -ArgumentList "/online /export-driver /destination:`"$DriverDir`"" -NoNewWindow -Wait -PassThru
 
 if ($DriverLog.ExitCode -eq 0) {
-    Write-Host "[OK] Đã trích xuất Driver thành công vào: $DriverDir" -ForegroundColor Green
+    Write-Host "[OK] Da trich xuat Driver thanh cong vao: $DriverDir" -ForegroundColor Green
 } else {
-    Write-Host "[!] CẢNH BÁO: Không thể trích xuất Driver hệ thống." -ForegroundColor Red
+    Write-Host "[!] CANH BAO: Khong the trich xuat Driver he thong." -ForegroundColor Red
 }
 Write-Host ""
 
 # =========================================================================
-# BƯỚC 4: SAO LƯU DỮ LIỆU DESKTOP
+# BUOC 4: SAO LƯU DU LIEU DESKTOP
 # =========================================================================
-Write-Host "[+] Đang tiến hành sao lưu dữ liệu ngoài Desktop..." -ForegroundColor Yellow
+Write-Host "[+] Dang tien hanh sao luu du lieu ngoai Desktop..." -ForegroundColor Yellow
 $DesktopPath = [Environment]::GetFolderPath("Desktop")
 robocopy $DesktopPath $DesktopDir /E /COPY:DAT /R:3 /W:5 /XF desktop.ini /NDL /NFL | Out-Null
 
-Write-Host "[OK] Đã hoàn thành sao lưu dữ liệu Desktop vào: $DesktopDir" -ForegroundColor Green
+Write-Host "[OK] Da hoan thanh sao luu du lieu Desktop vao: $DesktopDir" -ForegroundColor Green
 Write-Host ""
 
 Write-Host "=========================================================================" -ForegroundColor Cyan
-Write-Host " HOÀN THÀNH! TOÀN BỘ FILE UNATTEND.XML VÀ DATA ĐÃ ĐƯỢC LƯU TẠI D:\BACKUP" -ForegroundColor Cyan
+Write-Host " HOAN THANH! TOAN BO FILE UNATTEND.XML VA DATA DA DUOC LUU TAI D:\BACKUP" -ForegroundColor Cyan
 Write-Host "=========================================================================" -ForegroundColor Cyan
 Write-Host ""
-Read-Host "Bấm phím Enter để thoát"
+Read-Host "Bam phim Enter de thoat"
