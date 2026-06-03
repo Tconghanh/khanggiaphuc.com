@@ -1,5 +1,5 @@
-# --- THIẾT LẬP MÔI TRƯỜNG CHUYÊN NGHIỆP ---
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+# --- THIET LAP MOI TRUONG (ASCII ONLY) ---
+$OutputEncoding = [System.Text.Encoding]::ASCII
 $ErrorActionPreference = "SilentlyContinue"
 
 if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {  
@@ -10,187 +10,216 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-# --- KHỞI TẠO FORM ---
+# --- KHOI TAO FORM ---
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "Tconghanh Tools v14.0 - Master Final"
-$form.Size = New-Object System.Drawing.Size(960, 920)
+$form.Text = "Tconghanh Tools v22.0 - Ultimate Fix Edition"
+$form.Size = New-Object System.Drawing.Size(1280, 1000)
 $form.StartPosition = "CenterScreen"
-$form.BackColor = [System.Drawing.Color]::FromArgb(20, 20, 20)
+$form.BackColor = [System.Drawing.Color]::FromArgb(15, 15, 15)
 $form.ForeColor = [System.Drawing.Color]::White
 $form.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 $form.FormBorderStyle = "FixedSingle"; $form.MaximizeBox = $false
 
 $title = New-Object System.Windows.Forms.Label
-$title.Text = "TCONGHANH TOOLS"; $title.Font = New-Object System.Drawing.Font("Segoe UI", 28, [System.Drawing.FontStyle]::Bold)
-$title.Size = New-Object System.Drawing.Size(940, 65); $title.TextAlign = "MiddleCenter"; $title.ForeColor = [System.Drawing.Color]::Cyan
+$title.Text = "TCONGHANH TOOLS PRO"; $title.Font = New-Object System.Drawing.Font("Segoe UI", 32, [System.Drawing.FontStyle]::Bold)
+$title.Size = New-Object System.Drawing.Size(1260, 75); $title.TextAlign = "MiddleCenter"; $title.ForeColor = [System.Drawing.Color]::Cyan
 $form.Controls.Add($title)
 
-# --- 1. SECTION: BACKUP (100% WIDTH) ---
-$gbBackup = New-Object System.Windows.Forms.GroupBox
-$gbBackup.Text = "1. BACKUP - SAO LƯU"; $gbBackup.Location = New-Object System.Drawing.Point(20, 75); $gbBackup.Size = New-Object System.Drawing.Size(905, 120); $gbBackup.ForeColor = [System.Drawing.Color]::Gold
-$form.Controls.Add($gbBackup)
+# --- 0. SYSTEM INFO ---
+$gbH = New-Object System.Windows.Forms.GroupBox
+$gbH.Text = "0. SYSTEM INFO"; $gbH.Location = New-Object System.Drawing.Point(20, 80); $gbH.Size = New-Object System.Drawing.Size(1220, 90); $gbH.ForeColor = [System.Drawing.Color]::White
+$form.Controls.Add($gbH)
 
-$txtPath = New-Object System.Windows.Forms.TextBox; $txtPath.Text = "D:\Backup"; $txtPath.Location = New-Object System.Drawing.Point(15, 30); $txtPath.Size = New-Object System.Drawing.Size(760, 25); $txtPath.BackColor = [System.Drawing.Color]::Black; $txtPath.ForeColor = [System.Drawing.Color]::White
-$gbBackup.Controls.Add($txtPath)
+$lblH1 = New-Object System.Windows.Forms.Label; $lblH1.Text = "CPU/RAM/DISK Loading..."; $lblH1.Location = New-Object System.Drawing.Point(15, 25); $lblH1.Size = New-Object System.Drawing.Size(1190, 25); $lblH1.ForeColor = [System.Drawing.Color]::Lime; $lblH1.Font = New-Object System.Drawing.Font("Consolas", 10, [System.Drawing.FontStyle]::Bold)
+$gbH.Controls.Add($lblH1)
 
-$btnBrowse = New-Object System.Windows.Forms.Button; $btnBrowse.Text = "..."; $btnBrowse.Location = New-Object System.Drawing.Point(790, 28); $btnBrowse.Size = New-Object System.Drawing.Size(90, 30); $btnBrowse.BackColor = [System.Drawing.Color]::FromArgb(60,60,60)
-$gbBackup.Controls.Add($btnBrowse)
+$lblH2 = New-Object System.Windows.Forms.Label; $lblH2.Text = "Network Info Loading..."; $lblH2.Location = New-Object System.Drawing.Point(15, 55); $lblH2.Size = New-Object System.Drawing.Size(1190, 25); $lblH2.ForeColor = [System.Drawing.Color]::Aqua; $lblH2.Font = New-Object System.Drawing.Font("Consolas", 10, [System.Drawing.FontStyle]::Bold)
+$gbH.Controls.Add($lblH2)
 
-$btnUser = New-Object System.Windows.Forms.Button; $btnUser.Text = "Backup User Data (Desktop, Doc, Music, Pic)"; $btnUser.Location = New-Object System.Drawing.Point(15, 70); $btnUser.Size = New-Object System.Drawing.Size(430, 35); $btnUser.BackColor = [System.Drawing.Color]::FromArgb(45,45,45)
-$gbBackup.Controls.Add($btnUser)
+# --- 1. BACKUP ---
+$gbB = New-Object System.Windows.Forms.GroupBox
+$gbB.Text = "1. BACKUP - SAO LUU"; $gbB.Location = New-Object System.Drawing.Point(20, 180); $gbB.Size = New-Object System.Drawing.Size(1220, 110); $gbB.ForeColor = [System.Drawing.Color]::Gold
+$form.Controls.Add($gbB)
 
-$btnDriver = New-Object System.Windows.Forms.Button; $btnDriver.Text = "Backup Drivers - Sao lưu Drivers"; $btnDriver.Location = New-Object System.Drawing.Point(460, 70); $btnDriver.Size = New-Object System.Drawing.Size(420, 35); $btnDriver.BackColor = [System.Drawing.Color]::FromArgb(45,45,45)
-$gbBackup.Controls.Add($btnDriver)
+$txtP = New-Object System.Windows.Forms.TextBox; $txtP.Text = "D:\Backup"; $txtP.Location = New-Object System.Drawing.Point(20, 30); $txtP.Size = New-Object System.Drawing.Size(800, 25); $txtP.BackColor = [System.Drawing.Color]::Black; $txtP.ForeColor = [System.Drawing.Color]::White
+$gbB.Controls.Add($txtP)
 
-# --- 2. SECTION: TWEAKS (50% LEFT) ---
-$gbTweaks = New-Object System.Windows.Forms.GroupBox
-$gbTweaks.Text = "2. ESSENTIAL TWEAKS - TINH CHỈNH"; $gbTweaks.Location = New-Object System.Drawing.Point(20, 205); $gbTweaks.Size = New-Object System.Drawing.Size(445, 500); $gbTweaks.ForeColor = [System.Drawing.Color]::SpringGreen
-$form.Controls.Add($gbTweaks)
+$btnBr = New-Object System.Windows.Forms.Button; $btnBr.Text = "..."; $btnBr.Location = New-Object System.Drawing.Point(830, 28); $btnBr.Size = New-Object System.Drawing.Size(60, 28); $btnBr.BackColor = [System.Drawing.Color]::FromArgb(60,60,60)
+$gbB.Controls.Add($btnBr)
 
-$listTw = New-Object System.Windows.Forms.CheckedListBox; $listTw.Location = New-Object System.Drawing.Point(15, 25); $listTw.Size = New-Object System.Drawing.Size(415, 360); $listTw.BackColor = [System.Drawing.Color]::FromArgb(30,30,30); $listTw.ForeColor = [System.Drawing.Color]::White; $listTw.CheckOnClick = $true; $listTw.BorderStyle = "None"
-$gbTweaks.Controls.Add($listTw)
+$btnU = New-Object System.Windows.Forms.Button; $btnU.Text = "Backup User Data"; $btnU.Location = New-Object System.Drawing.Point(20, 65); $btnU.Size = New-Object System.Drawing.Size(420, 35); $btnU.BackColor = [System.Drawing.Color]::FromArgb(45,45,45)
+$gbB.Controls.Add($btnU)
 
-$twItems = @("Activity History - Disable (Tắt lịch sử)","Consumer Features - Disable (Tắt quảng cáo)","Disk Cleanup - Run (Dọn đĩa sâu)","End Task Right Click - Enable (Bật gỡ nhanh)","Folder Discovery - Disable (Tắt khám phá)","Hibernation - Disable (Tắt ngủ đông)","Location Tracking - Disable (Tắt vị trí)","MS Store Recommended - Disable (Tắt gợi ý)","PowerShell Telemetry - Disable (Tắt thu thập PS)","Restore Point - Create (Tạo điểm khôi phục)","Telemetry - Disable (Tắt thu thập Win)","Temporary Files - Remove (Xóa file rác)","Unwanted Apps - Remove (Gỡ App rác hệ thống)","Widgets - Remove (Gỡ bỏ Widgets)","WPBT - Disable (Vô hiệu WPBT)")
-foreach($i in $twItems) { [void]$listTw.Items.Add($i, $true) }
+$btnD = New-Object System.Windows.Forms.Button; $btnD.Text = "Backup Drivers"; $btnD.Location = New-Object System.Drawing.Point(460, 65); $btnD.Size = New-Object System.Drawing.Size(420, 35); $btnD.BackColor = [System.Drawing.Color]::FromArgb(45,45,45)
+$gbB.Controls.Add($btnD)
 
-$btnTwDef = New-Object System.Windows.Forms.Button; $btnTwDef.Text = "Default"; $btnTwDef.Location = New-Object System.Drawing.Point(15, 395); $btnTwDef.Size = New-Object System.Drawing.Size(130, 32); $btnTwDef.BackColor = [System.Drawing.Color]::SteelBlue; $gbTweaks.Controls.Add($btnTwDef)
-$btnTwAll = New-Object System.Windows.Forms.Button; $btnTwAll.Text = "All"; $btnTwAll.Location = New-Object System.Drawing.Point(150, 395); $btnTwAll.Size = New-Object System.Drawing.Size(130, 32); $btnTwAll.BackColor = [System.Drawing.Color]::Gray; $gbTweaks.Controls.Add($btnTwAll)
-$btnTwNon = New-Object System.Windows.Forms.Button; $btnTwNon.Text = "None"; $btnTwNon.Location = New-Object System.Drawing.Point(285, 395); $btnTwNon.Size = New-Object System.Drawing.Size(145, 32); $btnTwNon.BackColor = [System.Drawing.Color]::DimGray; $gbTweaks.Controls.Add($btnTwNon)
+# --- GRID 3 COLUMNS ---
 
-$btnExecTw = New-Object System.Windows.Forms.Button; $btnExecTw.Text = "RUN TWEAKS - CHẠY TINH CHỈNH"; $btnExecTw.Location = New-Object System.Drawing.Point(15, 435); $btnExecTw.Size = New-Object System.Drawing.Size(415, 50); $btnExecTw.BackColor = [System.Drawing.Color]::DarkSlateBlue; $btnExecTw.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$gbTweaks.Controls.Add($btnExecTw)
+# 2. TWEAKS & FIXES
+$gbTw = New-Object System.Windows.Forms.GroupBox
+$gbTw.Text = "2. TWEAKS & QUICK FIXES"; $gbTw.Location = New-Object System.Drawing.Point(20, 300); $gbTw.Size = New-Object System.Drawing.Size(390, 500); $gbTw.ForeColor = [System.Drawing.Color]::SpringGreen
+$form.Controls.Add($gbTw)
 
-# --- 3. SECTION: UNINSTALLER (50% RIGHT) ---
-$gbApp = New-Object System.Windows.Forms.GroupBox
-$gbApp.Text = "3. UNINSTALLER - GỠ PHẦN MỀM"; $gbApp.Location = New-Object System.Drawing.Point(480, 205); $gbApp.Size = New-Object System.Drawing.Size(445, 500); $gbApp.ForeColor = [System.Drawing.Color]::Orange
-$form.Controls.Add($gbApp)
+$listTw = New-Object System.Windows.Forms.CheckedListBox; $listTw.Location = New-Object System.Drawing.Point(15, 25); $listTw.Size = New-Object System.Drawing.Size(360, 400); $listTw.BackColor = [System.Drawing.Color]::FromArgb(25,25,25); $listTw.ForeColor = [System.Drawing.Color]::White; $listTw.CheckOnClick = $true; $listTw.BorderStyle = "None"
+$itemsTw = @("Temp Cleaner - Run", "Fix Printer Spooler", "Reset Network", "Windows Update - Disable", "Activity History - Disable", "Consumer Features - Disable", "Disk Cleanup - Run", "End Task RightClick - Enable", "Hibernation - Disable", "Location Tracking - Disable", "MS Store Recommended - Disable", "PowerShell Telemetry - Disable", "Restore Point - Create", "Telemetry - Disable", "Widgets - Remove", "WPBT - Disable", "Unwanted Apps - Remove")
+foreach($i in $itemsTw){ [void]$listTw.Items.Add($i, $true) }
+$gbTw.Controls.Add($listTw)
 
-$listApps = New-Object System.Windows.Forms.CheckedListBox; $listApps.Location = New-Object System.Drawing.Point(15, 25); $listApps.Size = New-Object System.Drawing.Size(415, 360); $listApps.BackColor = [System.Drawing.Color]::FromArgb(30,30,30); $listApps.ForeColor = [System.Drawing.Color]::White; $listApps.CheckOnClick = $true; $listApps.BorderStyle = "None"
-$gbApp.Controls.Add($listApps)
+$btnExTw = New-Object System.Windows.Forms.Button; $btnExTw.Text = "RUN TWEAKS & FIXES"; $btnExTw.Location = New-Object System.Drawing.Point(15, 435); $btnExTw.Size = New-Object System.Drawing.Size(360, 45); $btnExTw.BackColor = [System.Drawing.Color]::DarkSlateBlue; $btnExTw.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$gbTw.Controls.Add($btnExTw)
 
-$btnAppDef = New-Object System.Windows.Forms.Button; $btnAppDef.Text = "Default"; $btnAppDef.Location = New-Object System.Drawing.Point(15, 395); $btnAppDef.Size = New-Object System.Drawing.Size(130, 32); $btnAppDef.BackColor = [System.Drawing.Color]::SteelBlue; $gbApp.Controls.Add($btnAppDef)
-$btnAppAll = New-Object System.Windows.Forms.Button; $btnAppAll.Text = "All"; $btnAppAll.Location = New-Object System.Drawing.Point(150, 395); $btnAppAll.Size = New-Object System.Drawing.Size(130, 32); $btnAppAll.BackColor = [System.Drawing.Color]::Gray; $gbApp.Controls.Add($btnAppAll)
-$btnAppNon = New-Object System.Windows.Forms.Button; $btnAppNon.Text = "None"; $btnAppNon.Location = New-Object System.Drawing.Point(285, 395); $btnAppNon.Size = New-Object System.Drawing.Size(145, 32); $btnAppNon.BackColor = [System.Drawing.Color]::DimGray; $gbApp.Controls.Add($btnAppNon)
+# 3. INSTALLER
+$gbIn = New-Object System.Windows.Forms.GroupBox
+$gbIn.Text = "3. SOFTWARE INSTALLER"; $gbIn.Location = New-Object System.Drawing.Point(435, 300); $gbIn.Size = New-Object System.Drawing.Size(390, 500); $gbIn.ForeColor = [System.Drawing.Color]::DeepSkyBlue
+$form.Controls.Add($gbIn)
 
-$btnExecApp = New-Object System.Windows.Forms.Button; $btnExecApp.Text = "UNINSTALL - THỰC THI GỠ BỎ"; $btnExecApp.Location = New-Object System.Drawing.Point(15, 435); $btnExecApp.Size = New-Object System.Drawing.Size(415, 50); $btnExecApp.BackColor = [System.Drawing.Color]::Firebrick; $btnExecApp.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$gbApp.Controls.Add($btnExecApp)
+$listSw = New-Object System.Windows.Forms.CheckedListBox; $listSw.Location = New-Object System.Drawing.Point(15, 25); $listSw.Size = New-Object System.Drawing.Size(360, 400); $listSw.BackColor = [System.Drawing.Color]::FromArgb(25,25,25); $listSw.ForeColor = [System.Drawing.Color]::White; $listSw.CheckOnClick = $true; $listSw.BorderStyle = "None"
+$global:SwMap = @{
+    "Chrome"="Google.Chrome"; "CocCoc"="CocCoc.CocCoc"; "Firefox"="Mozilla.Firefox"; "Unikey"="Unikey.Unikey"; "EVKey"="EVKey.EVKey"; "WinRAR"="RARLab.WinRAR"; "7-Zip"="7zip.7zip"; "Office"="Microsoft.Office"; "VLC Player"="VideoLAN.VLC"; "AnyDesk"="AnyDesk.AnyDesk"; "TeamViewer"="TeamViewer.TeamViewer"; "CPU-Z"="CPUID.CPU-Z"; "Visual C++ 2022"="Microsoft.VCRedist.2015+.x64"; "iTunes"="Apple.iTunes"; "Advanced IP Scanner"="Famatech.AdvancedIPScanner"; "Foxit PhantomPDF"="Foxit.PhantomPDF"; "Optimizer 14.9"="Optimizer.GitHub"; "Partition Wizard 10"="MiniTool.PartitionWizard"; "VinaCAD"="VinaCAD.Custom"
+}
+foreach($k in $global:SwMap.Keys){ [void]$listSw.Items.Add($k, $false) }
+$gbIn.Controls.Add($listSw)
 
-# --- 4. SECTION: EXTENDED TOOLS (FOOTER BUTTONS) ---
-$gbFooter = New-Object System.Windows.Forms.GroupBox
-$gbFooter.Text = "4. EXTENDED TOOLS - CÔNG CỤ MỞ RỘNG"; $gbFooter.Location = New-Object System.Drawing.Point(20, 715); $gbFooter.Size = New-Object System.Drawing.Size(905, 100); $gbFooter.ForeColor = [System.Drawing.Color]::DeepSkyBlue
-$form.Controls.Add($gbFooter)
+$btnExSw = New-Object System.Windows.Forms.Button; $btnExSw.Text = "INSTALL SELECTED"; $btnExSw.Location = New-Object System.Drawing.Point(15, 435); $btnExSw.Size = New-Object System.Drawing.Size(360, 45); $btnExSw.BackColor = [System.Drawing.Color]::DarkCyan; $btnExSw.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$gbIn.Controls.Add($btnExSw)
 
-$btnInfo = New-Object System.Windows.Forms.Button; $btnInfo.Text = "Thông Tin (Info)"; $btnInfo.Location = New-Object System.Drawing.Point(15, 35); $btnInfo.Size = New-Object System.Drawing.Size(180, 45); $btnInfo.BackColor = [System.Drawing.Color]::Indigo; $gbFooter.Controls.Add($btnInfo)
-$btnMAS = New-Object System.Windows.Forms.Button; $btnMAS.Text = "Active Win/Office (MAS)"; $btnMAS.Location = New-Object System.Drawing.Point(210, 35); $btnMAS.Size = New-Object System.Drawing.Size(210, 45); $btnMAS.BackColor = [System.Drawing.Color]::DarkGreen; $gbFooter.Controls.Add($btnMAS)
-$btnWinutil = New-Object System.Windows.Forms.Button; $btnWinutil.Text = "ChrisTitus Winutil"; $btnWinutil.Location = New-Object System.Drawing.Point(435, 35); $btnWinutil.Size = New-Object System.Drawing.Size(210, 45); $btnWinutil.BackColor = [System.Drawing.Color]::Navy; $gbFooter.Controls.Add($btnWinutil)
-$btnDebloat = New-Object System.Windows.Forms.Button; $btnDebloat.Text = "Win 11 Debloat"; $btnDebloat.Location = New-Object System.Drawing.Point(660, 35); $btnDebloat.Size = New-Object System.Drawing.Size(225, 45); $btnDebloat.BackColor = [System.Drawing.Color]::SaddleBrown; $gbFooter.Controls.Add($btnDebloat)
+# 4. UNINSTALLER
+$gbUn = New-Object System.Windows.Forms.GroupBox
+$gbUn.Text = "4. UNINSTALL APPS"; $gbUn.Location = New-Object System.Drawing.Point(850, 300); $gbUn.Size = New-Object System.Drawing.Size(390, 500); $gbUn.ForeColor = [System.Drawing.Color]::Orange
+$form.Controls.Add($gbUn)
 
-# --- PROGRESS BAR ---
-$progressBar = New-Object System.Windows.Forms.ProgressBar; $progressBar.Location = New-Object System.Drawing.Point(20, 830); $progressBar.Size = New-Object System.Drawing.Size(905, 20); $progressBar.Style = "Continuous"; $progressBar.ForeColor = [System.Drawing.Color]::LimeGreen
+$listUn = New-Object System.Windows.Forms.CheckedListBox; $listUn.Location = New-Object System.Drawing.Point(15, 25); $listUn.Size = New-Object System.Drawing.Size(360, 400); $listUn.BackColor = [System.Drawing.Color]::FromArgb(25,25,25); $listUn.ForeColor = [System.Drawing.Color]::White; $listUn.CheckOnClick = $true; $listUn.BorderStyle = "None"
+$gbUn.Controls.Add($listUn)
+
+$btnExUn = New-Object System.Windows.Forms.Button; $btnExUn.Text = "UNINSTALL SELECTED"; $btnExUn.Location = New-Object System.Drawing.Point(15, 435); $btnExUn.Size = New-Object System.Drawing.Size(360, 45); $btnExUn.BackColor = [System.Drawing.Color]::Firebrick; $btnExUn.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$gbUn.Controls.Add($btnExUn)
+
+# --- LOG & PROGRESS ---
+$txtLog = New-Object System.Windows.Forms.RichTextBox; $txtLog.Location = New-Object System.Drawing.Point(20, 810); $txtLog.Size = New-Object System.Drawing.Size(1220, 70); $txtLog.BackColor = [System.Drawing.Color]::Black; $txtLog.ForeColor = [System.Drawing.Color]::Lime; $txtLog.Font = New-Object System.Drawing.Font("Consolas", 8); $txtLog.ReadOnly = $true
+$form.Controls.Add($txtLog)
+
+$progressBar = New-Object System.Windows.Forms.ProgressBar; $progressBar.Location = New-Object System.Drawing.Point(20, 890); $progressBar.Size = New-Object System.Drawing.Size(1220, 15); $progressBar.Style = "Continuous"; $progressBar.ForeColor = [System.Drawing.Color]::LimeGreen
 $form.Controls.Add($progressBar)
 
-$lblStatus = New-Object System.Windows.Forms.Label; $lblStatus.Text = "Ready / Sẵn sàng."; $lblStatus.Location = New-Object System.Drawing.Point(20, 855); $lblStatus.Size = New-Object System.Drawing.Size(600, 25)
-$form.Controls.Add($lblStatus)
+# --- FOOTER ---
+$pnlF = New-Object System.Windows.Forms.Panel; $pnlF.Location = New-Object System.Drawing.Point(20, 915); $pnlF.Size = New-Object System.Drawing.Size(1220, 45)
+$form.Controls.Add($pnlF)
 
-$lblPercent = New-Object System.Windows.Forms.Label; $lblPercent.Text = "0%"; $lblPercent.Location = New-Object System.Drawing.Point(865, 855); $lblPercent.TextAlign = "MiddleRight"
-$form.Controls.Add($lblPercent)
+$btnMAS = New-Object System.Windows.Forms.Button; $btnMAS.Text = "Active Win/Off (MAS)"; $btnMAS.Size = New-Object System.Drawing.Size(300, 35); $btnMAS.BackColor = [System.Drawing.Color]::DarkGreen; $pnlF.Controls.Add($btnMAS)
+$btnTT = New-Object System.Windows.Forms.Button; $btnTT.Text = "Winutil (ChrisTitus)"; $btnTT.Left = 320; $btnTT.Size = New-Object System.Drawing.Size(300, 35); $btnTT.BackColor = [System.Drawing.Color]::Navy; $pnlF.Controls.Add($btnTT)
+$btnI = New-Object System.Windows.Forms.Button; $btnI.Text = "mr Hanh - 0938.608.602"; $btnI.Left = 640; $btnI.Size = New-Object System.Drawing.Size(300, 35); $btnI.BackColor = [System.Drawing.Color]::Indigo; $pnlF.Controls.Add($btnI)
+$btnEx = New-Object System.Windows.Forms.Button; $btnEx.Text = "EXIT"; $btnEx.Left = 960; $btnEx.Size = New-Object System.Drawing.Size(260, 35); $btnEx.BackColor = [System.Drawing.Color]::Maroon; $pnlF.Controls.Add($btnEx)
 
 # ==========================================================
-# LOGIC XỬ LÝ CHUYÊN SÂU
+# LOGIC THUC THI
 # ==========================================================
-$global:AppData = @{}
-$JunkKeywords = @("OneDrive", "Copilot", "Solitaire", "Zune", "Bing", "Xbox", "People", "Feedback", "Weather", "News", "YourPhone", "StickyNotes", "Skype")
+function Add-Log ($m) { $txtLog.AppendText("[$((Get-Date).ToString('HH:mm'))] $m`n"); $txtLog.ScrollToCaret(); [System.Windows.Forms.Application]::DoEvents() }
+function Update-P ($v, $t) { $progressBar.Value = [math]::Round(($v / $t) * 100); [System.Windows.Forms.Application]::DoEvents() }
 
-function Update-UI ($val, $total, $txt) {
-    $p = [math]::Round(($val / $total) * 100); $progressBar.Value = $p; $lblPercent.Text = "$p%"; $lblStatus.Text = $txt; [System.Windows.Forms.Application]::DoEvents()
+function Get-SystemInfo {
+    try {
+        $cpu = (Get-CimInstance Win32_Processor).Name; $ram = [math]::Round((Get-CimInstance Win32_PhysicalMemory | Measure-Object Capacity -Sum).Sum / 1GB)
+        $disks = Get-CimInstance Win32_LogicalDisk | Where-Object { $_.DriveType -eq 3 } | ForEach-Object {
+            $total = [math]::Round($_.Size / 1GB); $free = [math]::Round($_.FreeSpace / 1GB); "$($_.DeviceID) Free:$free GB/Total:$total GB"
+        }
+        $lblH1.Text = "CPU: $cpu | RAM: $ram GB | DISK: $($disks -join ' | ')"
+        $lan = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -notlike "*Loopback*" }).IPAddress | Select-Object -First 1
+        $wan = (Invoke-RestMethod -Uri "https://api.ipify.org" -TimeoutSec 2)
+        $lblH2.Text = "IP LAN: $lan | IP WAN: $wan"
+    } catch { $lblH2.Text = "IP LAN: $lan | IP WAN: N/A" }
 }
 
 function Scan-Apps {
-    $listApps.Items.Clear(); $global:AppData.Clear()
-    # Lọc Registry & Ẩn mục không gỡ được
-    $reg = @("HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*", "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*")
-    foreach ($p in $reg) {
-        Get-ItemProperty $p | ForEach-Object {
-            if ($_.DisplayName -and $_.UninstallString -and ($_.NoRemove -ne 1) -and $_.DisplayName -notlike "*Update*" -and $_.DisplayName -notlike "*Visual C++ 2022*") {
-                if (!$global:AppData.ContainsKey($_.DisplayName)) {
-                    $global:AppData[$_.DisplayName] = @{ Type="Win32"; Uninstall=$_.UninstallString }
-                    [void]$listApps.Items.Add($_.DisplayName)
+    $listUn.Items.Clear(); $global:UnTable = @{}
+    $paths = @("HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*", "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*", "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*")
+    foreach ($p in $paths) {
+        Get-ItemProperty $p -ErrorAction SilentlyContinue | ForEach-Object {
+            if ($_.DisplayName -and $_.UninstallString -and ($_.SystemComponent -ne 1) -and ($_.NoRemove -ne 1) -and ($_.ReleaseType -ne "Update")) {
+                if ($_.DisplayName -notmatch "Microsoft\.NET.*Manifest" -and $_.DisplayName -notmatch "Microsoft Visual C\+\+.*Redistributable") {
+                    if (!$global:UnTable.ContainsKey($_.DisplayName)) {
+                        $global:UnTable[$_.DisplayName] = @{ Type="Win32"; Un=$_.UninstallString }
+                        [void]$listUn.Items.Add($_.DisplayName)
+                    }
                 }
             }
         }
     }
-    # Lọc Appx: Ẩn mục NonRemovable (như Edge mới)
-    Get-AppxPackage -AllUsers | ForEach-Object {
-        $n = $_.Name; $isJ = $false; foreach($k in $JunkKeywords){if($n -like "*$k*"){$isJ=$true;break}}
-        $isF = ($n -like "Microsoft.*" -and ($n -like "*Extension*" -or $n -like "*Framework*" -or $n -like "*VCLibs*" -or $n -like "*Runtime*"))
-        if (($isJ -or !$n.StartsWith("Microsoft.")) -and !$isF -and ($_.NonRemovable -eq $false)) {
-            $disp = "[App] " + $n; $global:AppData[$disp] = @{ Type="Appx"; Name=$n }
-            if (!$global:AppData.ContainsKey($disp)) { [void]$listApps.Items.Add($disp) }
+    Get-ItemProperty $paths | Where-Object { $_.DisplayName -like "*Visual C++*Redistributable*" } | ForEach-Object {
+        if (!$global:UnTable.ContainsKey($_.DisplayName)) {
+             $global:UnTable[$_.DisplayName] = @{ Type="Win32"; Un=$_.UninstallString }; [void]$listUn.Items.Add($_.DisplayName)
         }
     }
 }
 
-# --- EVENT HANDLERS ---
-$form.Add_Shown({ Scan-Apps })
+# --- INSTALL LOGIC (FIXED OPTIMIZER) ---
+$btnExSw.Add_Click({
+    $sel = $listSw.CheckedItems; if($sel.Count -eq 0){return}
+    $c = 0; $t = $sel.Count
+    foreach($item in $sel){
+        $c++; Add-Log "Installing: $item"; Update-P $c $t
+        $id = $global:SwMap[$item]
+        if($id -eq "VinaCAD.Custom"){ 
+            $url = "https://vinacad.s3.ap-northeast-1.amazonaws.com/products/all/VinaCAD_2026.6.3.exe"
+            (New-Object Net.WebClient).DownloadFile($url, "$env:TEMP\VinaCAD.exe"); Start-Process "$env:TEMP\VinaCAD.exe" -Wait
+        } elseif($id -eq "Optimizer.GitHub"){
+            $url = "https://github.com/hellzerg/optimizer/releases/latest/download/Optimizer.exe"
+            (New-Object Net.WebClient).DownloadFile($url, "$env:TEMP\Optimizer.exe"); Start-Process "$env:TEMP\Optimizer.exe"
+        } else { Start-Process winget -ArgumentList "install --id $id --silent --accept-package-agreements" -Wait }
+    }
+    Add-Log "Installation finished."
+})
 
-# Footer Buttons Logic
-$btnInfo.Add_Click({ [Windows.Forms.MessageBox]::Show("Công cụ hệ thống Tconghanh Tools`nChương trình được thiết kế bởi mr Hạnh - 0938.608.602", "Thông Tin") })
+# --- UNINSTALL LOGIC (FIXED UNIKEY) ---
+$btnExUn.Add_Click({
+    $sel = $listUn.CheckedItems; if($sel.Count -eq 0){return}
+    if([Windows.Forms.MessageBox]::Show("Uninstall $($sel.Count) items?","Confirm","YesNo") -eq "Yes"){
+        $c = 0; $t = $sel.Count
+        foreach($item in $sel){
+            $c++; Add-Log "Uninstalling: $item"; Update-P $c $t
+            # Kill process if UniKey
+            if($item -like "*UniKey*"){ Stop-Process -Name "UniKey" -Force -ErrorAction SilentlyContinue }
+            $d = $global:UnTable[$item]
+            if($d.Un -match '{[A-Z0-9-]+}'){ Start-Process "msiexec.exe" -ArgumentList "/x $($matches[0]) /qn" -Wait }
+            else { 
+                $ex = if($d.Un.StartsWith('"')){($d.Un -split '"')[1]}else{($d.Un -split ' ')[0]}
+                # Add silent flags for common installers
+                Start-Process $ex -ArgumentList "/S /silent /VERYSILENT /SUPPRESSMSGBOXES" -Wait 
+            }
+        }
+        Scan-Apps; Add-Log "Uninstallation finished."
+    }
+})
 
-$btnMAS.Add_Click({ Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command iex (irm https://get.activated.win)" })
+$btnExTw.Add_Click({
+    $sel = $listTw.CheckedItems; if($sel.Count -eq 0){return}
+    $c = 0; $t = $sel.Count
+    foreach($i in $sel){
+        $c++; Add-Log "Tweaking: $i"; Update-P $c $t
+        switch($i){
+            "Temp Cleaner - Run" { @("$env:TEMP\*", "C:\Windows\Temp\*") | ForEach-Object { Remove-Item $_ -Recurse -Force } }
+            "Fix Printer Spooler" { Restart-Service Spooler -Force }
+            "Reset Network" { netsh int ip reset; ipconfig /flushdns }
+            "Windows Update - Disable" { Set-Service wuauserv, bits -StartupType Disabled; Stop-Service wuauserv, bits -Force }
+            "Disk Cleanup - Run" { Dism /Online /Cleanup-Image /StartComponentCleanup /ResetBase }
+            "End Task RightClick - Enable" { reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarEndTask" /t REG_DWORD /d 1 /f }
+            "Telemetry - Disable" { reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f }
+            "Hibernate - Disable" { powercfg.exe /hibernate off }
+        }
+    }
+    Add-Log "Tweaks completed."
+})
 
-$btnWinutil.Add_Click({ Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command irm https://christitus.com/win | iex" })
-
-$btnDebloat.Add_Click({ Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command & ([scriptblock]::Create((irm https://debloat.raphi.re/)))" })
-
-# Backup Logic
-$btnBrowse.Add_Click({ $d=New-Object System.Windows.Forms.FolderBrowserDialog; if($d.ShowDialog() -eq "OK"){$txtPath.Text=$d.SelectedPath} })
-$btnUser.Add_Click({
-    $p = Join-Path $txtPath.Text "UserFiles"; if(!(Test-Path $p)){New-Item $p -ItemType Directory -Force}
+$btnMAS.Add_Click({ Start-Process powershell -ArgumentList "iex (irm https://get.activated.win)" })
+$btnTT.Add_Click({ Start-Process powershell -ArgumentList "irm https://christitus.com/win | iex" })
+$btnU.Add_Click({
+    $p = Join-Path $txtP.Text "UserFiles"; if(!(Test-Path $p)){New-Item $p -ItemType Directory -Force}
     $map = @{"Desktop"="Desktop"; "Documents"="MyDocuments"; "Music"="MyMusic"; "Pictures"="MyPictures"}
-    $c=0; foreach($k in $map.Keys){ $c++; Update-UI $c 4 "Backup: $k"; $s=[Environment]::GetFolderPath($map[$k]); if($s){$t=Join-Path $p $k; if(!(Test-Path $t)){New-Item $t -ItemType Directory -Force}; Copy-Item "$s\*" -Destination $t -Recurse -Force} }
-    [Windows.Forms.MessageBox]::Show("Backup OK!")
+    foreach($k in $map.Keys){ $s=[Environment]::GetFolderPath($map[$k]); if($s){Copy-Item "$s\*" -Destination (Join-Path $p $k) -Recurse -Force} }
+    Add-Log "Backup Done."
 })
-$btnDriver.Add_Click({ Update-UI 50 100 "Exporting..."; Export-WindowsDriver -Online -Destination (Join-Path $txtPath.Text "Drivers"); Update-UI 100 100 "Done!"; [Windows.Forms.MessageBox]::Show("Driver OK!") })
+$btnD.Add_Click({ Export-WindowsDriver -Online -Destination (Join-Path $txtP.Text "Drivers"); Add-Log "Drivers Done." })
+$btnBr.Add_Click({ $d=New-Object System.Windows.Forms.FolderBrowserDialog; if($d.ShowDialog() -eq "OK"){$txtP.Text=$d.SelectedPath} })
+$btnEx.Add_Click({ $form.Close() })
 
-# Tweaks Logic
-$btnExecTw.Add_Click({
-    $sel = $listTw.CheckedItems; $total = $sel.Count; $count = 0; if($total -eq 0){return}
-    foreach ($t in $sel) {
-        $count++; Update-UI $count $total "Applying: $t"
-        if ($t -like "*Activity History*") { reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "PublishUserActivities" /t REG_DWORD /d 0 /f }
-        if ($t -like "*Telemetry*") { reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f; Set-Service DiagTrack -StartupType Disabled }
-        if ($t -like "*End Task*") { reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarEndTask" /t REG_DWORD /d 1 /f }
-        if ($t -like "*Temporary Files*") { @("$env:TEMP\*", "C:\Windows\Temp\*") | ForEach-Object { Remove-Item $_ -Recurse -Force } }
-        if ($t -like "*Disk Cleanup*") { Dism /Online /Cleanup-Image /StartComponentCleanup /ResetBase }
-        if ($t -like "*Unwanted Apps*") { 
-            $junk = @(); foreach($i in $listApps.Items){ foreach($j in $JunkKeywords){if($i -like "*$j*"){$junk+=$i;break}}}
-            $totalUn = $junk.Count; $cUn = 0
-            foreach($app in $junk){ $cUn++; Update-UI $cUn $totalUn "Removing Bloat: $app"; $d=$global:AppData[$app]; if($d.Type -eq "Appx"){Get-AppxPackage $d.Name -AllUsers | Remove-AppxPackage} }
-        }
-    }
-    Scan-Apps; [Windows.Forms.MessageBox]::Show("Tweaks Complete!")
-})
-
-# Uninstall Logic
-$btnExecApp.Add_Click({ 
-    $sel = @(); foreach($i in $listApps.CheckedItems){$sel+=$i}
-    if($sel.Count -eq 0){return}
-    if([Windows.Forms.MessageBox]::Show("Confirm Uninstall?","Confirm","YesNo") -eq "Yes"){
-        $total=$sel.Count; $count=0
-        foreach($item in $sel){ $count++; Update-UI $count $total "Removing: $item"; $d=$global:AppData[$item]
-            if($d.Type -eq "Appx"){Get-AppxPackage $d.Name -AllUsers | Remove-AppxPackage}
-            else { $un=$d.Uninstall; if($un -match '{[A-Z0-9-]+}'){Start-Process "msiexec.exe" -ArgumentList "/x $($matches[0]) /qn" -Wait} else { $ex=if($un.StartsWith('"')){($un -split '"')[1]}else{($un -split ' ')[0]}; Start-Process $ex -ArgumentList "/S /silent /quiet" -Wait } }
-        }
-        Scan-Apps; Update-UI $total $total "Finish!"; [Windows.Forms.MessageBox]::Show("Done!")
-    }
-})
-
-# Select Btns
-$btnAppDef.Add_Click({ for($i=0;$i -lt $listApps.Items.Count;$i++){ $n=$listApps.Items[$i]; $chk=$false; foreach($j in $JunkKeywords){if($n -like "*$j*"){$chk=$true}}; $listApps.SetItemChecked($i,$chk) } })
-$btnAppAll.Add_Click({ for($i=0;$i -lt $listApps.Items.Count;$i++){ $listApps.SetItemChecked($i,$true) } })
-$btnAppNon.Add_Click({ for($i=0;$i -lt $listApps.Items.Count;$i++){ $listApps.SetItemChecked($i,$false) } })
-$btnTwDef.Add_Click({ for($i=0;$i -lt $listTw.Items.Count;$i++){ $listTw.SetItemChecked($i,$true) } })
-$btnTwAll.Add_Click({ for($i=0;$i -lt $listTw.Items.Count;$i++){ $listTw.SetItemChecked($i,$true) } })
-$btnTwNon.Add_Click({ for($i=0;$i -lt $listTw.Items.Count;$i++){ $listTw.SetItemChecked($i,$false) } })
-
+$form.Add_Shown({ Get-SystemInfo; Scan-Apps; Add-Log "Tconghanh Tools v22.0 Ready." })
 $form.ShowDialog()
