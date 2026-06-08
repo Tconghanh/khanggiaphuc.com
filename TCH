@@ -13,7 +13,7 @@ Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 
 # --- KHOI TAO FORM CHUAN ENTERPRISE ---
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "Tconghanh Tools Pro - Ultimate Tech Edition"
+$form.Text = "Tconghanh Tools Pro - Version 26.6.8"
 $form.Size = New-Object System.Drawing.Size(1280, 1024)
 $form.StartPosition = "CenterScreen"
 $form.BackColor = [System.Drawing.Color]::FromArgb(20, 20, 20)
@@ -23,7 +23,7 @@ $form.FormBorderStyle = "FixedSingle"
 $form.MaximizeBox = $false
 
 $title = New-Object System.Windows.Forms.Label
-$title.Text = "TCONGHANH TOOLS - ALL IN ONE OS OPTIMIZER"
+$title.Text = "TCONGHANH TOOLS - Version 26.6.8"
 $title.Font = New-Object System.Drawing.Font("Segoe UI", 22, [System.Drawing.FontStyle]::Bold)
 $title.Size = New-Object System.Drawing.Size(1260, 65)
 $title.TextAlign = "MiddleCenter"
