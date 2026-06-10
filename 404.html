@@ -3,19 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Không tìm thấy trang - Khang Gia Phúc</title>
+    <title>Trang không tồn tại - Khang Gia Phúc</title>
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; padding: 50px; background-color: #f7f9fa; color: #333; }
-        h1 { font-size: 80px; margin: 0; color: #ff6b6b; }
-        p { font-size: 18px; }
-        .btn { display: inline-block; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
-        .btn:hover { background-color: #0056b3; }
+        :root {
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --text-color: #2d3748;
+            --bg-color: #f7fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Khối thông tin bên trái */
+        .error-info {
+            text-align: left;
+        }
+
+        .logo {
+            max-width: 160px;
+            height: auto;
+            margin-bottom: 25px;
+        }
+
+        .error-code {
+            font-size: 72px;
+            font-weight: 800;
+            color: #e53e3e;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #1a202c;
+        }
+
+        p {
+            font-size: 16px;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Khối Game bên phải */
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #1a202c;
+            padding: 20px;
+            border-radius: 12px;
+            color: #fff;
+        }
+
+        .game-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            color: #a0aec0;
+        }
+
+        #gameCanvas {
+            background: #2d3748;
+            border-radius: 8px;
+            display: block;
+            cursor: pointer;
+        }
+
+        .game-meta {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .game-instruction {
+            font-size: 12px;
+            color: #a0aec0;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* Responsive cho thiết bị di động */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                margin: 20px;
+                padding: 20px;
+            }
+            .error-info {
+                text-align: center;
+            }
+            .logo {
+                margin: 0 auto 20px auto;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>404</h1>
-    <h2>Đường dẫn không tồn tại hoặc đã bị thay đổi!</h2>
-    <p>Xin lỗi, chúng tôi không tìm thấy trang bạn yêu cầu trên hệ thống Khang Gia Phúc.</p>
-    <a href="/" class="btn">Quay về Trang Chủ</a>
+
+    <div class="container">
+        <div class="error-info">
+            <img src="/data/logo.jpg" alt="Khang Gia Phúc Logo" class="logo">
+            <div class="error-code">404</div>
+            <h1>Liên kết không tồn tại!</h1>
+            <p>Đường dẫn bạn vừa truy cập có thể đã bị thay đổi, xóa bỏ hoặc không có trên hệ thống của Khang Gia Phúc. Vui lòng kiểm tra lại URL hoặc bấm nút bên dưới để quay về.</p>
+            <a href="/" class="btn">Quay về Trang Chủ</a>
+        </div>
+
+        <div class="game-area">
+            <div class="game-title">Giải trí một chút? 🚀</div>
+            <canvas id="gameCanvas" width="300" height="300"></canvas>
+            <div class="game-meta">
+                <span id="scoreDisplay">Điểm số: 0</span>
+                <span id="highScoreDisplay">Kỷ lục: 0</span>
+            </div>
+            <div class="game-instruction">Di chuyển chuột sang Trái/Phải trên ô vuông để hứng các khối hộp rơi xuống!</div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const highScoreDisplay = document.getElementById('highScoreDisplay');
+
+        // Khởi tạo các thông số game
+        let score = 0;
+        let highScore = localStorage.getItem('404_highscore') || 0;
+        highScoreDisplay.innerText = `Kỷ lục: ${highScore}`;
+
+        let basket = {
+            width: 60,
+            height: 15,
+            x: canvas.width / 2 - 30,
+            y: canvas.height - 25,
+            color: '#007bff'
+        };
+
+        let item = {
+            x: Math.random() * (canvas.width - 20),
+            y: 0,
+            size: 15,
+            speed: 3,
+            color: '#ecc94b'
+        };
+
+        let isGameOver = false;
+
+        // Lắng nghe sự kiện di chuyển chuột trong khu vực canvas
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            // Cập nhật vị trí thanh hứng theo tọa độ chuột
+            basket.x = e.clientX - rect.left - basket.width / 2;
+            
+            // Giới hạn không cho thanh hứng vượt biên canvas
+            if (basket.x < 0) basket.x = 0;
+            if (basket.x > canvas.width - basket.width) basket.x = canvas.width - basket.width;
+        });
+
+        // Hỗ trợ cảm ứng cho điện thoại
+        canvas.addEventListener('touchmove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            if(e.touches.length > 0) {
+                basket.x = e.touches[0].clientX - rect.left - basket.width / 2;
+                if (basket.x < 0) basket.x = 0;
+                if (basket.x > canvas.width - basket.width) basket.x = canvas.width - basket.width;
+            }
+            e.preventDefault();
+        }, { passive: false });
+
+        function resetGame() {
+            score = 0;
+            scoreDisplay.innerText = `Điểm số: ${score}`;
+            item.y = 0;
+            item.x = Math.random() * (canvas.width - item.size);
+            item.speed = 3;
+            isGameOver = false;
+            update();
+        }
+
+        // Click vào canvas để chơi lại nếu thua
+        canvas.addEventListener('click', () => {
+            if (isGameOver) resetGame();
+        });
+
+        function update() {
+            if (isGameOver) return;
+
+            // Xóa và vẽ lại canvas sau mỗi frame
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Vẽ khối rơi xuống (Vật thể cần hứng)
+            ctx.fillStyle = item.color;
+            ctx.fillRect(item.x, item.y, item.size, item.size);
+
+            // Vẽ thanh hứng (Giỏ)
+            ctx.fillStyle = basket.color;
+            ctx.fillRect(basket.x, basket.y, basket.width, basket.height);
+
+            // Cập nhật tọa độ rơi của vật thể
+            item.y += item.speed;
+
+            // Xử lý khi vật thể chạm xuống đáy thanh hứng
+            if (item.y + item.size >= basket.y && item.x + item.size >= basket.x && item.x <= basket.x + basket.width) {
+                score++;
+                scoreDisplay.innerText = `Điểm số: ${score}`;
+                item.y = 0;
+                item.x = Math.random() * (canvas.width - item.size);
+                // Tăng dần độ khó theo điểm số
+                item.speed += 0.2; 
+            }
+
+            // Xử lý khi vật thể bị rơi ra ngoài (Game Over)
+            if (item.y > canvas.height) {
+                isGameOver = true;
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('404_highscore', highScore);
+                    highScoreDisplay.innerText = `Kỷ lục: ${highScore}`;
+                }
+                
+                // Hiển thị màn hình thua cuộc
+                ctx.fillStyle = 'rgba(0,0,0,0.75)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#fff';
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 10);
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#cbd5e0';
+                ctx.fillText('Bấm vào đây để chơi lại', canvas.width / 2, canvas.height / 2 + 20);
+                return;
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        // Chạy game
+        update();
+    </script>
 </body>
 </html>
