@@ -1,4 +1,4 @@
-# --- THIET LAP MOI TRUONG (UTF-8 - TLS 1.2/1.3 - ADMIN ONLY) ---
+﻿# --- THIET LAP MOI TRUONG (UTF-8 - TLS 1.2/1.3 - ADMIN ONLY) ---
 $OutputEncoding = [System.Text.Encoding]::UTF8
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
 $ErrorActionPreference = "Stop"
