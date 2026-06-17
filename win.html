@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIN TOOLS - Bộ Công Cụ Tối Ưu Hóa Windows Chuyên Nghiệp</title>
+    <style>
+        :root {
+            --bg-dark: #030712;
+            --panel-bg: rgba(17, 24, 39, 0.7);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --glow-cyan: rgba(6, 182, 212, 0.15);
+            --fluent-blur: blur(20px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI Variable Display', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Matrix Canvas Background */
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.18;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Fluent Design Glassmorphism Panel */
+        .fluent-panel {
+            background: var(--panel-bg);
+            backdrop-filter: var(--fluent-blur);
+            -webkit-backdrop-filter: var(--fluent-blur);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fluent-panel:hover {
+            border-color: rgba(6, 182, 212, 0.3);
+            box-shadow: 0 12px 40px 0 rgba(6, 182, 212, 0.1);
+        }
+
+        /* Header Section */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .logo-img {
+            max-width: 180px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-title {
+            font-size: 3rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.3));
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .author-info {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Counter/Stats Grid */
+        .stats-grid {
+            display: table;
+            width: 100%;
+            margin-bottom: 30px;
+            border-collapse: separate;
+            border-spacing: 20px 0;
+        }
+
+        .stat-card {
+            display: table-cell;
+            width: 33.333%;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            font-family: monospace;
+            color: #fff;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Terminal/Command Section */
+        .terminal-container {
+            background-color: rgba(5, 7, 15, 0.85);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 10px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .dot-red { background-color: #ff5f56; }
+        .dot-yellow { background-color: #ffbd2e; }
+        .dot-green { background-color: #27c93f; }
+
+        .terminal-title {
+            margin-left: 10px;
+            font-family: monospace;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .instructions {
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+
+        .instructions strong {
+            color: #ffbd2e;
+        }
+
+        .command-box {
+            display: flex;
+            background-color: rgba(13, 17, 23, 0.9);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 8px;
+            padding: 15px 20px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .command-text {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            color: #58a6ff;
+            font-weight: bold;
+            user-select: all;
+        }
+
+        .btn-copy {
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-blue) 100%);
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+        }
+
+        /* Overview Section Layout */
+        .overview-grid {
+            display: table;
+            width: 100%;
+            margin-bottom: 30px;
+            border-collapse: separate;
+            border-spacing: 20px 0;
+        }
+
+        .overview-cell {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #fff;
+            position: relative;
+            padding-left: 15px;
+            border-left: 4px solid var(--accent-cyan);
+        }
+
+        .overview-cell p {
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .highlight-list {
+            list-style: none;
+        }
+
+        .highlight-list li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .highlight-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        /* Screenshot Area */
+        .screenshot-box {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .screenshot-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Detailed Features Grid Block */
+        .tweak-grid {
+            display: block;
+            margin-top: 20px;
+        }
+
+        .tweak-item {
+            display: inline-block;
+            width: 48%;
+            margin-right: 3%;
+            margin-bottom: 12px;
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 12px 15px;
+            vertical-align: top;
+            transition: all 0.2s ease;
+        }
+
+        .tweak-item:nth-child(2n) {
+            margin-right: 0;
+        }
+
+        .tweak-item:hover {
+            background-color: rgba(6, 182, 212, 0.08);
+            border-color: rgba(6, 182, 212, 0.4);
+        }
+
+        .tweak-num {
+            display: inline-block;
+            background-color: rgba(6, 182, 212, 0.2);
+            color: var(--accent-cyan);
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-right: 10px;
+            font-family: monospace;
+        }
+
+        /* Secondary Grid Elements */
+        .modules-grid {
+            display: table;
+            width: 100%;
+            margin-bottom: 30px;
+            border-collapse: separate;
+            border-spacing: 20px 0;
+        }
+
+        .module-card {
+            display: table-cell;
+            width: 25%;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .module-icon {
+            font-size: 2.3rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .module-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .module-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: left;
+        }
+
+        /* Donation Section Layout */
+        .donation-grid {
+            display: table;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 25px 0;
+        }
+
+        .donation-info {
+            display: table-cell;
+            width: 65%;
+            vertical-align: middle;
+        }
+
+        .donation-qr {
+            display: table-cell;
+            width: 35%;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .qr-img {
+            max-width: 160px;
+            height: auto;
+            border-radius: 12px;
+            border: 4px solid #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .donation-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ff4757;
+            margin-bottom: 15px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0 10px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+        }
+
+        /* Toast Alert */
+        .toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-green);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MATRIX BACKGROUND CANVAS -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="container">
+        
+        <!-- HEADER MODULE -->
+        <header>
+            <div class="logo-container">
+                <img src="https://www.khanggiaphuc.com/soft/LogoWT.jpg" alt="WinTools Logo" class="logo-img">
+            </div>
+            <div class="subtitle">HỆ THỐNG TỐI ƯU HÓA WINDOWS TOÀN DIỆN</div>
+            <h1 class="logo-title">WIN TOOLS</h1>
+            <div class="author-info">Phát triển bởi Mr Hạnh - Hotline: 0938.608.602</div>
+        </header>
+
+        <!-- COUNTER STATS PANEL -->
+        <div class="fluent-panel">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="152420">0</div>
+                    <div class="stat-label">Tổng Lượt Sử Dụng</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="9840">0</div>
+                    <div class="stat-label">Hôm Nay</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="99.2">0</div>
+                    <div class="stat-label">Tỷ Lệ Ổn Định (%)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TERMINAL INTERACTIVE COMMAND PACK -->
+        <div class="fluent-panel terminal-container">
+            <div class="terminal-header">
+                <div class="terminal-dot dot-red"></div>
+                <div class="terminal-dot dot-yellow"></div>
+                <div class="terminal-dot dot-green"></div>
+                <div class="terminal-title">PowerShell - Administrator Mode</div>
+            </div>
+            <div class="instructions">
+                <strong>HƯỚNG DẪN KÍCH HOẠT NHANH:</strong> Nhấp chuột phải vào nút <strong>Start (Windows)</strong> -> Chọn <strong>Windows PowerShell (Admin)</strong> -> Nhấn nút Sao Chép dưới đây, dán lệnh vào cửa sổ PowerShell và nhấn <strong>Enter</strong>.
+            </div>
+            <div class="command-box">
+                <div class="command-text" id="cmdText">iex (irm https://win.khanggiaphuc.com)</div>
+                <button class="btn-copy" onclick="copyCommand()">Sao Chép Lệnh</button>
+            </div>
+        </div>
+
+        <!-- CORE BRIEFING & SCREENSHOT PREVIEW -->
+        <div class="overview-grid">
+            <div class="overview-cell">
+                <div class="fluent-panel" style="height: 100%; margin-bottom: 0;">
+                    <h2 class="section-title">Giới Thiệu Bộ Công Cụ</h2>
+                    <p><strong>WIN TOOLS by Công Hạnh</strong> là sản phẩm công nghệ cao cấp tối ưu chuyên biệt cho Windows 10 và Windows 11. Hệ thống can thiệp an toàn ở cấp độ sâu giúp máy tính vận hành mượt mà, đạt hiệu suất đỉnh cao.</p>
+                    <p>Ứng dụng vận hành bằng mã nguồn lệnh <strong>PowerShell</strong> trực tiếp vô cùng an toàn và minh bạch. Cơ chế <strong>Cập Nhật Online</strong> thông minh tự động nạp các bản vá và tối ưu mới nhất khi bạn khởi chạy.</p>
+                    <ul class="highlight-list" style="margin-top: 15px;">
+                        <li>Tối ưu phần cứng gốc, tăng tốc xử lý CPU/RAM.</li>
+                        <li>An toàn tuyệt đối, loại bỏ mã độc hại hoàn toàn.</li>
+                        <li>Tự động dọn dẹp các tiến trình ngầm tốn tài nguyên.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="overview-cell">
+                <div class="fluent-panel screenshot-box" style="height: 100%; margin-bottom: 0;">
+                    <h2 class="section-title">Giao Diện Thực Tế</h2>
+                    <img src="https://www.khanggiaphuc.com/soft/WinTools.jpg" alt="WinTools Giao Diện Cửa Sổ" class="screenshot-img">
+                </div>
+            </div>
+        </div>
+        <div style="height: 30px;"></div>
+
+        <!-- DETAILED SYSTEM TWEAKS PACK -->
+        <div class="fluent-panel">
+            <h2 class="section-title" style="border-left-color: var(--accent-purple);">1. Chức Năng Tinh Chỉnh Hệ Thống (Advanced Tweaks)</h2>
+            <div class="tweak-grid">
+                <div class="tweak-item"><span class="tweak-num">00</span><span class="tweak-text">Gỡ các app mặc định không cần thiết để giải phóng RAM/CPU.</span></div>
+                <div class="tweak-item"><span class="tweak-num">01</span><span class="tweak-text">Xoá file tạm Temp, dọn thùng rác, giải phóng dung lượng ổ C.</span></div>
+                <div class="tweak-item"><span class="tweak-num">02</span><span class="tweak-text">Chặn các ứng dụng bên thứ ba tự ý chạy cùng Windows.</span></div>
+                <div class="tweak-item"><span class="tweak-num">03</span><span class="tweak-text">Tắt quyền chạy ngầm của các phần mềm khi không sử dụng.</span></div>
+                <div class="tweak-item"><span class="tweak-num">04</span><span class="tweak-text">Kích hoạt chế độ High Performance để đạt hiệu năng tối đa.</span></div>
+                <div class="tweak-item"><span class="tweak-num">05</span><span class="tweak-text">Tắt bớt các hiệu ứng chuyển động rườm rà giúp phản hồi nhanh.</span></div>
+                <div class="tweak-item"><span class="tweak-num">06</span><span class="tweak-text">Tắt hiệu ứng trong suốt giúp giảm tải card đồ hoạ GPU.</span></div>
+                <div class="tweak-item"><span class="tweak-num">07</span><span class="tweak-text">Tắt Xbox Game Bar nhằm tối ưu khung hình khi làm việc.</span></div>
+                <div class="tweak-item"><span class="tweak-num">08</span><span class="tweak-text">Chặn các thông báo quảng cáo làm phiền từ hệ thống.</span></div>
+                <div class="tweak-item"><span class="tweak-num">09</span><span class="tweak-text">Vô hiệu hoá trợ lý ảo Cortana và Copilot chạy ngầm.</span></div>
+                <div class="tweak-item"><span class="tweak-num">10</span><span class="tweak-text">Ẩn thanh tiện ích Widget thời tiết tin tức trên Taskbar.</span></div>
+                <div class="tweak-item"><span class="tweak-num">11</span><span class="tweak-text">Dừng dịch vụ Windows Search Indexing, giảm nghẽn ổ cứng.</span></div>
+                <div class="tweak-item"><span class="tweak-num">12</span><span class="tweak-text">Xoá sạch hàng đợi in bị kẹt, restart tiến trình Spooler.</span></div>
+                <div class="tweak-item"><span class="tweak-num">13</span><span class="tweak-text">Làm sạch bộ nhớ đệm DNS, reset Winsock giúp sửa lỗi mạng.</span></div>
+                <div class="tweak-item"><span class="tweak-num">14</span><span class="tweak-text">Tắt dịch vụ Windows Update ngầm chặn tự động cập nhật.</span></div>
+                <div class="tweak-item"><span class="tweak-num">15</span><span class="tweak-text">Giải mã Bitlocker trên ổ cứng để bảo vệ an toàn dữ liệu.</span></div>
+                <div class="tweak-item"><span class="tweak-num">16</span><span class="tweak-text">Căn trái, hiện icon Search, ẩn Task View, gộp nút khi đầy và khôi phục Menu chuột phải Win 10.</span></div>
+                <div class="tweak-item"><span class="tweak-num">17</span><span class="tweak-text">Gỡ bỏ triệt để ứng dụng lưu trữ đám mây OneDrive chạy ngầm.</span></div>
+                <div class="tweak-item"><span class="tweak-num">18</span><span class="tweak-text">Vô hiệu hoá giao thức mạng IPv6 không cần thiết.</span></div>
+                <div class="tweak-item"><span class="tweak-num">19</span><span class="tweak-text">Chặn Explorer tự động phân loại giúp mở Folder nhanh hơn.</span></div>
+            </div>
+        </div>
+
+        <!-- ADDITIONAL CORE MODULES -->
+        <div class="modules-grid">
+            <div class="module-card fluent-panel">
+                <span class="module-icon" style="color: var(--accent-green);">📥</span>
+                <h3>2. Cài Phần Mềm Nhanh</h3>
+                <p>Cài đặt tốc độ các công cụ thiết yếu hoàn toàn tự động, sạch 100% (Trình duyệt, Unikey, Office, WinRAR...).</p>
+            </div>
+            <div class="module-card fluent-panel">
+                <span class="module-icon" style="color: var(--accent-red);">🗑️</span>
+                <h3>3. Gỡ Bỏ Ứng Dụng</h3>
+                <p>Quét sâu và loại bỏ triệt để các ứng dụng rác, làm sạch phân vùng bộ nhớ và dọn Registry hệ thống tận gốc.</p>
+            </div>
+            <div class="module-card fluent-panel">
+                <span class="module-icon" style="color: var(--accent-orange);">🛡️</span>
+                <h3>4. Bản Quyền Hệ Thống</h3>
+                <p>Kiểm tra trạng thái kích hoạt bản quyền Windows và Microsoft Office một cách chính xác, minh bạch.</p>
+            </div>
+            <div class="module-card fluent-panel">
+                <span class="module-icon" style="color: var(--accent-purple);">⚙️</span>
+                <h3>5. Công Cụ Mở Rộng</h3>
+                <p>Bao gồm bộ Backup Drivers, Backup dữ liệu cá nhân chuyên nghiệp và liên kết các tiện ích quản trị nâng cao.</p>
+            </div>
+        </div>
+
+        <!-- DONATION DONATE AREA -->
+        <div class="fluent-panel" style="border-left: 4px solid #ff4757;">
+            <div class="donation-grid">
+                <div class="donation-info">
+                    <h3 class="donation-title">❤️ Ủng Hộ Tác Giả</h3>
+                    <p style="margin-bottom: 12px; font-size: 1.05rem;"><strong>Wintools by Công Hạnh</strong> được nghiên cứu và phát triển hoàn toàn miễn phí phục vụ cộng đồng.</p>
+                    <p style="color: var(--text-muted); text-align: justify;">Nếu bộ công cụ này mang lại giá trị hữu ích và tiết kiệm thời gian cho bạn, hãy gửi một chút quà nhỏ cổ vũ tinh thần tác giả. Mọi sự đóng góp, dù nhỏ nhất, đều là nguồn động lực to lớn giúp tôi tiếp tục duy trì máy chủ cập nhật trực tuyến, tối ưu tính năng mới và phục vụ cộng đồng lâu dài.</p>
+                </div>
+                <div class="donation-qr">
+                    <img src="https://www.khanggiaphuc.com/soft/Momo.jpeg" alt="Quét Mã MoMo Ủng Hộ" class="qr-img">
+                    <div style="margin-top: 8px; font-size: 0.85rem; color: #ff4757; font-weight: 600;">Quét mã qua ứng dụng MoMo</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BRANDING FOOTER -->
+        <footer>
+            <p>&copy; 2026 Bản quyền thuộc về <a href="https://khanggiaphuc.com" target="_blank">Công ty TNHH Khang Gia Phúc</a>. Đơn vị giải pháp CNTT, Hạ tầng mạng & An ninh công nghệ.</p>
+        </footer>
+
+    </div>
+
+    <!-- TOAST POPUP SYSTEM -->
+    <div class="toast" id="copyToast">Đã sao chép câu lệnh PowerShell thành công!</div>
+
+    <script>
+        // --- 1. SCRIPT HIỆU ỨNG MA TRẬN SỐ HACKER (MATRIX CANVAS) ---
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Chuỗi ký tự ma trận nhị phân & số công nghệ
+        const matrixChars = "0101101001101100123456789X://";
+        const charArr = matrixChars.split("");
+        const fontSize = 14;
+        let columns = canvas.width / fontSize;
+        let drops = [];
+
+        function initDrops() {
+            columns = canvas.width / fontSize;
+            drops = [];
+            for (let x = 0; x < columns; x++) {
+                drops[x] = 1;
+            }
+        }
+        initDrops();
+        window.addEventListener('resize', initDrops);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(3, 7, 18, 0.06)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Màu chữ xanh cyan công nghệ phối hợp xanh lá
+            ctx.fillStyle = '#06b6d4';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = charArr[Math.floor(Math.random() * charArr.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 33);
+
+        // --- 2. SCRIPT SAO CHÉP LỆNH NHANH ---
+        function copyCommand() {
+            const commandText = document.getElementById('cmdText').innerText;
+            navigator.clipboard.writeText(commandText).then(() => {
+                const toast = document.getElementById('copyToast');
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2500);
+            }).catch(err => {
+                console.error('Lỗi sao chép dữ liệu: ', err);
+            });
+        }
+
+        // --- 3. SCRIPT HIỆU ỨNG ĐẾM SỐ TỰ ĐỘNG (COUNTER ANIMATION) ---
+        function initCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 60; // Tốc độ xử lý chuyển động
+
+            counters.forEach(counter => {
+                const animate = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const current = +counter.innerText.replace(/,/g, '');
+                    
+                    // Xử lý bước nhảy số
+                    const increment = target / speed;
+
+                    if (current < target) {
+                        const nextValue = current + increment;
+                        if (target % 1 !== 0) {
+                            // Xử lý số thập phân (như tỷ lệ %)
+                            counter.innerText = Math.min(nextValue, target).toFixed(1);
+                        } else {
+                            counter.innerText = Math.min(Math.ceil(nextValue), target).toLocaleString('en-US');
+                        }
+                        setTimeout(animate, 20);
+                    } else {
+                        counter.innerText = target % 1 !== 0 ? target.toFixed(1) : target.toLocaleString('en-US');
+                    }
+                };
+                animate();
+            });
+        }
+
+        // Kích hoạt bộ đếm sau khi tải xong trang toàn bộ
+        window.addEventListener('DOMContentLoaded', initCounters);
+    </script>
+</body>
+</html>
