@@ -1,7 +1,7 @@
 # --- THIẾT LẬP MÔI TRƯỜNG (UTF-8 - TLS 1.2/1.3 - ADMIN ONLY) ---
 $OutputEncoding = [System.Text.Encoding]::UTF8
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")) {  
     Start-Process powershell -Verb runAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
@@ -11,69 +11,83 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
-# --- BIẾN TOÀN CỤC QUẢN LÝ DOWNLOAD ---
-$global:WebClient = $null
+# Tối ưu hóa DPI bằng phương thức Win32 gốc
+try {
+    Add-Type -TypeDefinition @'
+    using System;
+    using System.Runtime.InteropServices;
+    public class DpiUtil {
+        [DllImport("user32.dll")]
+        public static extern bool SetProcessDPIAware();
+    }
+'@
+    $dpiStatus = [DpiUtil]::SetProcessDPIAware()
+if ($dpiStatus) {
+    Write-Host "Chào mừng bạn đến với bộ công cụ Wintools của Mr Hạnh" -ForegroundColor Green
+} else {
+    Write-Host "Không thể cấu hình DPI. Tiếp tục khởi chạy..." -ForegroundColor Yellow
+}
+
+} catch {}
+
+# --- BIẾN TOÀN CỤC QUẢN LÝ ---
 $global:DownloadQueue = @()
 $global:CurrentDownloadIndex = 0
-$global:IsDownloadOnly = $false
 
-# --- KHỞI TẠO FORM CHUẨN ENTERPRISE ---
+# --- KHỞI TẠO FORM (Thu gọn chiều cao từ 970 xuống 935) ---
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "Bộ Công Cụ Windows - Win Tools v26.6.10"
-$form.Size = New-Object System.Drawing.Size(1280, 1024)
+$form.Text = "Bộ Công Cụ Windows - Win Tools v26.6.11"
+$form.Size = New-Object System.Drawing.Size(1280, 935)
 $form.StartPosition = "CenterScreen"
 $form.BackColor = [System.Drawing.Color]::FromArgb(20, 20, 20)
 $form.ForeColor = [System.Drawing.Color]::White
 $form.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 $form.FormBorderStyle = "FixedSingle"
 $form.MaximizeBox = $false
+$form.AutoScaleMode = "Dpi"
 
 $title = New-Object System.Windows.Forms.Label
-$title.Text = "WIN TOOLS - Phát triển bởi tconghanh - 0844.900.099"
+$title.Text = "WIN TOOLS - Phát triển bởi Mr Hạnh - 0938.608.602"
 $title.Font = New-Object System.Drawing.Font("Segoe UI", 22, [System.Drawing.FontStyle]::Bold)
 $title.Size = New-Object System.Drawing.Size(1260, 65)
 $title.TextAlign = "MiddleCenter"
 $title.ForeColor = [System.Drawing.Color]::FromArgb(0, 255, 204)
 $form.Controls.Add($title)
 
-# --- THÔNG TIN HỆ THỐNG ---
+# --- THÔNG TIN HỆ THỐNG (Thu gọn chiều cao từ 95 xuống 60) ---
 $gbH = New-Object System.Windows.Forms.GroupBox
 $gbH.Text = "THÔNG TIN HỆ THỐNG (SYSTEM INFO)"
 $gbH.Location = New-Object System.Drawing.Point(20, 70)
-$gbH.Size = New-Object System.Drawing.Size(1220, 95)
+$gbH.Size = New-Object System.Drawing.Size(1220, 60)
 $gbH.ForeColor = [System.Drawing.Color]::White
 $form.Controls.Add($gbH)
 
-$lblH1 = New-Object System.Windows.Forms.Label; $lblH1.Text = "Đang kiểm tra Hệ điều hành & Phần cứng (Detecting OS & Hardware)..."; $lblH1.Location = New-Object System.Drawing.Point(15, 25); $lblH1.Size = New-Object System.Drawing.Size(1190, 25); $lblH1.ForeColor = [System.Drawing.Color]::Lime; $lblH1.Font = New-Object System.Drawing.Font("Consolas", 10, [System.Drawing.FontStyle]::Bold)
+$lblH1 = New-Object System.Windows.Forms.Label; $lblH1.Text = "Đang kiểm tra Hệ điều hành & Phần cứng..."; $lblH1.Location = New-Object System.Drawing.Point(15, 25); $lblH1.Size = New-Object System.Drawing.Size(1190, 25); $lblH1.ForeColor = [System.Drawing.Color]::Lime; $lblH1.Font = New-Object System.Drawing.Font("Consolas", 10, [System.Drawing.FontStyle]::Bold)
 $gbH.Controls.Add($lblH1)
 
-$lblH2 = New-Object System.Windows.Forms.Label; $lblH2.Text = "Đang tải cấu hình kết nối mạng (Network Connection Loading)..."; $lblH2.Location = New-Object System.Drawing.Point(15, 55); $lblH2.Size = New-Object System.Drawing.Size(1190, 25); $lblH2.ForeColor = [System.Drawing.Color]::Aqua; $lblH2.Font = New-Object System.Drawing.Font("Consolas", 10, [System.Drawing.FontStyle]::Bold)
-$gbH.Controls.Add($lblH2)
-
-# --- SAO LƯU DỮ LIỆU ---
+# --- SAO LƯU DỮ LIỆU (Đẩy lên tọa độ Y = 140) ---
 $gbB = New-Object System.Windows.Forms.GroupBox
-$gbB.Text = "SAO LƯU DỮ LIỆU NGƯỜI DÙNG + TRÌNH ĐIỀU KHIỂN (DATA + DRIVER BACKUP)"; $gbB.Location = New-Object System.Drawing.Point(20, 175); $gbB.Size = New-Object System.Drawing.Size(1220, 110); $gbB.ForeColor = [System.Drawing.Color]::Gold
+$gbB.Text = "SAO LƯU DỮ LIỆU NGƯỜI DÙNG + TRÌNH ĐIỀU KHIỂN"; $gbB.Location = New-Object System.Drawing.Point(20, 140); $gbB.Size = New-Object System.Drawing.Size(1220, 80); $gbB.ForeColor = [System.Drawing.Color]::Gold
 $form.Controls.Add($gbB)
 
-$txtP = New-Object System.Windows.Forms.TextBox; $txtP.Text = "D:\Backup"; $txtP.Location = New-Object System.Drawing.Point(20, 30); $txtP.Size = New-Object System.Drawing.Size(1000, 25); $txtP.BackColor = [System.Drawing.Color]::Black; $txtP.ForeColor = [System.Drawing.Color]::White
+$txtP = New-Object System.Windows.Forms.TextBox; $txtP.Text = "D:\Backup"; $txtP.Location = New-Object System.Drawing.Point(20, 33); $txtP.Size = New-Object System.Drawing.Size(260, 30); $txtP.BackColor = [System.Drawing.Color]::Black; $txtP.ForeColor = [System.Drawing.Color]::White
 $gbB.Controls.Add($txtP)
 
-$btnBr = New-Object System.Windows.Forms.Button; $btnBr.Text = "..."; $btnBr.Location = New-Object System.Drawing.Point(1030, 28); $btnBr.Size = New-Object System.Drawing.Size(60, 28); $btnBr.BackColor = [System.Drawing.Color]::FromArgb(60,60,60)
+$btnBr = New-Object System.Windows.Forms.Button; $btnBr.Text = "..."; $btnBr.Location = New-Object System.Drawing.Point(290, 30); $btnBr.Size = New-Object System.Drawing.Size(60, 30); $btnBr.BackColor = [System.Drawing.Color]::FromArgb(60,60,60)
 $gbB.Controls.Add($btnBr)
 
-$btnU = New-Object System.Windows.Forms.Button; $btnU.Text = "Sao lưu dữ liệu cá nhân (Backup User Data)"; $btnU.Location = New-Object System.Drawing.Point(20, 65); $btnU.Size = New-Object System.Drawing.Size(500, 35); $btnU.BackColor = [System.Drawing.Color]::FromArgb(45,45,45)
+$btnU = New-Object System.Windows.Forms.Button; $btnU.Text = "Sao lưu dữ liệu (Backup User Data)"; $btnU.Location = New-Object System.Drawing.Point(435, 30); $btnU.Size = New-Object System.Drawing.Size(350, 30); $btnU.BackColor = [System.Drawing.Color]::FromArgb(45,45,45)
 $gbB.Controls.Add($btnU)
 
-$btnD = New-Object System.Windows.Forms.Button; $btnD.Text = "Sao lưu Trình điều khiển (Backup Drivers)"; $btnD.Location = New-Object System.Drawing.Point(540, 65); $btnD.Size = New-Object System.Drawing.Size(500, 35); $btnD.BackColor = [System.Drawing.Color]::FromArgb(45,45,45)
+$btnD = New-Object System.Windows.Forms.Button; $btnD.Text = "Sao lưu Trình điều khiển (Backup Drivers)"; $btnD.Location = New-Object System.Drawing.Point(850, 30); $btnD.Size = New-Object System.Drawing.Size(350, 30); $btnD.BackColor = [System.Drawing.Color]::FromArgb(45,45,45)
 $gbB.Controls.Add($btnD)
 
-# --- KHU VỰC 3 CỘT TÍNH NĂNG ---
-# 1. TỐI ƯU HỆ THỐNG (TWEAKS)
+# --- CỘT 1: TÙY CHỈNH HỆ THỐNG (Đẩy lên tọa độ Y = 230) ---
 $gbTw = New-Object System.Windows.Forms.GroupBox
-$gbTw.Text = "TÙY CHỈNH HỆ THỐNG CAO CẤP (ADVANCED TWEAKS)"; $gbTw.Location = New-Object System.Drawing.Point(20, 295); $gbTw.Size = New-Object System.Drawing.Size(390, 500); $gbTw.ForeColor = [System.Drawing.Color]::SpringGreen
+$gbTw.Text = "TÙY CHỈNH HỆ THỐNG (ADVANCED TWEAKS)"; $gbTw.Location = New-Object System.Drawing.Point(20, 230); $gbTw.Size = New-Object System.Drawing.Size(390, 450); $gbTw.ForeColor = [System.Drawing.Color]::SpringGreen
 $form.Controls.Add($gbTw)
 
-$listTw = New-Object System.Windows.Forms.CheckedListBox; $listTw.Location = New-Object System.Drawing.Point(15, 25); $listTw.Size = New-Object System.Drawing.Size(360, 400); $listTw.BackColor = [System.Drawing.Color]::FromArgb(25,25,25); $listTw.ForeColor = [System.Drawing.Color]::White; $listTw.CheckOnClick = $true; $listTw.BorderStyle = "None"
+$listTw = New-Object System.Windows.Forms.CheckedListBox; $listTw.Location = New-Object System.Drawing.Point(15, 25); $listTw.Size = New-Object System.Drawing.Size(360, 360); $listTw.BackColor = [System.Drawing.Color]::FromArgb(25,25,25); $listTw.ForeColor = [System.Drawing.Color]::White; $listTw.CheckOnClick = $true; $listTw.BorderStyle = "None"
 $itemsTw = @(
     "01. Gỡ bỏ ứng dụng rác (Uninstall Bloatware)",
     "02. Dọn dẹp ổ đĩa hệ thống (Disk Cleanup)",
@@ -88,10 +102,10 @@ $itemsTw = @(
     "11. Tắt tiện ích thanh tác vụ (Widget Taskbar)",
     "12. Tắt dịch vụ tìm kiếm ngầm (Search Indexing)",
     "13. Sửa lỗi hàng đợi in ấn (Fix Printer Spooler)",
-    "14. Khôi phục & Sửa lỗi mạng (Reset Network)",
+    "14. Khôi phục & sửa lỗi mạng (Reset Network)",
     "15. Tắt cập nhật tự động (Windows Update)",
     "16. Tắt mã hóa ổ đĩa (Disable Bitlocker)",
-    "17. Gỡ bỏ trình duyệt mặc định (Remove Edge)",
+    "17. Thanh tác vụ cổ điển (Classic taskbar)",
     "18. Gỡ bỏ lưu trữ đám mây (Remove OneDrive)",
     "19. Tắt giao thức địa chỉ IPv6 (IPv6 Disable)",
     "20. Tắt tự động quét thư mục (Folder Discovery)"
@@ -99,156 +113,170 @@ $itemsTw = @(
 foreach($k in $itemsTw){ [void]$listTw.Items.Add($k, $true) }
 $gbTw.Controls.Add($listTw)
 
-# --- KHỞI TẠO TOOLTIP HOVER ĐỘNG CHO MỤC TWEAKS ---
 $tweakToolTip = New-Object System.Windows.Forms.ToolTip
-$tweakToolTip.InitialDelay = 200
-$tweakToolTip.ReshowDelay = 100
-$tweakToolTip.IsBalloon = $false
+$tweakToolTip.InitialDelay = 200; $tweakToolTip.ReshowDelay = 100; $tweakToolTip.IsBalloon = $false
 $global:LastHoveredIndex = -1
-
 $global:TweakHelpData = @{
-    0  = "Gỡ các app mặc định không cần thiết của Windows (Weather, News...) để giải phóng RAM/CPU."
-    1  = "Xoá file tạm Temp, dọn thùng rác, tối ưu hệ thống và giải phóng dung lượng ổ cứng C."
-    2  = "Chặn các ứng dụng bên thứ ba tự ý chạy cùng Windows giúp tăng tốc độ khởi động máy."
-    3  = "Tắt quyền chạy ngầm của các phần mềm khi không sử dụng, tiết kiệm pin và tài nguyên phần cứng."
-    4  = "Kích hoạt chế độ High Performance để phần cứng luôn chạy với hiệu năng tối đa."
-    5  = "Tắt bớt các hiệu ứng chuyển động rườm rà của Windows giúp giao diện phản hồi nhanh lập tức."
-    6  = "Tắt hiệu ứng trong suốt giúp card đồ hoạ (GPU) giảm tải, tăng độ mượt cho máy cấu hình yếu."
-    7  = "Tắt Xbox Game Bar và các tiến trình quay phim màn hình ngầm nhằm tối ưu khung hình khi làm việc."
-    8  = "Chặn các thông báo quảng cáo làm phiền và gợi ý không mong muốn từ hệ thống Windows."
-    9  = "Vô hiệu hoá trợ lý ảo Cortana và Copilot chạy ngầm gây hao tốn tài nguyên mạng và RAM."
-    10 = "Ẩn thanh tiện ích Widget tin tức thời tiết trên thanh Taskbar giúp khôi phục không gian làm việc."
-    11 = "Dừng dịch vụ Windows Search Indexing, giảm thiểu tình trạng ổ cứng bị quét liên tục gây nghẽn."
-    12 = "Xoá sạch hàng đợi in đang bị kẹt, khởi động lại tiến trình Spooler để khắc phục lỗi không in được."
-    13 = "Làm sạch bộ nhớ đệm DNS, reset Winsock và IP, cấu hình lại mạng giúp sửa lỗi mất kết nối."
-    14 = "Tắt triệt để dịch vụ Windows Update ngầm để chặn tự động cập nhật gây chậm máy hoặc lỗi màn hình xanh."
-    15 = "Giải mã mã hoá Bitlocker trên ổ cứng để bảo vệ dữ liệu không bị khoá bất ngờ khi lỗi linh kiện."
-    16 = "Gỡ bỏ hoàn toàn trình duyệt Microsoft Edge mặc định ra khỏi hệ thống nếu không sử dụng."
-    17 = "Gỡ bỏ triệt để ứng dụng lưu trữ Microsoft OneDrive chạy ngầm và đồng bộ file gây chậm mạng."
-    18 = "Vô hiệu hoá giao thức địa chỉ mạng IPv6 không cần thiết để tăng tốc độ kết nối mạng LAN/Internet IPv4."
-    19 = "Chặn Explorer tự động quét và phân loại file trong thư mục lớn, giúp mở các Folder nhanh hơn."
+    0="Gỡ các app mặc định không cần thiết để giải phóng RAM/CPU."; 1="Xoá file tạm Temp, dọn thùng rác, giải phóng dung lượng ổ C."; 2="Chặn các ứng dụng bên thứ ba tự ý chạy cùng Windows."; 3="Tắt quyền chạy ngầm của các phần mềm khi không sử dụng."; 4="Kích hoạt chế độ High Performance để đạt hiệu năng tối đa."; 5="Tắt bớt các hiệu ứng chuyển động rườm rà giúp phản hồi nhanh."; 6="Tắt hiệu ứng trong suốt giúp giảm tải card đồ hoạ GPU."; 7="Tắt Xbox Game Bar nhằm tối ưu khung hình khi làm việc."; 8="Chặn các thông báo quảng cáo làm phiền từ hệ thống."; 9="Vô hiệu hoá trợ lý ảo Cortana và Copilot chạy ngầm."; 10="Ẩn thanh tiện ích Widget thời tiết tin tức trên Taskbar."; 11="Dừng dịch vụ Windows Search Indexing, giảm nghẽn ổ cứng."; 12="Xoá sạch hàng đợi in bị kẹt, restart tiến trình Spooler."; 13="Làm sạch bộ nhớ đệm DNS, reset Winsock giúp sửa lỗi mạng."; 14="Tắt dịch vụ Windows Update ngầm chặn tự động cập nhật."; 15="Giải mã Bitlocker trên ổ cứng để bảo vệ an toàn dữ liệu."; 16="Căn trái, hiện icon Search, ẩn Task View, gộp nút khi đầy và khôi phục Menu chuột phải Win 10."; 17="Gỡ bỏ triệt để ứng dụng lưu trữ đám mây OneDrive chạy ngầm."; 18="Vô hiệu hoá giao thức mạng IPv6 không cần thiết."; 19="Chặn Explorer tự động phân loại giúp mở Folder nhanh hơn."
 }
-
 $listTw.Add_MouseMove({
     param($sender, $e)
     $idx = $listTw.IndexFromPoint($e.Location)
     if ($idx -ne $global:LastHoveredIndex) {
         $global:LastHoveredIndex = $idx
         if ($idx -ge 0 -and $global:TweakHelpData.ContainsKey($idx)) {
-            $text = $global:TweakHelpData[$idx]
-            $tweakToolTip.SetToolTip($listTw, $text)
-        } else {
-            $tweakToolTip.Hide($listTw)
-        }
+            $tweakToolTip.SetToolTip($listTw, $global:TweakHelpData[$idx])
+        } else { $tweakToolTip.Hide($listTw) }
     }
 })
 
-$btnExTw = New-Object System.Windows.Forms.Button; $btnExTw.Text = "CHẠY TÙY CHỈNH (RUN TWEAKS)"; $btnExTw.Location = New-Object System.Drawing.Point(15, 435); $btnExTw.Size = New-Object System.Drawing.Size(360, 45); $btnExTw.BackColor = [System.Drawing.Color]::DarkSlateBlue; $btnExTw.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$btnExTw = New-Object System.Windows.Forms.Button; $btnExTw.Text = "CHẠY TÙY CHỈNH (RUN TWEAKS)"; $btnExTw.Location = New-Object System.Drawing.Point(15, 395); $btnExTw.Size = New-Object System.Drawing.Size(360, 45); $btnExTw.BackColor = [System.Drawing.Color]::DarkSlateBlue; $btnExTw.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
 $gbTw.Controls.Add($btnExTw)
 
-# 2. CÀI ĐẶT ỨNG DỤNG (INSTALLER)
+# --- CỘT 2: CÀI ĐẶT ỨNG DỤNG (Đẩy lên tọa độ Y = 230) ---
 $gbIn = New-Object System.Windows.Forms.GroupBox
-$gbIn.Text = "CÀI ĐẶT ỨNG DỤNG (INSTALLER)"; $gbIn.Location = New-Object System.Drawing.Point(435, 295); $gbIn.Size = New-Object System.Drawing.Size(390, 500); $gbIn.ForeColor = [System.Drawing.Color]::DeepSkyBlue
+$gbIn.Text = "CÀI ĐẶT ỨNG DỤNG (INSTALLER)"; $gbIn.Location = New-Object System.Drawing.Point(435, 230); $gbIn.Size = New-Object System.Drawing.Size(390, 450); $gbIn.ForeColor = [System.Drawing.Color]::DeepSkyBlue
 $form.Controls.Add($gbIn)
 
-$listSw = New-Object System.Windows.Forms.CheckedListBox; $listSw.Location = New-Object System.Drawing.Point(15, 25); $listSw.Size = New-Object System.Drawing.Size(360, 400); $listSw.BackColor = [System.Drawing.Color]::FromArgb(25,25,25); $listSw.ForeColor = [System.Drawing.Color]::White; $listSw.CheckOnClick = $true; $listSw.BorderStyle = "None"
+$listSw = New-Object System.Windows.Forms.CheckedListBox; $listSw.Location = New-Object System.Drawing.Point(15, 25); $listSw.Size = New-Object System.Drawing.Size(360, 360); $listSw.BackColor = [System.Drawing.Color]::FromArgb(25,25,25); $listSw.ForeColor = [System.Drawing.Color]::White; $listSw.CheckOnClick = $true; $listSw.BorderStyle = "None"
 $global:SwMap = [ordered]@{
     "01. Trình duyệt Chrome"="Google.Chrome"; "02. Trình duyệt Edge"="Microsoft.Edge"; "03. Trình duyệt Cốc Cốc"="CocCoc.CocCoc"; "04. Trình duyệt Firefox"="Mozilla.Firefox";
     "05. Microsoft Office x64"="Microsoft.Office"; "06. Microsoft Project x64"="Microsoft.Project"; "07. Microsoft Visio x64"="Microsoft.Visio"; "08. Microsoft OneDrive x64"="Microsoft.OneDrive";
     "09. Microsoft C++ 2022 x64"="Microsoft.VCRedist.2015+.x64"; "10. Google Drive"="Google.GoogleDrive"; "11. iTunes"="Apple.iTunes"; "12. AnyDesk"="AnyDesk.AnyDesk";
     "13. UltraViewer"="UltraViewer.UltraViewer"; "14. Trình nén 7-Zip"="7zip.7zip"; "15. Trình nén WinRAR"="RARLab.WinRAR"; "16. Bộ gõ UniKey"="Unikey.Unikey";
-    "17. Bộ gõ EVKey"="EVKey.EVKey"; "18. Foxit PhantomPDF"="Foxit.Phantom.Custom"; "19. Phần mềm VinaCAD"="VinaCAD.Custom"; "20. Công cụ AnhdvBoot"="AnhdvBoot.Custom"
+    "17. Bộ gõ EVKey"="EVKey.EVKey"; "18. Foxit PhantomPDF"="Foxit.PhantomPDF"; "19. VLC Media Player"="VideoLAN.VLC"; "20. Zalo PC"="VNGCorp.Zalo"
 }
 foreach($k in $global:SwMap.Keys){ [void]$listSw.Items.Add($k, $false) }
 $gbIn.Controls.Add($listSw)
 
-$btnExSw = New-Object System.Windows.Forms.Button; $btnExSw.Text = "CÀI ĐẶT (INSTALL)"; $btnExSw.Location = New-Object System.Drawing.Point(15, 435); $btnExSw.Size = New-Object System.Drawing.Size(175, 45); $btnExSw.BackColor = [System.Drawing.Color]::DarkCyan; $btnExSw.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$btnExSw = New-Object System.Windows.Forms.Button; $btnExSw.Text = "CÀI ĐẶT ỨNG DỤNG (INSTALL)"; $btnExSw.Location = New-Object System.Drawing.Point(15, 395); $btnExSw.Size = New-Object System.Drawing.Size(360, 45); $btnExSw.BackColor = [System.Drawing.Color]::DarkCyan; $btnExSw.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
 $gbIn.Controls.Add($btnExSw)
 
-$btnDlOnly = New-Object System.Windows.Forms.Button; $btnDlOnly.Text = "CHỈ TẢI VỀ (DOWNLOAD)"; $btnDlOnly.Location = New-Object System.Drawing.Point(200, 435); $btnDlOnly.Size = New-Object System.Drawing.Size(175, 45); $btnDlOnly.BackColor = [System.Drawing.Color]::FromArgb(40, 70, 120); $btnDlOnly.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
-$gbIn.Controls.Add($btnDlOnly)
-
-# 3. GỠ BỎ ỨNG DỤNG (UNINSTALLER)
+# --- CỘT 3: GỠ BỎ ỨNG DỤNG (Đẩy lên tọa độ Y = 230) ---
 $gbUn = New-Object System.Windows.Forms.GroupBox
-$gbUn.Text = "GỠ BỎ ỨNG DỤNG (UNINSTALLER)"; $gbUn.Location = New-Object System.Drawing.Point(850, 295); $gbUn.Size = New-Object System.Drawing.Size(390, 500); $gbUn.ForeColor = [System.Drawing.Color]::Orange
+$gbUn.Text = "GỠ BỎ ỨNG DỤNG (UNINSTALLER)"; $gbUn.Location = New-Object System.Drawing.Point(850, 230); $gbUn.Size = New-Object System.Drawing.Size(390, 450); $gbUn.ForeColor = [System.Drawing.Color]::Orange
 $form.Controls.Add($gbUn)
 
-$listUn = New-Object System.Windows.Forms.CheckedListBox; $listUn.Location = New-Object System.Drawing.Point(15, 25); $listUn.Size = New-Object System.Drawing.Size(360, 400); $listUn.BackColor = [System.Drawing.Color]::FromArgb(25,25,25); $listUn.ForeColor = [System.Drawing.Color]::White; $listUn.CheckOnClick = $true; $listUn.BorderStyle = "None"
+$listUn = New-Object System.Windows.Forms.CheckedListBox; $listUn.Location = New-Object System.Drawing.Point(15, 25); $listUn.Size = New-Object System.Drawing.Size(360, 360); $listUn.BackColor = [System.Drawing.Color]::FromArgb(25,25,25); $listUn.ForeColor = [System.Drawing.Color]::White; $listUn.CheckOnClick = $true; $listUn.BorderStyle = "None"
 $gbUn.Controls.Add($listUn)
 
-$btnExUn = New-Object System.Windows.Forms.Button; $btnExUn.Text = "GỠ BỎ (UNINSTALL)"; $btnExUn.Location = New-Object System.Drawing.Point(15, 435); $btnExUn.Size = New-Object System.Drawing.Size(360, 45); $btnExUn.BackColor = [System.Drawing.Color]::Firebrick; $btnExUn.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$btnExUn = New-Object System.Windows.Forms.Button; $btnExUn.Text = "GỠ BỎ (UNINSTALL)"; $btnExUn.Location = New-Object System.Drawing.Point(15, 395); $btnExUn.Size = New-Object System.Drawing.Size(360, 45); $btnExUn.BackColor = [System.Drawing.Color]::Firebrick; $btnExUn.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
 $gbUn.Controls.Add($btnExUn)
 
-# --- KHU VỰC LOG & TIẾN TRÌNH ---
-$txtLog = New-Object System.Windows.Forms.RichTextBox; $txtLog.Location = New-Object System.Drawing.Point(20, 805); $txtLog.Size = New-Object System.Drawing.Size(1220, 75); $txtLog.BackColor = [System.Drawing.Color]::Black; $txtLog.ForeColor = [System.Drawing.Color]::Lime; $txtLog.Font = New-Object System.Drawing.Font("Consolas", 9.5); $txtLog.ReadOnly = $true
-$form.Controls.Add($txtLog)
-
-$progressBar = New-Object System.Windows.Forms.ProgressBar; $progressBar.Location = New-Object System.Drawing.Point(20, 890); $progressBar.Size = New-Object System.Drawing.Size(1050, 15); $progressBar.Style = "Continuous"; $progressBar.ForeColor = [System.Drawing.Color]::LimeGreen
+# --- PROGRESS & LOG (Đẩy lên tương ứng 35px) ---
+$progressBar = New-Object System.Windows.Forms.ProgressBar; $progressBar.Location = New-Object System.Drawing.Point(20, 690); $progressBar.Size = New-Object System.Drawing.Size(1150, 15); $progressBar.Style = "Continuous"; $progressBar.ForeColor = [System.Drawing.Color]::LimeGreen
 $form.Controls.Add($progressBar)
 
-$lblPerc = New-Object System.Windows.Forms.Label; $lblPerc.Text = "0%"; $lblPerc.Location = New-Object System.Drawing.Point(1080, 888); $lblPerc.Size = New-Object System.Drawing.Size(50, 20); $lblPerc.ForeColor = [System.Drawing.Color]::White; $lblPerc.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$lblPerc = New-Object System.Windows.Forms.Label; $lblPerc.Text = "0%"; $lblPerc.Location = New-Object System.Drawing.Point(1185, 688); $lblPerc.Size = New-Object System.Drawing.Size(50, 20); $lblPerc.ForeColor = [System.Drawing.Color]::White; $lblPerc.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
 $form.Controls.Add($lblPerc)
 
-# --- NÚT HỦY LỆNH (CANCEL DOWNLOAD) ---
-$btnCancelDl = New-Object System.Windows.Forms.Button
-$btnCancelDl.Text = "HỦY (CANCEL)"
-$btnCancelDl.Location = New-Object System.Drawing.Point(1140, 883)
-$btnCancelDl.Size = New-Object System.Drawing.Size(100, 25)
-$btnCancelDl.BackColor = [System.Drawing.Color]::DarkRed
-$btnCancelDl.ForeColor = [System.Drawing.Color]::White
-$btnCancelDl.Font = New-Object System.Drawing.Font("Segoe UI", 8, [System.Drawing.FontStyle]::Bold)
-$btnCancelDl.Visible = $false
-$form.Controls.Add($btnCancelDl)
+$txtLog = New-Object System.Windows.Forms.RichTextBox; $txtLog.Location = New-Object System.Drawing.Point(20, 715); $txtLog.Size = New-Object System.Drawing.Size(1220, 125); $txtLog.BackColor = [System.Drawing.Color]::Black; $txtLog.ForeColor = [System.Drawing.Color]::Lime; $txtLog.Font = New-Object System.Drawing.Font("Consolas", 9.5); $txtLog.ReadOnly = $true
+$form.Controls.Add($txtLog)
 
-# --- FOOTER ---
-$pnlF = New-Object System.Windows.Forms.Panel; $pnlF.Location = New-Object System.Drawing.Point(20, 915); $pnlF.Size = New-Object System.Drawing.Size(1220, 50)
+# --- FOOTER TOOLBAR (Đẩy lên tọa độ Y = 850) ---
+$pnlF = New-Object System.Windows.Forms.Panel; $pnlF.Location = New-Object System.Drawing.Point(20, 850); $pnlF.Size = New-Object System.Drawing.Size(1220, 50)
 $form.Controls.Add($pnlF)
 
-$btnMAS = New-Object System.Windows.Forms.Button; $btnMAS.Text = "Kích hoạt Win/Office (MAS)"; $btnMAS.Size = New-Object System.Drawing.Size(230, 38); $btnMAS.BackColor = [System.Drawing.Color]::DarkGreen; $pnlF.Controls.Add($btnMAS)
+$btnCheckLic = New-Object System.Windows.Forms.Button; $btnCheckLic.Text = "Kiểm tra bản quyền (Check license)"; $btnCheckLic.Size = New-Object System.Drawing.Size(230, 38); $btnCheckLic.BackColor = [System.Drawing.Color]::FromArgb(0, 122, 204); $btnCheckLic.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold); $pnlF.Controls.Add($btnCheckLic)
 $btnTT = New-Object System.Windows.Forms.Button; $btnTT.Text = "Công cụ Winutil (ChrisTitus)"; $btnTT.Left = 245; $btnTT.Size = New-Object System.Drawing.Size(230, 38); $btnTT.BackColor = [System.Drawing.Color]::Navy; $pnlF.Controls.Add($btnTT)
 $btnDebloat = New-Object System.Windows.Forms.Button; $btnDebloat.Text = "Tối ưu hóa Windows 11"; $btnDebloat.Left = 490; $btnDebloat.Size = New-Object System.Drawing.Size(230, 38); $btnDebloat.BackColor = [System.Drawing.Color]::Indigo; $pnlF.Controls.Add($btnDebloat)
-$btnFixOS = New-Object System.Windows.Forms.Button; $btnFixOS.Text = "SỬA LỖI HỆ THỐNG (FIX OS)"; $btnFixOS.Left = 735; $btnFixOS.Size = New-Object System.Drawing.Size(230, 38); $btnFixOS.BackColor = [System.Drawing.Color]::Chocolate; $btnFixOS.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold); $pnlF.Controls.Add($btnFixOS)
-
+$btnFixOS = New-Object System.Windows.Forms.Button; $btnFixOS.Text = "Thông tin thêm (About WinTools)"; $btnFixOS.Left = 735; $btnFixOS.Size = New-Object System.Drawing.Size(230, 38); $btnFixOS.BackColor = [System.Drawing.Color]::Chocolate; $btnFixOS.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold); $pnlF.Controls.Add($btnFixOS)
 $btnEx = New-Object System.Windows.Forms.Button; $btnEx.Text = "THOÁT (EXIT)"; $btnEx.Left = 980; $btnEx.Size = New-Object System.Drawing.Size(240, 38); $btnEx.BackColor = [System.Drawing.Color]::Maroon; $pnlF.Controls.Add($btnEx)
 
 # ==========================================================
 # LOGIC THỰC THI CHUYÊN NGHIỆP
 # ==========================================================
-function Add-Log ($m) { $txtLog.AppendText("[$((Get-Date).ToString('HH:mm:ss'))] $m`n"); $txtLog.ScrollToCaret(); [System.Windows.Forms.Application]::DoEvents() }
-function Update-P ($v, $t) { $p = [math]::Round(($v / $t) * 100); if($p -gt 100){$p=100}; $progressBar.Value = $p; $lblPerc.Text = "$p%"; [System.Windows.Forms.Application]::DoEvents() }
+function Add-Log ($m) { 
+    $txtLog.AppendText("[$((Get-Date).ToString('HH:mm:ss'))] $m`n")
+    $txtLog.ScrollToCaret()
+    [System.Windows.Forms.Application]::DoEvents() 
+}
 
+function Update-P ($v, $t) { 
+    $p = [math]::Round(($v / $t) * 100)
+    if($p -gt 100){$p=100}
+    $progressBar.Value = $p
+    $lblPerc.Text = "$p%"
+    [System.Windows.Forms.Application]::DoEvents() 
+}
+
+# Tải thông tin Hệ điều hành & Phần cứng nhanh chóng (đã loại bỏ truy vấn IP, Ổ đĩa)
 function Get-SystemInfo {
     try {
         $os = (Get-CimInstance Win32_OperatingSystem).Caption
-        $cpu = (Get-CimInstance Win32_Processor).Name; $ram = [math]::Round((Get-CimInstance Win32_PhysicalMemory | Measure-Object Capacity -Sum).Sum / 1GB)
-        $disks = Get-CimInstance Win32_LogicalDisk | Where-Object { $_.DriveType -eq 3 } | ForEach-Object {
-            $total = [math]::Round($_.Size / 1GB); $free = [math]::Round($_.FreeSpace / 1GB); "$($_.DeviceID) Trống:$free GB/$total GB"
-        }
+        $cpu = (Get-CimInstance Win32_Processor).Name
+        $ram = [math]::Round((Get-CimInstance Win32_PhysicalMemory | Measure-Object Capacity -Sum).Sum / 1GB)
         $lblH1.Text = "HĐH: $os | CPU: $cpu | RAM: $ram GB"
-        $lblH2.Text = "Ổ ĐĨA: $($disks -join ' | ') | IP Mạng LAN: Đang lấy dữ liệu..."
-        
-        $lan = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -notlike "*Loopback*" -and $_.InterfaceAlias -notlike "*vEthernet*" }).IPAddress | Select-Object -First 1
-        $lblH2.Text = "Ổ ĐĨA: $($disks -join ' | ') | IP LAN: $lan | IP WAN: " + (Invoke-RestMethod -Uri "https://api.ipify.org" -TimeoutSec 3 -ErrorAction SilentlyContinue)
-    } catch { $lblH2.Text = "Không thể tải cấu hình mạng hoặc thông tin hệ thống." }
+    } catch { 
+        $lblH1.Text = "Không thể tải cấu hình thông tin hệ thống." 
+    }
 }
 
 function Scan-Apps {
-    $listUn.Items.Clear(); $global:UnTable = @{}
-    $paths = @("HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*", "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*", "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*")
+    $listUn.Items.Clear()
+    $global:UnTable = @{}
+    $paths = @(
+        "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*",
+        "HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*",
+        "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
+    )
     foreach ($p in $paths) {
-        if (Test-Path (Split-Path $p)) {
+        $parent = Split-Path $p
+        if (Test-Path $parent) {
             Get-ItemProperty $p -ErrorAction SilentlyContinue | ForEach-Object {
                 if ($_.DisplayName -and $_.UninstallString -and ($_.SystemComponent -ne 1) -and ($_.ReleaseType -ne "Update")) {
                     if ($_.DisplayName -notmatch "Microsoft\.NET" -and $_.DisplayName -notmatch "Visual C\+\+") {
-                        if (!$global:UnTable.ContainsKey($_.DisplayName)) {
-                            $global:UnTable[$_.DisplayName] = @{ Type="Win32"; Un=$_.UninstallString }
-                            [void]$listUn.Items.Add($_.DisplayName)
+                        $name = $_.DisplayName.Trim()
+                        if (!$global:UnTable.ContainsKey($name)) {
+                            $global:UnTable[$name] = @{ Type="Win32"; Un=$_.UninstallString }
+                            [void]$listUn.Items.Add($name)
                         }
                     }
                 }
             }
         }
     }
+}
+
+function Create-DesktopShortcut ($itemName) {
+    try {
+        $wshShell = New-Object -ComObject WScript.Shell
+        $desktopPath = [System.IO.Path]::Combine([Environment]::GetFolderPath("Desktop"), "$itemName.lnk")
+        $searchNames = @()
+        if ($itemName -match "Chrome") { $searchNames += "chrome.exe" }
+        elseif ($itemName -match "Edge") { $searchNames += "msedge.exe" }
+        elseif ($itemName -match "Cốc Cốc") { $searchNames += "browser.exe" }
+        elseif ($itemName -match "Firefox") { $searchNames += "firefox.exe" }
+        elseif ($itemName -match "AnyDesk") { $searchNames += "AnyDesk.exe" }
+        elseif ($itemName -match "UltraViewer") { $searchNames += "UltraViewer_Desktop.exe" }
+        elseif ($itemName -match "7-Zip") { $searchNames += "7zFM.exe" }
+        elseif ($itemName -match "WinRAR") { $searchNames += "WinRAR.exe" }
+        elseif ($itemName -match "UniKey") { $searchNames += "UniKeyNT.exe" }
+        elseif ($itemName -match "EVKey") { $searchNames += "EVKey64.exe"; $searchNames += "EVKey32.exe" }
+        elseif ($itemName -match "Foxit") { $searchNames += "FoxitPhantomPDF.exe"; $searchNames += "FoxitPDFEditor.exe"; $searchNames += "FoxitReader.exe" }
+        elseif ($itemName -match "VLC") { $searchNames += "vlc.exe" }
+        elseif ($itemName -match "Zalo") { $searchNames += "Zalo.exe" }
+        
+        if ($searchNames.Count -eq 0) { return }
+        $targetExe = $null
+        $progPaths = @("C:\Program Files", "C:\Program Files (x86)", "$env:LocalAppData\Programs", "$env:ProgramFiles\Zalo PC")
+        foreach ($p in $progPaths) {
+            if (Test-Path $p) {
+                foreach ($name in $searchNames) {
+                    $found = Get-ChildItem -Path $p -Filter $name -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+                    if ($found) { $targetExe = $found.FullName; break }
+                }
+            }
+            if ($targetExe) { break }
+        }
+        if ($targetExe) {
+            $shortcut = $wshShell.CreateShortcut($desktopPath)
+            $shortcut.TargetPath = $targetExe
+            $shortcut.WorkingDirectory = Split-Path $targetExe
+            $shortcut.Save()
+            Add-Log "Đã tạo lối tắt ngoài Desktop: $itemName"
+        }
+    } catch { Add-Log "Không thể tạo shortcut Desktop cho $itemName" }
 }
 
 # --- TWEAKS EXECUTOR ---
@@ -256,437 +284,229 @@ $btnExTw.Add_Click({
     $sel = $listTw.CheckedItems; if($sel.Count -eq 0){return}
     $c = 0; $t = $sel.Count
     foreach($i in $sel){
-        $c++; Add-Log "Đang xử lý (Processing): $i"; Update-P $c $t
+        $c++; Add-Log "Đang xử lý: $i"; Update-P $c $t
         try {
-
-# --- 01. Gỡ bỏ ứng dụng rác ---
-if ($i -match "01. Gỡ bỏ") {
-    $WhiteList = "WindowsStore|Calculator|Photos|Paint|Notepad|StickyNotes|Framework|Runtime|VCLibs|UI.Xaml|NET.Native"
-Get-AppxPackage -AllUsers | ForEach-Object {
-    if ($_.Name -notmatch $WhiteList -and $_.NonRemovable -ne $true) {
-        Remove-AppxPackage -Package $_.PackageFullName -ErrorAction SilentlyContinue
-        Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -eq $_.PackageFullName } | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
-    }
-}
-
-$TeamsPath = "$Env:LocalAppData\Microsoft\Teams\Update.exe"
-if (Test-Path $TeamsPath) {
-    Start-Process $TeamsPath -ArgumentList "-uninstall" -Wait
-    $TeamsDir = Split-Path $TeamsPath
-    Remove-Item $TeamsDir -Recurse -Force -ErrorAction SilentlyContinue
-}
-}
-
-# --- 02. Dọn dẹp ổ đĩa ---
-if ($i -match "02. Dọn dẹp") {
-    $ssPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy"
-    if (!(Test-Path $ssPath)) { [void](New-Item $ssPath -Force) }; Set-ItemProperty $ssPath -Name "StorageSense" -Value 1 -Type DWord -Force
-    Remove-Item -Path "$env:TEMP\*" -Force -Recurse -ErrorAction SilentlyContinue 
-    Remove-Item -Path "C:\Windows\Temp\*" -Force -Recurse -ErrorAction SilentlyContinue
-    [void](Clear-RecycleBin -Force -Confirm:$false -ErrorAction SilentlyContinue)
-    Start-Process "cleanmgr.exe" -ArgumentList "/autoclean /d C" -Wait -WindowStyle Hidden
-    Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase
-}
-
-# --- 03. Tắt ứng dụng khởi động ---
-if ($i -match "03. Tắt ứng dụng tự") {
-     $paths = @("HKCU:\Software\Microsoft\Windows\CurrentVersion\Run", "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run")
-     foreach ($path in $paths) {
-    if (Test-Path $path) {
-        (Get-Item $path -ErrorAction SilentlyContinue).Property | ForEach-Object {
-            $n = $_
-            if ($n -notmatch "EVKey|UniKey|OneDrive|SecurityHealth") {
-                Remove-ItemProperty -Path $path -Name $n -Force -ErrorAction SilentlyContinue
-                $ap = $path.Replace("CurrentVersion\Run", "CurrentVersion\Explorer\StartupApproved\Run")
-                if (Test-Path $ap) { 
-                    Set-ItemProperty -Path $ap -Name $n -Value ([byte[]](0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00)) -Force -ErrorAction SilentlyContinue 
-                }
+            $needExplorerRestart = $false
+            if ($i -match "01. Gỡ bỏ") {
+                 $WhiteList = "WindowsStore|Calculator|Photos|Paint|Notepad|StickyNotes|Framework|Runtime|VCLibs|UI.Xaml|NET.Native"
+                 Get-AppxPackage -AllUsers | ForEach-Object {
+                      if ($_.Name -notmatch $WhiteList -and $_.NonRemovable -ne $true) {
+                           $PkgName = $_.Name
+                           Remove-AppxPackage -Package $_.PackageFullName -AllUsers -ErrorAction SilentlyContinue
+                           Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -eq $PkgName -or $_.PackageName -match $PkgName } | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue } } }
+            if ($i -match "02. Dọn dẹp") {
+                 Remove-Item "$env:TEMP\*", "C:\Windows\Temp\*" -Force -Recurse -ea 0
+                 [void](Clear-RecycleBin -Force -Confirm:$false -ea 0) }
+            if ($i -match "03. Tắt ứng dụng") {
+                 $wl = "EVKey|UniKey|GoogleDriveFS|SecurityHealth"
+                 $paths = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run", "HKLM:\Software\Microsoft\Windows\CurrentVersion\Run"
+                 foreach ($path in $paths) {
+                      if (Test-Path $path) {
+                           (Get-Item $path -ea 0).Property | ForEach-Object {
+                                if ($_ -notmatch $wl) { Remove-ItemProperty $path $_ -Force -ea 0 } } } } }
+            if ($i -match "04. Tắt ứng dụng chạy") { Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Name "GlobalUserDisabled" -Value 1 -Type DWord -Force -ea 0 }
+            if ($i -match "05. Tối ưu hóa") { Start-Process "powercfg" -ArgumentList "/setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c" -Wait -WindowStyle Hidden }
+            if ($i -match "06. Tối ưu hiệu") { Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" -Name "VisualFXSetting" -Value 3 -Type DWord -Force }
+            if ($i -match "07. Tắt hiệu ứng") { Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "EnableTransparency" -Value 0 -Type DWord -Force }
+            if ($i -match "08. Tắt tính năng") { Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -Value 0 -Type DWord -Force }
+            if ($i -match "09. Tắt thông báo") { Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings" -Name "NOC_GlobalSetting" -Value 0 -Type DWord -Force }
+            if ($i -match "10. Tắt trợ lý") { Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot" -Name "TurnOffWindowsCopilot" -Value 1 -Type DWord -Force -ea 0 }
+            if ($i -match "11. Tắt tiện ích") { Get-AppxPackage *Client.WebExperience* -AllUsers -ea 0 | Remove-AppxPackage -AllUsers -ea 0 }
+            if ($i -match "12. Tắt dịch vụ") { Stop-Service "WSearch" -Force -ea 0; Set-Service "WSearch" -StartupType Disabled -ea 0 }
+            if ($i -match "13. Sửa lỗi hàng") { Stop-Service "Spooler" -Force -ea 0; Remove-Item "C:\Windows\System32\spool\PRINTERS\*" -Force -Recurse -ea 0; Start-Service "Spooler" -ea 0 }
+            if ($i -match "14. Khôi phục") { Start-Process "ipconfig" -ArgumentList "/flushdns" -Wait -WindowStyle Hidden }
+            if ($i -match "15. Tắt cập nhật") { Stop-Service "wuauserv" -Force -ea 0; Set-Service "wuauserv" -StartupType Disabled -ea 0 }
+            if ($i -match "16. Tắt mã hóa") { Disable-BitLocker -MountPoint $Env:SystemDrive -ea 0 }
+            if ($i -match "17. Thanh tác vụ") {
+                 # 1. Align taskbar to the left (0 = Left, 1 = Center)
+                 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarAl" -Value 0 -Type DWord -Force -ea 0
+                 # 2. Show search icon only (1 = Icon Only)
+                 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Value 1 -Type DWord -Force -ea 0
+                 # 3. Hide 'Task view' button (0 = Hide)
+                 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowTaskViewButton" -Value 0 -Type DWord -Force -ea 0
+                 # 4. Combine taskbar buttons: When taskbar is full (1 = When full)
+                 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarGlomLevel" -Value 1 -Type DWord -Force -ea 0
+                 # 5. Restore classic right-click menu (Win 10 style)
+                 New-Item -Path "HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" -Value "" -Force -ea 0
+                 $needExplorerRestart = $true
             }
-        }
+            if ($i -match "18. Gỡ bỏ lưu") { Stop-Process -Name OneDrive -Force -ea 0; Start-Process "C:\Windows\System32\OneDriveSetup.exe" -ArgumentList "/uninstall" -Wait; $needExplorerRestart = $true }
+            if ($i -match "19. Tắt giao thức") { Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters" -Name "DisabledComponents" -Value 255 -Type DWord -Force -ea 0 }
+            if ($i -match "20. Tắt tự động") { Set-ItemProperty "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell" -Name "FolderType" -Value "NotSpecified" -Force; $needExplorerRestart = $true }
+            
+            if ($needExplorerRestart) { Stop-Process -Name explorer -Force -ea 0; Start-Sleep -Seconds 1; Start-Process explorer }
+        } catch { Add-Log "Lỗi thực thi mục: $i" }
     }
-}
-$folderPaths = @(
-    "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup",
-    "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup"
-)
-foreach ($folder in $folderPaths) {
-    if (Test-Path $folder) {
-        Get-ChildItem $folder -ErrorAction SilentlyContinue | ForEach-Object {
-            if ($_.Name -notmatch "EVKey|UniKey") { 
-                Remove-Item $_.FullName -Force -ErrorAction SilentlyContinue 
-            }
-        }
-    }
-}
-}
-
-# --- 04. Tắt ứng dụng chạy ngầm ---
-if ($i -match "04. Tắt ứng dụng chạy") {
-    Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Name "GlobalUserDisabled" -Value 1 -Type DWord -Force -ErrorAction SilentlyContinue
-    Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" -Name "LetAppsRunInBackground" -Value 2 -Type DWord -Force -ErrorAction SilentlyContinue
-}
-
-# --- 05. Tối ưu hiệu năng ---
-if ($i -match "05. Tối ưu hóa") { Start-Process "powercfg" -ArgumentList "/setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c" -Wait -WindowStyle Hidden }
-
-# --- 06. Tối ưu giao diện ---
-if ($i -match "06. Tối ưu hiệu") {
-    Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" -Name "VisualFXSetting" -Value 3 -Type DWord -Force
-    Set-ItemProperty "HKCU:\Control Panel\Desktop" -Name "UserPreferencesMask" -Value ([byte[]](0x90, 0x12, 0x03, 0x80, 0x10, 0x00, 0x00, 0x00)) -Force
-    Set-ItemProperty "HKCU:\Control Panel\Desktop" -Name "FontSmoothing" -Value 2 -Force; Set-ItemProperty "HKCU:\Control Panel\Desktop" -Name "FontSmoothingType" -Value 2 -Force
-}
-
-# --- 07. Tắt hiệu ứng trong suốt ---
-if ($i -match "07. Tắt hiệu ứng") { Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "EnableTransparency" -Value 0 -Type DWord -Force }
-
-# --- 08. Tắt tính năng Game ---
-if ($i -match "08. Tắt tính năng") {
-    Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR" -Name "AppCaptureEnabled" -Value 0 -Type DWord -Force
-    Set-ItemProperty "HKCU:\System\GameConfigStore" -Name "GameDVR_Enabled" -Value 0 -Type DWord -Force
-    Set-ItemProperty "HKCU:\Software\Microsoft\GameBar" -Name "AllowAutoGameMode" -Value 0 -Type DWord -Force
-}
-
-# --- 09. Tắt thông báo ---
-if ($i -match "09. Tắt thông báo") {
-    Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings" -Name "NOC_GlobalSetting" -Value 0 -Type DWord -Force
-    Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338389Enabled" -Value 0 -Type DWord -Force
-}
-
-# --- 10. Tắt trợ lý ảo ---
-if ($i -match "10. Tắt trợ lý") {
-    $cPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot"; if (!(Test-Path $cPath)) { [void](New-Item $cPath -Force) }
-    Set-ItemProperty $cPath -Name "TurnOffWindowsCopilot" -Value 1 -Type DWord -Force
-    Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Advanced" -Name "ShowCopilotButton" -Value 0 -Type DWord -Force -ErrorAction SilentlyContinue
-}
-
-# --- 11. Tắt tiện ích Widget ---
-if ($i -match "11. Tắt tiện ích") {
-    $wPath = "HKLM:\SOFTWARE\Policies\Microsoft\Dsh"; if (!(Test-Path $wPath)) { [void](New-Item $wPath -Force) }; Set-ItemProperty $wPath -Name "AllowNewsAndInterests" -Value 0 -Type DWord -Force
-    Get-AppxPackage *Client.WebExperience* -AllUsers -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
-}
-
-# --- 12. Tắt tìm kiếm ngầm ---
-if ($i -match "12. Tắt dịch vụ") {
-    Stop-Service "WSearch" -Force -ErrorAction SilentlyContinue; Set-Service "WSearch" -StartupType Disabled -ErrorAction SilentlyContinue
-    Set-Service "dosvc" -StartupType Disabled -ErrorAction SilentlyContinue
-}
-
-# --- 13. Sửa lỗi in ấn ---
-if ($i -match "13. Sửa lỗi hàng") {
-    Stop-Service "Spooler" -Force -ErrorAction SilentlyContinue; Remove-Item -Path "C:\Windows\System32\spool\PRINTERS\*" -Force -Recurse -ErrorAction SilentlyContinue; Start-Service "Spooler" -ErrorAction SilentlyContinue
-}
-
-# --- 14. Sửa lỗi mạng ---
-if ($i -match "14. Khôi phục") {
-    Start-Process "netsh" -ArgumentList "winsock reset" -Wait -WindowStyle Hidden
-    Start-Process "netsh" -ArgumentList "int ip reset" -Wait -WindowStyle Hidden
-    Start-Process "ipconfig" -ArgumentList "/flushdns" -Wait -WindowStyle Hidden
-}
-
-# --- 15. Tắt cập nhật ---
-if ($i -match "15. Tắt cập nhật") {
-    $SvcList = @("wuauserv", "bits", "waasmedicsvc")
-    foreach ($svc in $SvcList) { Stop-Service $svc -Force -ErrorAction SilentlyContinue; Set-Service $svc -StartupType Disabled -ErrorAction SilentlyContinue }
-    Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore" -Name "AutoDownload" -Value 2 -Type DWord -Force -ErrorAction SilentlyContinue
-}
-
-# --- 16. Tắt mã hóa ổ đĩa ---
-if ($i -match "16. Tắt mã hóa") {
-    Disable-BitLocker -MountPoint $Env:SystemDrive -ErrorAction SilentlyContinue
-}
-
-# --- 17. Gỡ bỏ Edge ---
-if ($i -match "17. Gỡ bỏ trình") {
-    $edgeFile = Get-ChildItem "C:\Program Files (x86)\Microsoft\Edge\Application" -Filter "setup.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-if ($edgeFile) { Start-Process $edgeFile.FullName -ArgumentList "--uninstall --system-level --force-uninstall" -Wait }
-}
-
-# --- 18. Gỡ bỏ OneDrive ---
-if ($i -match "18. Gỡ bỏ lưu") {
-    Start-Process "C:\Windows\System32\OneDriveSetup.exe" -ArgumentList "/uninstall" -Wait
-    Stop-Process -Name OneDrive, FileCoAuth -Force -ErrorAction SilentlyContinue
-    Remove-Item "$env:LocalAppData\Microsoft\OneDrive", "C:\ProgramData\Microsoft OneDrive" -Recurse -Force -ErrorAction SilentlyContinue
-    sc.exe config OneSyncSvc start= disabled | Out-Null
-    $needExplorerRestart = $true
-}
-
-# --- 19. Tắt địa chỉ IPv6 ---
-if ($i -match "19. Tắt giao thức") {
-    Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters" -Name "DisabledComponents" -Value 255 -Type DWord -Force -ErrorAction SilentlyContinue
-}
-
-# --- 20. Tắt quét thư mục tự động ---
-if ($i -match "20. Tắt tự động") {
-    Remove-Item "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags", "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU" -Recurse -Force -ErrorAction SilentlyContinue
-    $p = "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\Bags\AllFolders\Shell"
-    if (!(Test-Path $p)) { New-Item $p -Force | Out-Null }
-    Set-ItemProperty $p -Name "FolderType" -Value "NotSpecified" -Force
-    $needExplorerRestart = $true
-}
-
-if ($needExplorerRestart) {
-    Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue
-    Start-Sleep -Seconds 1
-    Start-Process explorer
-}
-
-        } catch { Add-Log "Lỗi thực thi mục (Execution Failed): $i" }
-    }
-    Update-P 100 100; Add-Log "Hoàn thành tùy chỉnh hệ thống (Tweaks Done)."
+    Update-P 100 100; Add-Log "Hoàn thành tùy chỉnh hệ thống."
 })
 
-# --- LỆNH SỬA LỖI HỆ THỐNG ---
-$btnFixOS.Add_Click({
-    Add-Log "Đang kiểm tra & Sửa lỗi cấu trúc Windows Component Store (DISM)..."
-    Update-P 25 100
-    $dismArgs = "/c dism.exe /online /cleanup-image /restorehealth"
-    Start-Process cmd.exe -ArgumentList $dismArgs -Wait -WindowStyle Hidden
+$btnFixOS.Add_Click({ Start-Process "https://khanggiaphuc.com/win" })
 
-    Add-Log "Đang chạy trình quét lỗi bảo vệ tài nguyên hệ thống (SFC Scannow)..."
+# --- HÀM KIỂM TRA BẢN QUYỀN WINDOWS & OFFICE TỰ ĐỘNG ---
+$btnCheckLic.Add_Click({
+    Add-Log "Đang phân tích giấy phép bản quyền trên thiết bị..."
+    $progressBar.Value = 0; $lblPerc.Text = "0%"
+    Update-P 25 100
+
+    # 1. Kiểm tra bản quyền Windows
+    $winStatus = "Không xác định"
+    try {
+        $wmiWin = Get-CimInstance -Namespace root\CIMV2 -ClassName SoftwareLicensingProduct | Where-Object { $_.PartialProductKey -and $_.ApplicationID -eq "55c92734-d682-4d71-983e-d6ec3f16059f" } | Select-Object -First 1
+        if ($wmiWin) {
+            $licState = switch($wmiWin.LicenseStatus) {
+                0 { "Chưa kích hoạt (Unlicensed)" }
+                1 { "Đã kích hoạt bản quyền chính thức (Licensed)" }
+                2 { "Hết hạn dùng thử / Đang gia hạn (OOB Grace)" }
+                3 { "Thời gian gia hạn kích hoạt (OOB Grace)" }
+                4 { "Thời gian gia hạn không chính hãng (Non-Genuine Grace)" }
+                Default { "Trạng thái khác" }
+            }
+            $winStatus = "$($wmiWin.Description) `n📌 Trạng thái: $licState"
+        } else {
+            $winStatus = "Không tìm thấy thông tin bản quyền Windows qua kênh phân tích nhanh."
+        }
+    } catch { $winStatus = "Lỗi khi lấy thông tin bản quyền Windows." }
+    
     Update-P 60 100
-    $sfcArgs = "/c sfc /scannow"
-    Start-Process cmd.exe -ArgumentList $sfcArgs -Wait -WindowStyle Hidden
+
+    # 2. Kiểm tra bản quyền Microsoft Office
+    $officeStatus = "Không tìm thấy bộ Office nào đang cài trên thiết bị này hoặc chưa được kích hoạt."
+    try {
+        $osppPaths = @(
+            "C:\Program Files\Microsoft Office\root\Office16\OSPP.VBS",
+            "C:\Program Files\Microsoft Office\Office16\OSPP.VBS",
+            "C:\Program Files (x86)\Microsoft Office\Office16\OSPP.VBS",
+            "C:\Program Files\Microsoft Office\Office15\OSPP.VBS",
+            "C:\Program Files (x86)\Microsoft Office\Office15\OSPP.VBS",
+            "C:\Program Files\Microsoft Office\Office14\OSPP.VBS",
+            "C:\Program Files (x86)\Microsoft Office\Office14\OSPP.VBS"
+        )
+        
+        $foundScript = $null
+        foreach ($p in $osppPaths) { if (Test-Path $p) { $foundScript = $p; break } }
+        
+        if ($foundScript) {
+            $osppResult = cscript.exe //NoLogo "$foundScript" /dstatus
+            $lines = $osppResult | Where-Object { $_ -match "LICENSE NAME|LICENSE STATUS" }
+            if ($lines) {
+                $officeStatus = ($lines -join "`n").Replace("LICENSE NAME:", "Gói:").Replace("LICENSE STATUS:", "Trạng thái:")
+            } else {
+                $officeStatus = "Có tệp script cấu hình cấu trúc nhưng không trích xuất được giấy phép active."
+            }
+        }
+    } catch { $officeStatus = "Lỗi khi truy vấn thông tin giấy phép Office." }
 
     Update-P 100 100
-    Add-Log "Đã xử lý và sửa lỗi hệ thống xong!"
-    [System.Windows.Forms.MessageBox]::Show("Hệ thống đã được quét và sửa lỗi thành công!", "Thông báo", "OK", "Information")
+    Add-Log "Kiểm tra bản quyền thành công."
+
+    $msgResult = "=== KẾT QUẢ KIỂM TRA BẢN QUYỀN ===`n`n" +
+                  "🪟 [WINDOWS LICENSE]`n$winStatus`n`n" +
+                  "📦 [MICROSOFT OFFICE LICENSE]`n$officeStatus"
+                  
+    [System.Windows.Forms.MessageBox]::Show($msgResult, "Thông báo kiểm tra giấy phép", "OK", "Information")
 })
 
-# --- HÀM THỰC THI CHUỖI DOWNLOAD KHÔNG TREO UI ---
-function Start-NextDownload {
+# --- ĐIỀU PHỐI VÀ CÀI ĐẶT TUẦN TỰ WINGET ---
+function Start-NextInstallation {
     if ($global:CurrentDownloadIndex -ge $global:DownloadQueue.Count) {
-        $btnCancelDl.Visible = $false
         Update-P 100 100
-        if ($global:IsDownloadOnly) {
-            Add-Log "Tải file offline thành công! Lưu tại D:\Backup\Soft\"
-            [System.Windows.Forms.MessageBox]::Show("Tất cả bộ cài offline đã được tải về thư mục D:\Backup\Soft\", "Thông báo", "OK", "Information")
-        } else {
-            Add-Log "Cài đặt phần mềm hoàn tất (Software Installation Finished)"
-        }
+        Add-Log "Cài đặt hoàn tất tất cả phần mềm được chọn!"
+        [System.Windows.Forms.MessageBox]::Show("Quá trình cài đặt tự động hoàn tất!", "Thông báo", "OK", "Information")
+        return
+    }
+
+    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+        Add-Log "Lỗi: Không tìm thấy trình cài đặt Winget trên máy này. Hãy cập nhật Windows App Installer."
+        [System.Windows.Forms.MessageBox]::Show("Hệ thống thiếu công cụ Winget của Microsoft. Không thể tự cài.", "Cảnh báo", "OK", "Warning")
         return
     }
 
     $task = $global:DownloadQueue[$global:CurrentDownloadIndex]
     $item = $task.Item
-    $url = $task.Url
-    $out = $task.Out
-    $isWinget = $task.IsWinget
     $id = $task.Id
 
-    Add-Log "Đang xử lý (Processing): $item"
+    Add-Log "Đang tiến hành xử lý: $item"
+    $pos = [math]::Round((($global:CurrentDownloadIndex + 0.5) / $global:DownloadQueue.Count) * 100)
+    Update-P $pos 100
     
-    if ($isWinget) {
-        if ($global:IsDownloadOnly) {
-            Add-Log "Đang trích xuất liên kết và tải bộ cài offline từ Winget..."
-            $pos = [math]::Round((($global:CurrentDownloadIndex + 0.5) / $global:DownloadQueue.Count) * 100)
-            $progressBar.Value = $pos; $lblPerc.Text = "$pos%"
-            
-            $sb = {
-                param($id)
-                $output = winget info --id $id
-                $line = $output | Where-Object { $_ -match "Installer Url|Đường dẫn Trình cài đặt" }
-                if ($line -and $line -match "https?://[^\s]+") {
-                    return $Matches[0]
-                }
-                return $null
-            }
-            $job = Start-Job -ScriptBlock $sb -ArgumentList $id
-            while ($job.State -eq "Running") { [System.Windows.Forms.Application]::DoEvents(); Start-Sleep -Milliseconds 100 }
-            $resolvedUrl = Receive-Job $job
-            Remove-Job $job
-
-            if ($resolvedUrl) {
-                $fileName = [System.IO.Path]::GetFileName(($resolvedUrl -split '\?')[0])
-                if (-not $fileName -or $fileName -notmatch "\.(exe|msi|zip|rar)$") { $fileName = "$id`_installer.exe" }
-                $wgOut = "D:\Backup\Soft\$fileName"
-                
-                try {
-                    $wc = New-Object System.Net.WebClient
-                    $wc.DownloadFile($resolvedUrl, $wgOut)
-                    Add-Log "Đã tải bộ cài offline: $fileName"
-                } catch {
-                    Add-Log "Không thể tải trực tiếp, đang sử dụng lệnh tải hỗ trợ..."
-                    Start-Process winget -ArgumentList "download --id $id --download-directory D:\Backup\Soft" -Wait -NoNewWindow
-                }
-            } else {
-                Start-Process winget -ArgumentList "download --id $id --download-directory D:\Backup\Soft" -Wait -NoNewWindow
-                Add-Log "Đã tải gói cài đặt offline thông qua Winget Download."
-            }
-            $global:CurrentDownloadIndex++
-            Start-NextDownload
-        } else {
-            $scriptBlock = {
-                param($id)
-                Start-Process winget -ArgumentList "install --id $id --silent --accept-package-agreements --accept-source-agreements" -Wait -NoNewWindow
-            }
-            $pos = [math]::Round((($global:CurrentDownloadIndex + 0.5) / $global:DownloadQueue.Count) * 100)
-            $progressBar.Value = $pos; $lblPerc.Text = "$pos%"
-            
-            $job = Start-Job -ScriptBlock $scriptBlock -ArgumentList $id
-            while ($job.State -eq "Running") { [System.Windows.Forms.Application]::DoEvents(); Start-Sleep -Milliseconds 100 }
-            Remove-Job $job
-            
-            $global:CurrentDownloadIndex++
-            Start-NextDownload
-        }
-    } else {
-        $btnCancelDl.Visible = $true
-        $global:WebClient = New-Object System.Net.WebClient
-        
-        $onProgress = {
-            param($sender, $e)
-            $fileProgress = $e.ProgressPercentage
-            $totalProgress = [math]::Round((($global:CurrentDownloadIndex / $global:DownloadQueue.Count) * 100) + ($fileProgress / $global:DownloadQueue.Count))
-            if($totalProgress -gt 100){$totalProgress=100}
-            $progressBar.Value = $totalProgress; $lblPerc.Text = "$totalProgress%"
-        }
-        
-        $onComplete = {
-            param($sender, $e)
-            $global:WebClient.Dispose()
-            
-            if ($e.Cancelled) {
-                Add-Log "Quá trình tải đã bị người dùng hủy bỏ (Download Cancelled)."
-                $btnCancelDl.Visible = $false
-                return
-            }
-            
-            if ($e.Error -ne $null) {
-                Add-Log "Gặp lỗi khi tải tệp tin (Failed to download): $item"
-            } else {
-                if ($global:IsDownloadOnly) {
-                    Add-Log "Đã tải xong tệp cài đặt offline về ổ lưu trữ."
-                } else {
-                    Add-Log "Tải thành công. Đang khởi chạy trình cài đặt..."
-                    if ($out -and (Test-Path $out)) {
-                        if ($item -match "20. Công cụ") {
-                            Start-Process $out -Verb RunAs -WindowStyle Normal
-                            Add-Log "Đã mở giao diện tương tác cho: $item"
-                        } else {
-                            Start-Process $out -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART" -Wait -Verb RunAs
-                            Add-Log "Cài đặt thành công (Installed successfully): $item"
-                        }
-                    } else {
-                        Add-Log "Lỗi: Không tìm thấy tệp cài đặt tại tuyến đường $out"
-                    }
-                }
-            }
-            
-            $global:CurrentDownloadIndex++
-            Start-NextDownload
-        }
-
-        $global:WebClient.add_DownloadProgressChanged($onProgress)
-        $global:WebClient.add_DownloadFileCompleted($onComplete)
-        
-        try {
-            $global:WebClient.DownloadFileAsync((New-Object System.Uri($url)), $out)
-        } catch {
-            Add-Log "Lỗi khi khởi tạo quá trình tải cho $item"
-            $global:CurrentDownloadIndex++
-            Start-NextDownload
-        }
+    Add-Log "Đang tải và cấu hình cài đặt ngầm: $id..."
+    $proc = Start-Process winget -ArgumentList "install --id $id --silent --force --accept-package-agreements --accept-source-agreements" -Wait -NoNewWindow -PassThru
+    
+    if ($proc.ExitCode -eq 0) {
+        Add-Log "Cài đặt thành công ứng dụng: $item"
+        Create-DesktopShortcut $item
+    } else { 
+        Add-Log "Cài đặt hoàn tất hoặc kiểm tra lại trạng thái: $item (Mã thoát: $($proc.ExitCode))" 
+        Create-DesktopShortcut $item
     }
-}
 
-function Init-DownloadQueue {
-    $sel = $listSw.CheckedItems
-    if ($sel.Count -eq 0) { return }
-    
-    $global:DownloadQueue = @()
-    $global:CurrentDownloadIndex = 0
-    
-    $targetDir = "D:\Backup\Soft"
-    if (-not (Test-Path $targetDir)) { [void](New-Item -Path $targetDir -ItemType Directory -Force) }
-    
-    foreach ($item in $sel) {
-        $id = $global:SwMap[$item]
-        if ($item -match "18. Foxit" -or $item -match "19. Phần mềm" -or $item -match "20. Công cụ") {
-            if ($item -match "18. Foxit") {
-                $url = "https://github.com/Tconghanh/khanggiaphuc.com/releases/download/FoxitPhantomPDFv9.2/FoxitPhantom.exe"
-                $out = "D:\Backup\Soft\FoxitPhantom.exe"
-            }
-            elseif ($item -match "19. Phần mềm") {
-                $url = "https://vinacad.s3.ap-northeast-1.amazonaws.com/products/all/VinaCAD_2026.6.3.exe"
-                $out = "D:\Backup\Soft\VinaCAD_2026.6.3.exe"
-            }
-            else {
-                $url = "https://github.com/Tconghanh/khanggiaphuc.com/releases/download/AnhdvBootToolv26.2/AnhdvBootTool.exe"
-                $out = "D:\Backup\Soft\AnhdvBootTool.exe"
-            }
-            $global:DownloadQueue += @{ Item=$item; Url=$url; Out=$out; IsWinget=$false; Id=$null }
-        } else { 
-            $global:DownloadQueue += @{ Item=$item; Url=$null; Out=$null; IsWinget=$true; Id=$id }
-        }
-    }
-    Start-NextDownload
+    $global:CurrentDownloadIndex++
+    Start-NextInstallation
 }
 
 $btnExSw.Add_Click({
-    $global:IsDownloadOnly = $false
-    Init-DownloadQueue
-})
-
-$btnDlOnly.Add_Click({
-    $global:IsDownloadOnly = $true
-    Init-DownloadQueue
-})
-
-$btnCancelDl.Add_Click({
-    if ($global:WebClient -ne $null) {
-        $global:WebClient.CancelAsync()
-        $btnCancelDl.Visible = $false
-        Update-P 0 100
+    $sel = $listSw.CheckedItems; if ($sel.Count -eq 0) { return }
+    $global:DownloadQueue = @()
+    $global:CurrentDownloadIndex = 0
+    foreach ($item in $sel) {
+        $id = $global:SwMap[$item]
+        $global:DownloadQueue += @{ Item=$item; Id=$id }
     }
+    Start-NextInstallation
 })
 
 $btnExUn.Add_Click({
     $sel = $listUn.CheckedItems; if($sel.Count -eq 0){return}
-    if([System.Windows.Forms.MessageBox]::Show("Bạn có chắc chắn muốn gỡ bỏ $($sel.Count) ứng dụng đã chọn?","Xác nhận gỡ cài đặt","YesNo","Question") -eq "Yes"){
+    if([System.Windows.Forms.MessageBox]::Show("Bạn muốn gỡ bỏ các ứng dụng đã chọn?","Xác nhận","YesNo","Question") -eq "Yes"){
         $c = 0; $t = $sel.Count
         foreach($item in $sel){
-            $c++; Add-Log "Đang gỡ cài đặt (Uninstalling): $item"; Update-P $c $t
+            $c++; Add-Log "Đang gỡ cài đặt: $item"; Update-P $c $t
             try {
-                if($item -like "*UniKey*"){ Stop-Process -Name "UniKey" -Force -ErrorAction SilentlyContinue }
+                if($item -like "*UniKey*"){ Stop-Process -Name "UniKey" -Force -ea 0 }
                 $d = $global:UnTable[$item]
                 if($d.Type -eq "Win32"){
                     $unString = $d.Un
                     if($unString -match '{[A-Z0-9-]+}'){ Start-Process "msiexec.exe" -ArgumentList "/x $($matches[0]) /qn /norestart" -Wait } 
                     else { 
-                        if ($unString.StartsWith('"')) { $split = $unString -split '"'; $ex = $split[1]; $args = $split[2..$split.Length] -join '"' } 
-                        else { $split = $unString -split ' '; $ex = $split[0]; $args = $split[1..$split.Length] -join ' ' }
-                        $args += " /S /silent /VERYSILENT /qn /quiet"; Start-Process $ex -ArgumentList $args -Wait -ErrorAction SilentlyContinue
+                        if ($unString.StartsWith('"')) { $split = $unString -split '"'; $ex = $split[1] } 
+                        else { $split = $unString -split ' '; $ex = $split[0] }
+                        Start-Process $ex -ArgumentList "/S /silent /VERYSILENT /qn /quiet" -Wait -ea 0
                     }
-                } else { Get-AppxPackage $d.Name -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue }
-            } catch { Add-Log "Gỡ bỏ không thành công (Failed to uninstall): $item" }
+                }
+            } catch { Add-Log "Gỡ bỏ thất bại: $item" }
         }
-        Scan-Apps; Update-P 100 100; Add-Log "Đã gỡ bỏ phần mềm hoàn tất."
+        Scan-Apps; Update-P 100 100; Add-Log "Đã gỡ bỏ phần mềm xong."
     }
 })
 
 $btnDebloat.Add_Click({ Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"& ([scriptblock]::Create((irm https://debloat.raphi.re/)))`"" })
-$btnMAS.Add_Click({ Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"irm https://get.activated.win | iex`"" })
 $btnTT.Add_Click({ Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"irm https://christitus.com/win | iex`"" })
 
 $btnU.Add_Click({
     $p = Join-Path $txtP.Text "UserFiles"; if(!(Test-Path $p)){ [void](New-Item $p -ItemType Directory -Force) }
     $map = @{"Desktop"="Desktop"; "Documents"="MyDocuments"; "Music"="MyMusic"; "Pictures"="MyPictures"}
     $c=0; foreach($k in $map.Keys){ $c++; Update-P $c 4; $s=[Environment]::GetFolderPath($map[$k])
-        if($s -and (Test-Path $s)){ $target = Join-Path $p $k; if(!(Test-Path $target)){ [void](New-Item $target -ItemType Directory -Force) }; Copy-Item "$s\*" -Destination $target -Recurse -Force -ErrorAction SilentlyContinue } 
+        if($s -and (Test-Path $s)){ Copy-Item "$s\*" -Destination (New-Item (Join-Path $p $k) -ItemType Directory -Force) -Recurse -Force -ea 0 } 
     }
-    Add-Log "Sao lưu dữ liệu người dùng hoàn tất (Backup User Data Done)"
+    Add-Log "Sao lưu dữ liệu người dùng hoàn tất!"
 })
 
 $btnD.Add_Click({ 
-    Add-Log "Đang tiến hành sao lưu Driver hệ thống - Vui lòng chờ..."
-    $dPath = Join-Path $txtP.Text "Drivers"; if(!(Test-Path $dPath)){ [void](New-Item $dPath -ItemType Directory -Force) }
-    $cmdArgs = "/c powershell -Command `"Export-WindowsDriver -Online -Destination '$dPath'`""
-    Start-Process cmd.exe -ArgumentList $cmdArgs -Wait -WindowStyle Hidden
-    Update-P 100 100; Add-Log "Sao lưu trình điều khiển thành công (Drivers Backup Successfully): $dPath" 
+    Add-Log "Đang sao lưu Driver hệ thống..."
+    $dPath = Join-Path $txtP.Text "Drivers"
+    if(!(Test-Path $dPath)){ [void](New-Item $dPath -ItemType Directory -Force) }
+    
+    try {
+        Export-WindowsDriver -Online -Destination $dPath -ErrorAction Stop
+        Update-P 100 100
+        Add-Log "Sao lưu trình điều khiển thành công: $dPath"
+    } catch {
+        Add-Log "Lỗi khi xuất trình điều khiển: $_"
+    }
 })
 
 $btnBr.Add_Click({ $d = New-Object System.Windows.Forms.FolderBrowserDialog; if($d.ShowDialog() -eq "OK"){$txtP.Text=$d.SelectedPath} })
 $btnEx.Add_Click({ $form.Close() })
 
-$form.Add_Shown({ Get-SystemInfo; Scan-Apps; Add-Log "Sẵn sàng. Vui lòng chọn chức năng xử lý mong muốn." })
+$form.Add_Shown({ Get-SystemInfo; Scan-Apps; Add-Log "Sẵn sàng. Chào mừng bạn đến với Wintools by Công Hạnh." })
 $form.ShowDialog()
