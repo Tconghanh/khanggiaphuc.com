@@ -313,7 +313,7 @@ $btnExTw.Add_Click({
                       if (Test-Path $path) {
                            (Get-Item $path -ea 0).Property | ForEach-Object {
                                 if ($_ -notmatch $wl) { Remove-ItemProperty $path $_ -Force -ea 0 } } } } }
-            if ($i -match "04. Tắt ứng dụng chạy") { Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Name "GlobalUserDisabled" -Value 1 -Type DWord -Force -ea 0 }
+            if ($i -match "04. Tắt ứng dụng chạy") { Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" -Name "GlobalUserDisabled" -Value 1 -Type DWord -Force -ea 0 ; $Svc = @("DiagTrack","dmwappushservice","XblAuthManager","XblGameSave","XboxNetApiSvc","ParentalControls","RemoteRegistry","MapsBroker","PhoneSvc","SensorService","SensrSvc","Fax","RetailDemo","WbioSrvc","NvContainerLocalSystem","NVDisplay.ContainerLocalSystem") ; foreach ($s in $Svc) { if (Get-Service $s -ErrorAction SilentlyContinue) { Stop-Service $s -Force -ErrorAction SilentlyContinue; Set-Service $s -StartupType Disabled -ErrorAction SilentlyContinue } } }
             if ($i -match "05. Tối ưu hóa") { Start-Process "powercfg" -ArgumentList "/setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c" -Wait -WindowStyle Hidden }
             if ($i -match "06. Tối ưu hiệu") { Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" -Name "VisualFXSetting" -Value 3 -Type DWord -Force }
             if ($i -match "07. Tắt hiệu ứng") { Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "EnableTransparency" -Value 0 -Type DWord -Force }
