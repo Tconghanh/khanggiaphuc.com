@@ -272,7 +272,7 @@
                 </div>
             </div>
             <div class="map-container">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.2364024346516!2d106.69469507570327!3d10.793198058882895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528cb61eddf4b%3A0x6bda1997dcf56230!2zOTAgxJDGlG5oIFRpw6puIEhvw6BuZywgxJDhIEthbywgUXXhuq1uIDEsIEjhu5MgQ2jDrSBNaW5oLCBWaWV0bmFt!5e0!3m2!1sen!2s!4v1711111111111!3m2!1sen!2s" allowfullscreen="" loading="lazy"></iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.349633659223!2d106.6967733!3d10.784511!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f350ecaaab5%3A0xbb1d27993a409744!2zOTAgxJDDrG5oIFRpw6puIEhvw6BuZywgxJDhContentIEthbywgUXXhuq1uIDEsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1710925200000!5m2!1svi!2s" allowfullscreen="" loading="lazy"></iframe>
             </div>
         </div>
     </section>
@@ -290,7 +290,7 @@
 
     <div id="productModal" class="modal" onclick="closeModal(event, 'productModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="document.getElementById('productModal').style.display='none'">&times;</span>
+            <span class="close-modal" onclick="document.getElementById('productModal').style.display='none'">×</span>
             <div class="modal-body">
                 <div class="modal-gallery">
                     <img id="modal-main-img" src="" alt="Main Product Image" class="modal-main-img">
@@ -310,7 +310,7 @@
 
     <div id="projModal" class="modal" onclick="closeModal(event, 'projModal')">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="document.getElementById('projModal').style.display='none'">&times;</span>
+            <span class="close-modal" onclick="document.getElementById('projModal').style.display='none'">×</span>
             <div class="proj-modal-body">
                 <img id="pj-main-preview" src="" alt="Project Preview" class="proj-modal-img">
                 <h2 id="pj-title" class="proj-modal-title"></h2>
@@ -357,7 +357,7 @@
                 document.querySelectorAll('.nav-link').forEach(link => {
                     link.classList.remove('active');
                     if (link.getAttribute('href').substring(1) === current) {
-                        link.add('active');
+                        link.classList.add('active');
                     }
                 });
             }
@@ -378,7 +378,6 @@
 
         // 1. TẢI VÀ XỬ LÝ DỮ LIỆU SẢN PHẨM (TỪ TAB 'SanPham')
         function fetchProducts() {
-            // Thay đổi cấu trúc gọi dữ liệu từ tab San_Pham cũ sang tab SanPham mới
             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=SanPham`;
             
             fetch(url)
@@ -390,25 +389,34 @@
                     allProducts = rows.map(row => {
                         const cells = row.c;
                         
-                        // Xử lý chuỗi ảnh cách nhau bằng dấu phẩy ở cột C (index 2)
+                        // Cột B (index 1): Tên sản phẩm
+                        let tenSP = cells[1] && cells[1].v ? cells[1].v : 'Sản phẩm chưa có tên';
+
+                        // Cột C (index 2): Link chứa ảnh sản phẩm cách nhau bằng dấu ","
                         let imgStr = cells[2] && cells[2].v ? String(cells[2].v).trim() : '';
                         let images = imgStr ? imgStr.split(',').map(s => s.trim()).filter(s => s) : [];
                         
-                        // Xử lý chuỗi danh mục cách nhau bằng dấu phẩy ở cột D (index 3)
+                        // Cột D (index 3): Danh mục cách nhau bằng dấu ","
                         let catStr = cells[3] && cells[3].v ? String(cells[3].v).trim() : 'Khác';
                         let categories = catStr.split(',').map(s => s.trim()).filter(s => s);
 
-                        // Xử lý chuỗi mô tả cách nhau bằng dấu phẩy ở cột G (index 6)
+                        // Cột E (index 4): Thương hiệu
+                        let thuongHieu = cells[4] && cells[4].v ? cells[4].v : 'Chính hãng';
+
+                        // Cột F (index 5): Giá sản phẩm
+                        let giaSP = cells[5] && cells[5].v ? cells[5].v : 'Liên hệ';
+
+                        // Cột G (index 6): Mô tả sản phẩm cách nhau bằng dấu ","
                         let descStr = cells[6] && cells[6].v ? String(cells[6].v).trim() : '';
                         let descItems = descStr ? descStr.split(',').map(s => s.trim()).filter(s => s) : [];
 
                         return {
                             id: cells[0] && cells[0].v ? cells[0].v : 'SP-' + Math.random().toString(36).substr(2, 5),
-                            ten: cells[1] && cells[1].v ? cells[1].v : 'Sản phẩm chưa có tên',
+                            ten: tenSP,
                             anhArr: images,
                             danhmucArr: categories,
-                            thuonghieu: cells[4] && cells[4].v ? cells[4].v : 'Chính hãng',
-                            gia: cells[5] && cells[5].v ? cells[5].v : 'Liên hệ',
+                            thuonghieu: thuongHieu,
+                            gia: giaSP,
                             motaArr: descItems
                         };
                     });
@@ -417,16 +425,15 @@
                     renderProducts();
                 })
                 .catch(err => {
-                    console.error("Lỗi khi tải dữ liệu tab SanPham từ Google Sheet:", err);
-                    document.getElementById('product-container').innerHTML = '<p style="text-align:center; color:red;">Không thể tải danh sách sản phẩm lúc này. Vui lòng thử lại sau.</p>';
+                    console.error("Lỗi khi tải dữ liệu sản phẩm:", err);
+                    document.getElementById('product-container').innerHTML = '<p style="text-align:center; color:red;">Không thể tải danh sách sản phẩm lúc này.</p>';
                 });
         }
 
-        // Tạo bộ lọc động cho Sản phẩm dựa trên các danh mục thực tế từ Sheet
+        // Tạo bộ lọc cho Sản phẩm
         function buildProductFilters() {
             const filterSet = new Set();
-            // Mặc định luôn có danh mục Nổi bật lên đầu
-            filterSet.add('Nổi bật');
+            filterSet.add('Nổi bật'); // Luôn ưu tiên hiển thị danh mục "Nổi bật"
             
             allProducts.forEach(p => {
                 p.danhmucArr.forEach(cat => {
@@ -456,12 +463,11 @@
             renderProducts();
         }
 
-        // Render cấu trúc sản phẩm ra lưới hiển thị giao diện
+        // Render sản phẩm ra giao diện
         function renderProducts() {
             const container = document.getElementById('product-container');
             container.innerHTML = '';
             
-            // Lọc danh sách theo bộ lọc danh mục đang active
             const filtered = allProducts.filter(p => {
                 return p.danhmucArr.some(cat => cat.toLowerCase() === activeProductFilter.toLowerCase());
             });
@@ -475,7 +481,6 @@
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 
-                // Sử dụng ảnh đầu tiên trong mảng ảnh, nếu rỗng thì thay thế bằng ảnh mặc định không lỗi
                 const firstImg = p.anhArr.length > 0 ? p.anhArr[0] : 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=400&q=80';
                 
                 card.innerHTML = `
@@ -493,7 +498,6 @@
             });
         }
 
-        // Định dạng giá tiền linh hoạt
         function formatGia(giaVal) {
             if (!giaVal || String(giaVal).toLowerCase() === 'liên hệ' || String(giaVal).trim() === '0') {
                 return 'Giá: Liên hệ';
@@ -504,7 +508,7 @@
             return giaVal;
         }
 
-        // Hiển thị chi tiết Album ảnh và mô tả dạng tích xanh xuống dòng trong Modal Sản phẩm
+        // Mở Modal xem chi tiết sản phẩm
         function openProductModal(productId) {
             const p = allProducts.find(item => item.id === productId);
             if(!p) return;
@@ -513,7 +517,7 @@
             document.getElementById('modal-meta').innerText = `Thương hiệu: ${p.thuonghieu} | Danh mục: ${p.danhmucArr.join(', ')}`;
             document.getElementById('modal-price').innerText = formatGia(p.gia);
 
-            // Xử lý cấu trúc mô tả xuống dòng có dấu tích xanh ở đầu dòng từng phần tử
+            // Định dạng mô tả: tạo dấu tích xanh đầu dòng và xuống dòng cho từng mục
             const descContainer = document.getElementById('modal-desc');
             descContainer.innerHTML = '';
             if (p.motaArr.length > 0) {
@@ -524,10 +528,10 @@
                     descContainer.appendChild(item);
                 });
             } else {
-                descContainer.innerText = 'Đang cập nhật thông tin chi tiết mô tả sản phẩm.';
+                descContainer.innerText = 'Đang cập nhật thông tin chi tiết.';
             }
 
-            // Xử lý tạo Album ảnh sản phẩm linh hoạt (nếu có nhiều ảnh)
+            // Xử lý hiển thị Album ảnh
             const mainImg = document.getElementById('modal-main-img');
             const thumbsContainer = document.getElementById('modal-thumbs');
             thumbsContainer.innerHTML = '';
@@ -538,12 +542,12 @@
                 mainImg.src = p.anhArr[0];
                 mainImg.onerror = function() { this.src = defaultFallback; };
 
-                // Tạo ảnh nhỏ thumb bên dưới nếu có nhiều hơn 1 ảnh
                 p.anhArr.forEach((imgUrl, idx) => {
                     const thumb = document.createElement('img');
                     thumb.src = imgUrl;
                     thumb.className = `thumb-img ${idx === 0 ? 'active' : ''}`;
-                    thumb.onerror = function() { this.style.display = 'none'; }; // Ẩn hoàn toàn nếu link ảnh lỗi không hiển thị text lỗi
+                    // Nếu không tìm thấy ảnh (lỗi link) thì bỏ qua không hiển thị
+                    thumb.onerror = function() { this.style.display = 'none'; };
                     
                     thumb.onclick = () => {
                         mainImg.src = imgUrl;
@@ -556,14 +560,11 @@
                 mainImg.src = defaultFallback;
             }
 
-            // Cấu hình link Zalo nút mua hàng liên hệ nhanh kèm theo tên sản phẩm cụ thể
             document.getElementById('modal-order-btn').href = `https://zalo.me/0934140049?text=${encodeURIComponent('Xin chào KGP Telecom, tôi muốn nhận tư vấn báo giá chi tiết cho sản phẩm: ' + p.ten)}`;
-
             document.getElementById('productModal').style.display = 'flex';
         }
 
-
-        // 2. TẢI VÀ XỬ LÝ DỮ LIỆU DỰ ÁN (GIỮ NGUYÊN HOÀN TOÀN CỦA FILE GỐC)
+        // 2. TẢI VÀ XỬ LÝ DỮ LIỆU DỰ ÁN (GIỮ NGUYÊN 100% GỐC)
         function fetchProjects() {
             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=Du_An`;
             
@@ -572,7 +573,6 @@
                 .then(txt => {
                     const data = JSON.parse(txt.substr(47).slice(0, -2));
                     const rows = data.table.rows;
-                    const imgBase = "https://khanggiaphuc.com/data/";
                     
                     allProjects = rows.map(row => {
                         const cells = row.c;
@@ -588,7 +588,7 @@
                     renderProjects();
                 })
                 .catch(err => {
-                    console.error("Lỗi khi tải dữ liệu tab Du_An:", err);
+                    console.error("Lỗi khi tải dữ liệu dự án:", err);
                     document.getElementById('project-container').innerHTML = '<p style="text-align:center; color:var(--light-text);">Đang cập nhật danh mục dự án...</p>';
                 });
         }
@@ -657,6 +657,28 @@
             mainPreview.onerror = function() { this.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80'; };
             
             document.getElementById('projModal').style.display = 'flex';
+        }
+
+        // HÀM ĐỌC SỐ TIỀN THÀNH CHỮ NGUYÊN BẢN CŨ CỦA TRANG
+        function docSoTien(number) {
+            if (number === 0) return "Không";
+            const digits = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"];
+            const units = ["", " nghìn", " triệu", " tỷ", " nghìn tỷ", " triệu tỷ"];
+            function read3(n, isFirst) {
+                let r = ""; const h = Math.floor(n/100), t = Math.floor((n%100)/10), d = n%10;
+                if (h > 0 || !isFirst) r += digits[h] + " trăm ";
+                if (t > 1) { r += digits[t] + " mươi "; if (d === 1) r += "mốt"; else if (d === 5) r += "lăm"; else if (d > 0) r += digits[d]; } 
+                else if (t === 1) { r += "mười "; if (d === 5) r += "lăm"; else if (d > 0) r += digits[d]; } 
+                else if (t === 0 && d > 0) { if (h > 0 || !isFirst) r += "lẻ "; r += digits[d]; }
+                return r;
+            }
+            let res = "", i = 0, str = String(number);
+            while (str.length > 0) {
+                let chunk = Number(str.slice(-3)); str = str.slice(0, -3);
+                if (chunk > 0) res = read3(chunk, str.length === 0) + units[i] + " " + res;
+                i++;
+            }
+            return res.trim().charAt(0).toUpperCase() + res.trim().slice(1) + " đồng";
         }
     </script>
 </body>
