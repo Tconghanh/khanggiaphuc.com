@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký & Liên kết Google</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; background-color: #f4f4f9; }
+        .container { max-width: 400px; margin: auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 10px; }
+        button.google { background-color: #db4437; }
+        button:hover { opacity: 0.9; }
+        .status { margin-top: 15px; font-weight: bold; color: green; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Đăng ký tài khoản</h2>
+    <input type="email" id="email" placeholder="Email của bạn">
+    <input type="password" id="password" placeholder="Mật khẩu">
+    <button id="btnSignUp">Đăng ký bằng Email</button>
+    
+    <hr>
+    
+    <button id="btnGoogle" class="google">Đăng nhập / Liên kết Google</button>
+    
+    <div id="status" class="status"></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    GoogleAuthProvider, 
+    signInWithPopup,
+    linkWithPopup
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+  // Cấu hình Firebase của bạn (Lấy từ Firebase Console)
+ const firebaseConfig = {
+  apiKey: "AIzaSyCPF6eKvKX7gPFDLM0fSd0PjSQlPN_IHLA",
+  authDomain: "loginweb-e9b15.firebaseapp.com",
+  projectId: "loginweb-e9b15",
+  storageBucket: "loginweb-e9b15.firebasestorage.app",
+  messagingSenderId: "901539385947",
+  appId: "1:901539385947:web:43267ec391a442e5ce657e"
+};
+
+  // Khởi tạo Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  const statusDiv = document.getElementById('status');
+
+  // 1. Chức năng Đăng ký bằng Email/Password
+  document.getElementById('btnSignUp').addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          statusDiv.innerText = `Đăng ký thành công! User: ${userCredential.user.email}`;
+          statusDiv.style.color = "green";
+      } catch (error) {
+          statusDiv.innerText = `Lỗi: ${error.message}`;
+          statusDiv.style.color = "red";
+      }
+  });
+
+  // 2. Chức năng Đăng nhập hoặc Liên kết với tài khoản Google
+  document.getElementById('btnGoogle').addEventListener('click', async () => {
+      // Nếu người dùng ĐÃ đăng nhập bằng Email/Password trước đó, chúng ta sẽ LIÊN KẾT (Link) tài khoản Google vào
+      if (auth.currentUser) {
+          try {
+              const result = await linkWithPopup(auth.currentUser, googleProvider);
+              statusDiv.innerText = `Liên kết tài khoản Google thành công cho: ${result.user.email}`;
+              statusDiv.style.color = "green";
+          } catch (error) {
+              statusDiv.innerText = `Lỗi liên kết: ${error.message}`;
+              statusDiv.style.color = "red";
+          }
+      } else {
+          // Nếu CHƯA đăng nhập, tiến hành Đăng nhập thẳng bằng Google
+          try {
+              const result = await signInWithPopup(auth, googleProvider);
+              statusDiv.innerText = `Đăng nhập Google thành công! Hoan nghênh ${result.user.displayName}`;
+              statusDiv.style.color = "green";
+          } catch (error) {
+              statusDiv.innerText = `Lỗi đăng nhập: ${error.message}`;
+              statusDiv.style.color = "red";
+          }
+      }
+  });
+</script>
+
+</body>
+</html>
