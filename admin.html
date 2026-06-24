@@ -16,125 +16,133 @@
             --success: #22c55e;
             --primary: #2271b1;
             --primary-hover: #135e96;
+            --sidebar-width: 260px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Segoe UI, Roboto, sans-serif; }
-        
-        body { 
-            background: #f4f5f7; 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column;
-        }
-        
+        /* Reset & Base Styles */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: #f0f2f5; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .hidden { display: none !important; }
 
-        /* ==================== HÌNH NỀN LOGIC & ĐĂNG NHẬP ==================== */
+        /* ==================== 1. FORM ĐĂNG NHẬP CÂN ĐỐI VÀNG ==================== */
         .login-wrapper { 
             width: 100%; 
             min-height: 100vh;
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            padding: 20px; 
-            /* Hình nền Logic/Hệ thống dạng lưới công nghệ (CSS Blueprint) */
+            padding: 24px; 
             background-color: #0b0d13;
             background-image: 
-                linear-gradient(rgba(77, 163, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(77, 163, 255, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
+                linear-gradient(rgba(77, 163, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(77, 163, 255, 0.04) 1px, transparent 1px);
+            background-size: 24px 24px;
             background-position: center;
         }
         .login-card { 
-            max-width: 400px; 
+            max-width: 420px; 
             width: 100%; 
-            padding: 35px 30px; 
+            padding: 40px 32px; 
             background: rgba(23, 25, 35, 0.85); 
             border-radius: 16px; 
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4); 
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5); 
             border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             color: var(--text-dark);
+            text-align: center;
         }
-        .login-card h2 { text-align: center; margin-bottom: 25px; font-weight: 600; letter-spacing: 0.5px; color: #fff; }
+        .login-card h2 { margin-bottom: 28px; font-size: 22px; font-weight: 600; letter-spacing: 1px; color: #fff; }
         
-        /* ==================== GIAO DIỆN DASHBOARD (PC & MOBILE) ==================== */
-        .dashboard-wrapper { display: flex; width: 100%; height: 100vh; flex-direction: row; }
+        /* ==================== 2. LAYOUT DASHBOARD ĐỐI XỨNG ==================== */
+        .dashboard-wrapper { display: flex; width: 100%; height: 100vh; overflow: hidden; }
         
-        /* Sidebar mặc định cho PC */
-        .sidebar { width: 240px; background: #23282d; color: #eee; padding-top: 20px; flex-shrink: 0; display: flex; flex-direction: column; }
-        .sidebar h2 { text-align: center; font-size: 18px; margin-bottom: 20px; color: #fff; font-weight: 600; }
-        .sidebar a { display: block; padding: 14px 20px; color: #c3c4c7; text-decoration: none; border-left: 4px solid transparent; cursor: pointer; font-size: 14px; transition: 0.2s; }
-        .sidebar a:hover, .sidebar a.active { background: #1d2327; color: #72aee6; border-left-color: #72aee6; }
+        /* Sidebar PC */
+        .sidebar { width: var(--sidebar-width); background: #1e2327; color: #eee; flex-shrink: 0; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .sidebar h2 { padding: 24px 20px; text-align: center; font-size: 19px; color: #fff; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.05); letter-spacing: 0.5px; }
+        .sidebar nav { display: flex; flex-direction: column; padding: 12px 0; flex: 1; }
+        .sidebar a { display: flex; align-items: center; padding: 14px 24px; color: #c3c4c7; text-decoration: none; border-left: 4px solid transparent; font-size: 14px; font-weight: 500; transition: all 0.2s ease; cursor: pointer; }
+        .sidebar a:hover, .sidebar a.active { background: #14181c; color: #72aee6; border-left-color: #72aee6; }
         
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #f0f2f5; }
-        .topbar { background: #fff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; flex-shrink: 0; }
-        .topbar-actions { display: flex; gap: 8px; align-items: center; }
+        /* Khu vực hiển thị chính */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         
-        .container { padding: 25px; flex: 1; overflow-y: auto; }
+        /* Topbar thanh lịch */
+        .topbar { background: #fff; height: 64px; padding: 0 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .topbar-actions { display: flex; gap: 10px; align-items: center; }
         
-        /* Cấu trúc tối ưu iFrame */
-        .iframe-container { width: 100%; height: calc(100vh - 150px); border: none; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; border: 1px solid #e2e8f0; }
-        iframe { width: 100%; height: 100%; border: none; background: white; }[cite: 1]
+        /* Container cuộn cân đối */
+        .container { padding: 32px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; }
+        .tab-content { display: flex; flex-direction: column; gap: 24px; width: 100%; }
 
-        /* Module Upload Ảnh (upload.html) */
-        .upload-section-dark { background: var(--bg); color: var(--text-dark); padding: 24px; border-radius: 18px; border: 1px solid var(--border-dark); margin-bottom: 20px; }[cite: 1]
-        .dropzone { border: 2px dashed var(--accent); border-radius: 18px; padding: 40px; text-align: center; cursor: pointer; transition: .3s; background: var(--card); }[cite: 1]
-        .dropzone.drag { background: #162033; }[cite: 1]
-        .dropzone h2 { margin-bottom: 10px; font-size: 20px; color: #fff; }[cite: 1]
-        .dropzone p { color: var(--muted); }[cite: 1]
-        
-        .toolbar { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }[cite: 1]
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-top: 20px; }[cite: 1]
-        .item { background: var(--card2); border-radius: 14px; overflow: hidden; border: 1px solid var(--border-dark); }[cite: 1]
-        .item img { width: 100%; height: 130px; object-fit: cover; display: block; }[cite: 1]
-        .info { padding: 12px; }[cite: 1]
-        .filename { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dark); }[cite: 1]
-        
-        .progress { height: 8px; background: #2c3444; border-radius: 50px; overflow: hidden; margin-top: 10px; }[cite: 1]
-        .progress-bar { height: 100%; width: 0%; background: var(--success); transition: .2s; }[cite: 1]
-        .url { margin-top: 10px; font-size: 12px; word-break: break-all; }[cite: 1]
-        .url a { color: #7db8ff; text-decoration: none; }[cite: 1]
-        .badge { display: inline-block; padding: 4px 8px; border-radius: 6px; background: #22304a; font-size: 12px; margin-top: 8px; color: #fff; }[cite: 1]
-        .stats { text-align: center; margin-top: 15px; color: var(--muted); }[cite: 1]
+        /* Khung iFrame đồng bộ */
+        .iframe-container { width: 100%; height: calc(100vh - 128px); border: none; background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); overflow: hidden; border: 1px solid #e2e8f0; }
+        iframe { width: 100%; height: 100%; border: none; background: white; display: block; }
 
-        /* ==================== THÀNH PHẦN BUTTON DÙNG CHUNG ==================== */
-        input[type="email"], input[type="password"] { width: 100%; padding: 11px 15px; margin: 5px 0 12px 0; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; background: rgba(0,0,0,0.2); color: #fff; }
+        /* ==================== 3. MODULE UPLOAD ẢNH ĐẸP MẮT ==================== */
+        .upload-section-dark { background: var(--bg); color: var(--text-dark); padding: 32px; border-radius: 16px; border: 1px solid var(--border-dark); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .upload-section-dark h3 { text-align: center; margin-bottom: 6px; font-size: 18px; color: #fff; font-weight: 600; }
+        .dropzone { border: 2px dashed var(--accent); border-radius: 12px; padding: 36px 20px; text-align: center; cursor: pointer; transition: all 0.2s ease; background: var(--card); margin-top: 16px; }
+        .dropzone:hover, .dropzone.drag { background: #1c2333; border-color: #7db8ff; }
+        .dropzone h4 { font-size: 16px; color: #fff; margin-bottom: 6px; }
+        .dropzone p { color: var(--muted); font-size: 13px; }
+        
+        .toolbar { display: flex; gap: 12px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; margin-top: 20px; }
+        .item { background: var(--card2); border-radius: 10px; overflow: hidden; border: 1px solid var(--border-dark); display: flex; flex-direction: column; }
+        .item img { width: 100%; height: 125px; object-fit: cover; display: block; }
+        .info { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .filename { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dark); }
+        
+        .progress { height: 6px; background: #2c3444; border-radius: 10px; overflow: hidden; margin-top: 8px; }
+        .progress-bar { height: 100%; width: 0%; background: var(--success); transition: width .2s ease; }
+        .url { margin-top: 8px; font-size: 11px; word-break: break-all; }
+        .url a { color: #7db8ff; text-decoration: none; }
+        .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; background: #22304a; font-size: 11px; margin-top: 6px; color: #fff; width: fit-content; }
+        .stats { text-align: center; margin-top: 12px; color: var(--muted); font-size: 13px; }
+
+        /* Form Nhúng Google Form bên dưới công cụ upload */
+        .form-card-white { background: white; padding: 12px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; }
+
+        /* ==================== BUTTONS & INPUTS CHUNG ==================== */
+        input[type="email"], input[type="password"] { width: 100%; padding: 12px 16px; margin: 6px 0 14px 0; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; background: rgba(0,0,0,0.25); color: #fff; font-size: 14px; transition: border 0.2s; }
         input[type="email"]:focus, input[type="password"]:focus { outline: none; border-color: var(--accent); }
         
-        .btn-general { background: var(--primary); color: white; border: none; cursor: pointer; font-weight: 600; padding: 12px 20px; border-radius: 8px; transition: 0.2s; }
+        .btn-general { background: var(--primary); color: white; border: none; cursor: pointer; font-weight: 600; padding: 12px 24px; border-radius: 8px; font-size: 14px; transition: background 0.2s; }
         .btn-general:hover { background: var(--primary-hover); }
-        .btn-upload-style { background: var(--accent); border: none; padding: 12px 20px; border-radius: 10px; color: white; cursor: pointer; font-weight: 600; }[cite: 1]
-        .btn-upload-style:hover { opacity: .9; }[cite: 1]
+        .btn-upload-style { background: var(--accent); border: none; padding: 12px 24px; border-radius: 8px; color: white; cursor: pointer; font-weight: 600; font-size: 14px; transition: opacity 0.2s; }
+        .btn-upload-style:hover { opacity: .9; }
         
-        button.google { background-color: #db4437; }[cite: 1]
-        button.google:hover { background-color: #c53727; }[cite: 1]
+        button.google { background-color: #db4437; }
+        button.google:hover { background-color: #c53727; }
         
-        /* Nhóm nút Topbar */
-        .btn-topbar { padding: 8px 16px; border-radius: 6px; font-weight: 600; border: none; cursor: pointer; text-decoration: none; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; }
-        .btn-home { background: #e2e8f0; color: #334155; }
-        .btn-home:hover { background: #cbd5e1; }
-        .btn-logout { background: #d63638; color: white; }[cite: 1]
-        .btn-logout:hover { background: #b32424; }[cite: 1]
+        /* Topbar Buttons */
+        .btn-topbar { padding: 8px 16px; border-radius: 6px; font-weight: 600; border: none; cursor: pointer; text-decoration: none; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .btn-home { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
+        .btn-home:hover { background: #e2e8f0; }
+        .btn-logout { background: #d63638; color: white; }
+        .btn-logout:hover { background: #b32424; }
         
-        .status { margin-top: 10px; font-weight: bold; text-align: center; font-size: 14px; }
+        .status { margin-top: 12px; font-weight: 600; text-align: center; font-size: 13px; }
 
-        /* ==================== RESPONSIVE CHO MOBILE ==================== */
+        /* ==================== TỐI ƯU ĐỐI XỨNG TRÊN MOBILE (RESPONSIVE) ==================== */
         @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .dashboard-wrapper { flex-direction: column; height: auto; overflow: visible; }
+            .dashboard-wrapper { flex-direction: column; height: 100vh; }
             
-            /* Sidebar chuyển thành thanh Menu cuộn ngang trên điện thoại */
-            .sidebar { width: 100%; padding-top: 10px; height: auto; flex-direction: row; overflow-x: auto; white-space: nowrap; border-bottom: 2px solid #1d2327; }
-            .sidebar h2 { display: none; } /* Ẩn chữ tiêu đề trên mobile để rộng chỗ */
-            .sidebar a { display: inline-block; padding: 12px 15px; border-left: none; border-bottom: 3px solid transparent; }
-            .sidebar a:hover, .sidebar a.active { background: #1d2327; color: #72aee6; border-left-color: transparent; border-bottom-color: #72aee6; }
+            /* Chuyển Sidebar thành thanh Tabs cuộn ngang mượt mà */
+            .sidebar { width: 100%; height: auto; border-bottom: 1px solid rgba(0,0,0,0.1); box-shadow: none; }
+            .sidebar h2 { display: none; }
+            .sidebar nav { flex-direction: row; padding: 0; overflow-x: auto; scrollbar-width: none; }
+            .sidebar nav::-webkit-scrollbar { display: none; } /* Ẩn scrollbar để nhìn cân đối */
+            .sidebar a { padding: 16px 20px; white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; font-size: 13px; }
+            .sidebar a:hover, .sidebar a.active { background: rgba(0,0,0,0.1); border-left-color: transparent; border-bottom-color: #72aee6; }
             
-            .main-content { height: calc(100vh - 50px); overflow: hidden; }
-            .topbar { padding: 10px 15px; }
-            .container { padding: 12px; }
-            .iframe-container { height: calc(100vh - 120px); }
-            .upload-section-dark { padding: 15px; }
+            .topbar { padding: 0 16px; height: 56px; font-size: 13px; }
+            .container { padding: 16px; gap: 16px; }
+            .iframe-container { height: calc(100vh - 128px); border-radius: 8px; }
+            .upload-section-dark { padding: 20px 16px; border-radius: 12px; }
+            .dropzone { padding: 24px 16px; }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+            .item img { height: 100px; }
         }
     </style>
 </head>
@@ -144,10 +152,10 @@
     <div id="loginSection" class="login-wrapper">
         <div class="login-card">
             <h2>HỆ THỐNG QUẢN TRỊ</h2>
-            <input type="email" id="email" placeholder="Email quản trị">
+            <input type="email" id="email" placeholder="Email đăng nhập">
             <input type="password" id="password" placeholder="Mật khẩu">
             <button id="btnLoginEmail" class="btn-general" style="width: 100%;">Đăng nhập hệ thống</button>
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.15);">
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid rgba(255,255,255,0.12);">
             <button id="btnLoginGoogle" class="btn-general google" style="width: 100%;">Đăng nhập bằng Google</button>
             <div id="authStatus" class="status"></div>
         </div>
@@ -158,18 +166,20 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <h2>KGP Admin</h2>
-            <a onclick="switchTab('tab-dang-bai')" id="menu-dang-bai" class="active">📝 Đăng bài viết mới</a>
-            <a onclick="switchTab('tab-ql-bai')" id="menu-ql-bai">📌 Quản lý bài viết</a>
-            <a onclick="switchTab('tab-dang-sp')" id="menu-dang-sp">📥 Đăng sản phẩm mới</a>
-            <a onclick="switchTab('tab-ql-sp')" id="menu-ql-sp">📦 Quản lý sản phẩm</a>
-            <a onclick="switchTab('tab-cai-dat')" id="menu-cai-dat">⚙️ Cài đặt chung</a>
+            <nav>
+                <a onclick="switchTab('tab-dang-bai')" id="menu-dang-bai" class="active">📝 Đăng bài mới</a>
+                <a onclick="switchTab('tab-ql-bai')" id="menu-ql-bai">📌 Quản lý bài viết</a>
+                <a onclick="switchTab('tab-dang-sp')" id="menu-dang-sp">📥 Đăng sản phẩm</a>
+                <a onclick="switchTab('tab-ql-sp')" id="menu-ql-sp">📦 Quản lý sản phẩm</a>
+                <a onclick="switchTab('tab-cai-dat')" id="menu-cai-dat">⚙️ Cài đặt chung</a>
+            </nav>
         </div>
 
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Topbar đã thêm nút Home -->
+            <!-- Topbar cân đối -->
             <div class="topbar">
-                <div style="font-size: 14px;">User: <span id="userEmail" style="font-weight:bold; color:var(--primary);">...</span></div>
+                <div style="font-size: 14px; font-weight: 500; color: #475569;">Quản trị viên: <span id="userEmail" style="font-weight: 600; color: var(--primary);">...</span></div>
                 <div class="topbar-actions">
                     <a href="index.html" class="btn-topbar btn-home">🏠 Home</a>
                     <button id="btnLogout" class="btn-topbar btn-logout">Đăng xuất</button>
@@ -179,33 +189,29 @@
             <!-- NỘI DUNG CÁC TAB QUẢN TRỊ -->
             <div class="container">
                 
-                <!-- TAB 1: ĐĂNG BÀI VIẾT MỚI (Tích hợp bộ upload ảnh tối ưu) -->
+                <!-- TAB 1: ĐĂNG BÀI VIẾT MỚI -->
                 <div id="tab-dang-bai" class="tab-content">
                     <div class="upload-section-dark">
-                        <h3 style="text-align: center; margin-bottom: 10px; color:#fff;">📸 Bộ Công Cụ Tải Ảnh Bài Viết</h3>
-                        
+                        <h3>📸 Bộ Công Cụ Tải Ảnh Bài Viết</h3>
+                        <div class="stats">Tự động nén WebP • Tối ưu 1600px • Sao chép liên kết tự động</div>
                         <div id="dropzone" class="dropzone">
-                            <h2>Kéo thả ảnh vào đây</h2>
-                            <p>hoặc bấm để chọn nhiều ảnh</p>
+                            <h4>Kéo thả ảnh vào đây</h4>
+                            <p>hoặc nhấp chuột để chọn tệp hình ảnh</p>
                         </div>
-                        <input id="fileInput" type="file" multiple accept="image/*" style="display: none;">[cite: 1]
-                        
-                        <div id="stats" class="stats"></div>[cite: 1]
-                        <div id="gallery" class="grid"></div>[cite: 1]
-                        
+                        <input id="fileInput" type="file" multiple accept="image/*">
+                        <div id="stats" class="stats"></div>
+                        <div id="gallery" class="grid"></div>
                         <div class="toolbar">
-                            <button class="btn-upload-style" id="btnUploadAll">Upload ảnh bài viết</button>
-                            <button class="btn-upload-style" id="btnCopyAllUrls">Copy link ảnh</button>
+                            <button class="btn-upload-style" id="btnUploadAll">Upload toàn bộ ảnh</button>
+                            <button class="btn-upload-style" id="btnCopyAllUrls" style="background:#4b5563;">Copy chuỗi URL</button>
                         </div>
                     </div>
-
-                    <!-- Đã bật tính năng thu gọn tối đa Google Form: &rm=minimal -->
-                    <div style="background: white; padding: 10px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScJWkjfa4gJaTSqq0Wep014vMJFXXXFi2oHEncqR1LdPqd78Q/viewform?embedded=true&rm=minimal" style="height: 750px;"></iframe>
+                    <div class="form-card-white">
+                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScJWkjfa4gJaTSqq0Wep014vMJFXXXFi2oHEncqR1LdPqd78Q/viewform?embedded=true&rm=minimal" style="height: 700px;"></iframe>
                     </div>
                 </div>
 
-                <!-- TAB 2: QUẢN LÝ BÀI VIẾT (Đã bật chế độ xem gọn gàng &rm=minimal) -->
+                <!-- TAB 2: QUẢN LÝ BÀI VIẾT -->
                 <div id="tab-ql-bai" class="tab-content hidden">
                     <div class="iframe-container">
                         <iframe src="https://docs.google.com/spreadsheets/d/1knLdhA1j69Qqfa6nMIe20vfufQnvGr4THpehnK0mHPk/edit?gid=1223294975&rm=minimal"></iframe>
@@ -215,26 +221,22 @@
                 <!-- TAB 3: ĐĂNG SẢN PHẨM MỚI -->
                 <div id="tab-dang-sp" class="tab-content hidden">
                     <div class="upload-section-dark">
-                        <h3 style="text-align: center; margin-bottom: 10px; color:#fff;">📸 Bộ Công Cụ Tải Ảnh Sản Phẩm</h3>
-                        
+                        <h3>📸 Bộ Công Cụ Tải Ảnh Sản Phẩm</h3>
+                        <div class="stats">Tự động nén WebP • Tối ưu 1600px • Sao chép liên kết tự động</div>
                         <div id="dropzoneSp" class="dropzone">
-                            <h2>Kéo thả ảnh sản phẩm vào đây</h2>
-                            <p>hoặc bấm để chọn nhiều ảnh</p>
+                            <h4>Kéo thả ảnh sản phẩm vào đây</h4>
+                            <p>hoặc nhấp chuột để chọn tệp hình ảnh</p>
                         </div>
-                        <input id="fileInputSp" type="file" multiple accept="image/*" style="display: none;">[cite: 1]
-                        
-                        <div id="statsSp" class="stats"></div>[cite: 1]
-                        <div id="gallerySp" class="grid"></div>[cite: 1]
-                        
+                        <input id="fileInputSp" type="file" multiple accept="image/*">
+                        <div id="statsSp" class="stats"></div>
+                        <div id="gallerySp" class="grid"></div>
                         <div class="toolbar">
-                            <button class="btn-upload-style" id="btnUploadAllSp">Upload ảnh sản phẩm</button>
-                            <button class="btn-upload-style" id="btnCopyAllUrlsSp">Copy link ảnh</button>
+                            <button class="btn-upload-style" id="btnUploadAllSp">Upload toàn bộ ảnh</button>
+                            <button class="btn-upload-style" id="btnCopyAllUrlsSp" style="background:#4b5563;">Copy chuỗi URL</button>
                         </div>
                     </div>
-
-                    <!-- Đã bật tính năng thu gọn tối đa Google Form sản phẩm: &rm=minimal -->
-                    <div style="background: white; padding: 10px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc_a0fwWoGEksBNXP5hjptWOwEDpvm1Ih0m7Ks-1d3pzNkmqg/viewform?embedded=true&rm=minimal" style="height: 750px;"></iframe>
+                    <div class="form-card-white">
+                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc_a0fwWoGEksBNXP5hjptWOwEDpvm1Ih0m7Ks-1d3pzNkmqg/viewform?embedded=true&rm=minimal" style="height: 700px;"></iframe>
                     </div>
                 </div>
 
@@ -256,7 +258,7 @@
         </div>
     </div>
 
-<!-- Firebase SDK v10 -->
+<!-- Firebase Config Modules -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, linkWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -295,7 +297,7 @@
   document.getElementById('btnLoginEmail').addEventListener('click', async () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      try { await signInWithEmailAndPassword(auth, email, password); } catch (error) { authStatus.innerText = "Sai tài khoản hoặc mật khẩu!"; authStatus.style.color = "#ef4444"; }
+      try { await signInWithEmailAndPassword(auth, email, password); } catch (error) { authStatus.innerText = "Sai tài khoản hoặc mật khẩu!"; authStatus.style.color = "#f87171"; }
   });
 
   document.getElementById('btnLoginGoogle').addEventListener('click', async () => {
@@ -309,9 +311,9 @@
   document.getElementById('btnLogout').addEventListener('click', () => { signOut(auth); });
 </script>
 
-<!-- Logic xử lý Ảnh (upload.html) -->
+<!-- Logic Core Upload nén ảnh -->
 <script>
-const WORKER_URL = "https://upload.tconghanh.workers.dev/";[cite: 1]
+const WORKER_URL = "https://upload.tconghanh.workers.dev/";
 
 setupUploadModule({
     dropzoneId: "dropzone", fileInputId: "fileInput", galleryId: "gallery", statsId: "stats",
@@ -332,21 +334,21 @@ function setupUploadModule(config) {
     const gl = document.getElementById(config.galleryId);
     const st = document.getElementById(config.statsId);
 
-    dz.onclick = () => fi.click();[cite: 1]
-    fi.onchange = e => { localFiles = [...e.target.files]; render(); };[cite: 1]
+    dz.onclick = () => fi.click();
+    fi.onchange = e => { localFiles = [...e.target.files]; render(); };
 
-    dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("drag"); });[cite: 1]
-    dz.addEventListener("dragleave", () => { dz.classList.remove("drag"); });[cite: 1]
+    dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("drag"); });
+    dz.addEventListener("dragleave", () => { dz.classList.remove("drag"); });
     dz.addEventListener("drop", e => {
-        e.preventDefault(); dz.classList.remove("drag");[cite: 1]
-        localFiles = [...e.dataTransfer.files].filter(f => f.type.startsWith("image/"));[cite: 1]
-        render();[cite: 1]
+        e.preventDefault(); dz.classList.remove("drag");
+        localFiles = [...e.dataTransfer.files].filter(f => f.type.startsWith("image/"));
+        render();
     });
 
     function render() {
-        gl.innerHTML = ""; let total = 0;[cite: 1]
+        gl.innerHTML = ""; let total = 0;
         localFiles.forEach((file, index) => {
-            total += file.size; const url = URL.createObjectURL(file);[cite: 1]
+            total += file.size; const url = URL.createObjectURL(file);
             gl.innerHTML += `
                 <div class="item" id="${config.galleryId}-item-${index}">
                     <img src="${url}">
@@ -356,54 +358,54 @@ function setupUploadModule(config) {
                         <div class="progress"><div class="progress-bar" id="${config.galleryId}-bar-${index}"></div></div>
                         <div class="url" id="${config.galleryId}-url-${index}"></div>
                     </div>
-                </div>`;[cite: 1]
+                </div>`;
         });
-        st.innerHTML = `${localFiles.length} ảnh • ${(total/1024/1024).toFixed(2)} MB`;[cite: 1]
+        st.innerHTML = `${localFiles.length} ảnh • ${(total/1024/1024).toFixed(2)} MB`;
     }
 
-    async function convertToWebP(file) {[cite: 1]
-        return new Promise(resolve => {[cite: 1]
-            const img = new Image();[cite: 1]
-            img.onload = () => {[cite: 1]
-                let w = img.width, h = img.height; const max = 1600;[cite: 1]
-                if (w > h) { if (w > max) { h *= max / w; w = max; } } [cite: 1]
-                else { if (h > max) { w *= max / h; h = max; } }[cite: 1]
-                const canvas = document.createElement("canvas"); canvas.width = w; canvas.height = h;[cite: 1]
-                const ctx = canvas.getContext("2d"); ctx.drawImage(img, 0, 0, w, h);[cite: 1]
-                canvas.toBlob(blob => resolve(blob), "image/webp", 0.82);[cite: 1]
+    async function convertToWebP(file) {
+        return new Promise(resolve => {
+            const img = new Image();
+            img.onload = () => {
+                let w = img.width, h = img.height; const max = 1600;
+                if (w > h) { if (w > max) { h *= max / w; w = max; } } 
+                else { if (h > max) { w *= max / h; h = max; } }
+                const canvas = document.createElement("canvas"); canvas.width = w; canvas.height = h;
+                const ctx = canvas.getContext("2d"); ctx.drawImage(img, 0, 0, w, h);
+                canvas.toBlob(blob => resolve(blob), "image/webp", 0.82);
             };
-            img.src = URL.createObjectURL(file);[cite: 1]
+            img.src = URL.createObjectURL(file);
         });
     }
 
     document.getElementById(config.btnUploadId).onclick = async () => {
-        localUploadedUrls = [];[cite: 1]
-        for (let i = 0; i < localFiles.length; i++) {[cite: 1]
-            const bar = document.getElementById(`${config.galleryId}-bar-${i}`);[cite: 1]
-            bar.style.width = "10%";[cite: 1]
-            const webp = await convertToWebP(localFiles[i]);[cite: 1]
-            bar.style.width = "40%";[cite: 1]
-            const fd = new FormData();[cite: 1]
-            const originalName = localFiles[i].name.substring(0, localFiles[i].name.lastIndexOf('.')) || localFiles[i].name;[cite: 1]
-            fd.append("file", webp, `${originalName}.webp`);[cite: 1]
+        localUploadedUrls = [];
+        for (let i = 0; i < localFiles.length; i++) {
+            const bar = document.getElementById(`${config.galleryId}-bar-${i}`);
+            bar.style.width = "10%";
+            const webp = await convertToWebP(localFiles[i]);
+            bar.style.width = "40%";
+            const fd = new FormData();
+            const originalName = localFiles[i].name.substring(0, localFiles[i].name.lastIndexOf('.')) || localFiles[i].name;
+            fd.append("file", webp, `${originalName}.webp`);
 
             try {
-                const res = await fetch(WORKER_URL, { method: "POST", body: fd });[cite: 1]
-                bar.style.width = "80%"; const json = await res.json(); bar.style.width = "100%";[cite: 1]
-                localUploadedUrls.push(json.url);[cite: 1]
-                document.getElementById(`${config.galleryId}-url-${i}`).innerHTML = `<a href="${json.url}" target="_blank">${json.url}</a>`;[cite: 1]
+                const res = await fetch(WORKER_URL, { method: "POST", body: fd });
+                bar.style.width = "80%"; const json = await res.json(); bar.style.width = "100%";
+                localUploadedUrls.push(json.url);
+                document.getElementById(`${config.galleryId}-url-${i}`).innerHTML = `<a href="${json.url}" target="_blank">${json.url}</a>`;
             } catch (err) { alert("Lỗi khi upload ảnh thứ " + (i + 1)); }
         }
-        if (localUploadedUrls.length) {[cite: 1]
-            await navigator.clipboard.writeText(localUploadedUrls.join(","));[cite: 1]
-            alert(`Upload thành công ${localUploadedUrls.length} ảnh. Tất cả đường dẫn đã được copy tự động!`);[cite: 1]
+        if (localUploadedUrls.length) {
+            await navigator.clipboard.writeText(localUploadedUrls.join(","));
+            alert(`Tải lên thành công ${localUploadedUrls.length} ảnh. Link đã lưu vào clipboard!`);
         }
     };
 
-    document.getElementById(config.btnCopyId).onclick = async () => {[cite: 1]
-        if (!localUploadedUrls.length) return alert("Chưa có URL nào để copy!");[cite: 1]
-        await navigator.clipboard.writeText(localUploadedUrls.join(","));[cite: 1]
-        alert("Đã copy tất cả URL vào bộ nhớ tạm!");[cite: 1]
+    document.getElementById(config.btnCopyId).onclick = async () => {
+        if (!localUploadedUrls.length) return alert("Chưa có URL nào để copy!");
+        await navigator.clipboard.writeText(localUploadedUrls.join(","));
+        alert("Đã copy toàn bộ link ảnh thành công!");
     };
 }
 
