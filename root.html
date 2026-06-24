@@ -89,7 +89,7 @@
         </div>
     </div>
 
-<!-- Firebase SDK -->
+<!-- Firebase SDK v10 -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { 
@@ -98,14 +98,15 @@
   } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
   import { getFirestore, collection, addDoc, query, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  // Cấu hình Firebase của bạn
+  // Cấu hình Firebase ĐÃ ĐƯỢC CẬP NHẬT CHÍNH XÁC
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "khanggiaphuc.com", // Đã cập nhật tên miền riêng của bạn
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyCPF6eKvKX7gPFDLM0fSd0PjSQlPN_IHLA",
+    authDomain: "loginweb-e9b15.firebaseapp.com",
+    projectId: "loginweb-e9b15",
+    storageBucket: "loginweb-e9b15.firebasestorage.app",
+    messagingSenderId: "901539385947",
+    appId: "1:901539385947:web:43267ec391a442e5ce657e",
+    measurementId: "G-YR6Z4LE1SV"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -121,30 +122,30 @@
 
   let unsubscribePosts = null; // Biến hủy theo dõi realtime data khi logout
 
-  /* ==================== THEO DÕI TRẠNG THÁI ĐĂNG NHẬP (CORE) ==================== */
+  /* ==================== THEO DÕI TRẠNG THÁI ĐĂNG NHẬP ==================== */
   onAuthStateChanged(auth, (user) => {
       if (user) {
-          // BƯỚC 1: Nếu CÓ User -> Ẩn Login, Hiện Dashboard
+          // Nếu ĐÃ đăng nhập -> Hiện Dashboard, ẩn Login Form
           loginSection.classList.add('hidden');
           dashboardSection.classList.remove('hidden');
           userEmailSpan.innerText = user.email || "Tài khoản Google";
-          authStatus.innerText = ""; // Xóa thông báo lỗi cũ nếu có
+          authStatus.innerText = ""; 
           
-          // BƯỚC 2: Tải dữ liệu bài viết
+          // Tải dữ liệu bài viết từ Firestore
           loadPostsRealtime();
       } else {
-          // BƯỚC 3: Nếu KHÔNG CÓ User -> Hiện Login, Ẩn Dashboard
+          // Nếu CHƯA đăng nhập -> Hiện Login Form, ẩn Dashboard
           loginSection.classList.remove('hidden');
           dashboardSection.classList.add('hidden');
           
-          // Hủy lắng nghe dữ liệu để bảo mật & tránh rò rỉ bộ nhớ
+          // Hủy lắng nghe dữ liệu cũ để tránh lỗi bảo mật
           if (unsubscribePosts) { unsubscribePosts(); unsubscribePosts = null; }
       }
   });
 
   /* ==================== XỬ LÝ ĐĂNG NHẬP / ĐĂNG KÝ ==================== */
   
-  // Đăng nhập Email + Pass
+  // Đăng nhập bằng Email + Mật khẩu
   document.getElementById('btnLoginEmail').addEventListener('click', async () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
@@ -155,22 +156,22 @@
       }
   });
 
-  // Đăng ký Email + Pass mới
+  // Đăng ký tài khoản Email mới
   document.getElementById('btnSignUpEmail').addEventListener('click', async () => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       try {
           await createUserWithEmailAndPassword(auth, email, password);
-          alert("Tạo tài khoản admin thành công!");
+          alert("Tạo tài khoản thành công!");
       } catch (error) {
           showError("Lỗi đăng ký: " + error.message);
       }
   });
 
-  // Đăng nhập / Liên kết Google
+  // Đăng nhập / Liên kết với tài khoản Google
   document.getElementById('btnLoginGoogle').addEventListener('click', async () => {
       if (auth.currentUser) {
-          // Nếu đang đăng nhập bằng mật khẩu -> Tiến hành Liên kết
+          // Trường hợp đã đăng nhập bằng email -> Click để Liên kết Google vào
           try {
               await linkWithPopup(auth.currentUser, googleProvider);
               alert("Liên kết tài khoản Google thành công!");
@@ -178,7 +179,7 @@
               showError("Lỗi liên kết: " + error.message);
           }
       } else {
-          // Nếu chưa đăng nhập -> Đăng nhập thẳng bằng Google
+          // Trường hợp chưa đăng nhập -> Đăng nhập thẳng bằng tài khoản Google
           try {
               await signInWithPopup(auth, googleProvider);
           } catch (error) {
@@ -187,18 +188,18 @@
       }
   });
 
-  // Đăng xuất
+  // Đăng xuất khỏi hệ thống
   document.getElementById('btnLogout').addEventListener('click', () => {
       signOut(auth);
   });
 
   /* ==================== QUẢN LÝ NỘI DUNG (FIRESTORE) ==================== */
   
-  // Đăng bài mới
+  // Tạo bài viết mới gửi lên Firestore
   document.getElementById('btnPublish').addEventListener('click', async () => {
       const title = document.getElementById('postTitle').value;
       const content = document.getElementById('postContent').value;
-      if(!title || !content) return alert("Vui lòng nhập đủ tiêu đề và nội dung!");
+      if(!title || !content) return alert("Vui lòng nhập đủ thông tin bài viết!");
 
       try {
           await addDoc(collection(db, "posts"), {
@@ -206,6 +207,7 @@
               content: content,
               createdAt: new Date()
           });
+          // Xóa trắng form sau khi đăng bài thành công
           document.getElementById('postTitle').value = "";
           document.getElementById('postContent').value = "";
       } catch (error) {
@@ -213,10 +215,9 @@
       }
   });
 
-  // Tải danh sách bài viết thời gian thực
+  // Lấy danh sách dữ liệu thời gian thực
   function loadPostsRealtime() {
       const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-      // Gán sự kiện lắng nghe vào biến unsubscribePosts
       unsubscribePosts = onSnapshot(q, (snapshot) => {
           const postsList = document.getElementById('postsList');
           postsList.innerHTML = "";
@@ -231,7 +232,7 @@
       });
   }
 
-  // Hàm hỗ trợ hiển thị thông báo lỗi
+  // Hàm hiển thị dòng báo lỗi
   function showError(msg) {
       authStatus.innerText = msg;
       authStatus.style.color = "red";
