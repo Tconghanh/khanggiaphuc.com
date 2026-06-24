@@ -3,336 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KGPTelecom Data</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+    <title>Khang Gia Phúc - Hệ thống Quản trị</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        :root { --bg: #020617; --accent: #38bdf8; --glass: rgba(15, 23, 42, 0.75); --border: rgba(255, 255, 255, 0.08); }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #e2e8f0; margin: 0; overflow: hidden; }
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        .sidebar { width: 250px; background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(20px); border-right: 1px solid var(--border); height: 100vh; z-index: 10; }
-        .nav-item { margin: 8px 16px; padding: 12px 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; color: #94a3b8; transition: all 0.3s; cursor: pointer; border: 1px solid transparent; }
-        .nav-item:hover, .nav-item.active { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); border-color: rgba(56, 189, 248, 0.2); }
-        .nav-item.active { background: linear-gradient(135deg, rgba(2, 132, 199, 0.4) 0%, rgba(14, 165, 233, 0.1) 100%); color: white; border-color: var(--accent-blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1); }
-        .stat-card { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 24px; transition: all 0.3s ease; }
-        header { height: 70px; background: rgba(2, 6, 23, 0.5); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; }
-        .search-input { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); color: white; padding: 10px 15px 10px 40px; border-radius: 12px; font-size: 13px; width: 100%; outline: none; transition: all 0.3s; }
-        .search-input:focus { border-color: var(--accent-blue); background: rgba(0, 0, 0, 0.5); }
-        .file-scroll { max-height: calc(100vh - 420px); overflow-y: auto; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.2); border-radius: 10px; }
-        iframe { width: 100%; height: calc(100vh - 70px); border: none; background: white; }
+        :root {
+            --bg: #0f1117;
+            --card: #171923;
+            --card2: #1f2330;
+            --text-dark: #e8e8e8;
+            --muted: #9aa4b2;
+            --accent: #4da3ff;
+            --border-dark: #2d3445;
+            --success: #22c55e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Segoe UI, Roboto, sans-serif; }
+        body { background: #f4f5f7; min-height: 100vh; display: flex; }
+        
+        .hidden { display: none !important; }
+
+        /* ==================== 1. GIAO DIỆN ĐĂNG NHẬP ==================== */
+        .login-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .login-card { max-width: 400px; width: 100%; padding: 30px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .login-card h2 { text-align: center; margin-bottom: 20px; color: #23282d; }
+        
+        /* ==================== 2. GIAO DIỆN DASHBOARD ==================== */
+        .dashboard-wrapper { display: flex; width: 100%; height: 100vh; }
+        .sidebar { width: 240px; background: #23282d; color: #eee; padding-top: 20px; flex-shrink: 0; }
+        .sidebar h2 { text-align: center; font-size: 18px; margin-bottom: 20px; color: #fff; }
+        .sidebar a { display: block; padding: 12px 20px; color: #c3c4c7; text-decoration: none; border-left: 4px solid transparent; cursor: pointer; }
+        .sidebar a:hover, .sidebar a.active { background: #1d2327; color: #72aee6; border-left-color: #72aee6; }
+        
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .topbar { background: #fff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; flex-shrink: 0; }
+        .container { padding: 30px; flex: 1; overflow-y: auto; }
+        
+        /* Cấu trúc iFrame và Vùng Upload tối ưu theo upload.html */
+        .iframe-container { width: 100%; height: calc(100vh - 160px); border: none; background: #fff; border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+        iframe { width: 100%; height: 100%; border: none; background: white; }
+
+        /* Style đặc biệt cho module Upload Ảnh (Giao diện Dark của upload.html) */
+        .upload-section-dark { background: var(--bg); color: var(--text-dark); padding: 24px; border-radius: 18px; border: 1px solid var(--border-dark); margin-bottom: 20px; }
+        .dropzone { border: 2px dashed var(--accent); border-radius: 18px; padding: 40px; text-align: center; cursor: pointer; transition: .3s; background: var(--card); }
+        .dropzone.drag { background: #162033; }
+        .dropzone h2 { margin-bottom: 10px; font-size: 20px; color: #fff; }
+        .dropzone p { color: var(--muted); }
+        
+        .toolbar { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+        .item { background: var(--card2); border-radius: 14px; overflow: hidden; border: 1px solid var(--border-dark); }
+        .item img { width: 100%; height: 140px; object-fit: cover; display: block; }
+        .info { padding: 12px; }
+        .filename { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dark); }
+        
+        .progress { height: 8px; background: #2c3444; border-radius: 50px; overflow: hidden; margin-top: 10px; }
+        .progress-bar { height: 100%; width: 0%; background: var(--success); transition: .2s; }
+        .url { margin-top: 10px; font-size: 12px; word-break: break-all; }
+        .url a { color: #7db8ff; text-decoration: none; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 6px; background: #22304a; font-size: 12px; margin-top: 8px; color: #fff; }
+        .stats { text-align: center; margin-top: 15px; color: var(--muted); }
+
+        /* ==================== THÀNH PHẦN DÙNG CHUNG ==================== */
+        input[type="email"], input[type="password"] { width: 100%; padding: 10px; margin: 5px 0 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+        .btn-general { background: #2271b1; color: white; border: none; cursor: pointer; font-weight: bold; padding: 12px 20px; border-radius: 10px; }
+        .btn-general:hover { background: #135e96; }
+        .btn-upload-style { background: var(--accent); border: none; padding: 12px 20px; border-radius: 10px; color: white; cursor: pointer; font-weight: 600; }
+        .btn-upload-style:hover { opacity: .9; }
+        
+        button.google { background-color: #db4437; }
+        button.google:hover { background-color: #c53727; }
+        button.logout { background: #d63638; width: auto; padding: 8px 15px; margin: 0; border-radius: 4px; }
+        button.logout:hover { background: #b32424; }
+        .status { margin-top: 10px; font-weight: bold; text-align: center; font-size: 14px; }
     </style>
 </head>
-<body class="flex">
+<body>
 
-    <canvas id="bg-canvas"></canvas>
+    <div id="loginSection" class="login-wrapper">
+        <div class="login-card">
+            <h2>Hệ thống Quản trị</h2>
+            <input type="email" id="email" placeholder="Email đăng nhập">
+            <input type="password" id="password" placeholder="Mật khẩu">
+            <button id="btnLoginEmail" class="btn-general" style="width: 100%;">Đăng nhập bằng Email</button>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+            <button id="btnLoginGoogle" class="btn-general google" style="width: 100%;">Đăng nhập / Liên kết Google</button>
+            <div id="authStatus" class="status"></div>
+        </div>
+    </div>
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar flex flex-col py-8 text-white">
-        <div class="px-8 mb-10 flex items-center gap-3">
-            <div class="h-10 w-10 bg-sky-500 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.4)]">
-                <i class="fa-solid fa-microchip text-white text-xl"></i>
-            </div>
-            <div>
-                <h1 class="font-bold tracking-tighter text-lg leading-none italic">KGP <span class="text-sky-400 font-light italic">CORE</span></h1>
-                <p class="text-[8px] text-slate-500 font-bold uppercase tracking-[0.3em] mt-1">Hệ điều hành v4.5</p>
-            </div>
+    <div id="dashboardSection" class="dashboard-wrapper hidden">
+        <div class="sidebar">
+            <h2>KGP Admin</h2>
+            <a onclick="switchTab('tab-dang-bai')" id="menu-dang-bai" class="active">📝 Đăng bài viết mới</a>
+            <a onclick="switchTab('tab-ql-bai')" id="menu-ql-bai">📌 Quản lý bài viết</a>
+            <a onclick="switchTab('tab-dang-sp')" id="menu-dang-sp">📥 Đăng sản phẩm mới</a>
+            <a onclick="switchTab('tab-ql-sp')" id="menu-ql-sp">📦 Quản lý sản phẩm</a>
+            <a onclick="switchTab('tab-cai-dat')" id="menu-cai-dat">⚙️ Cài đặt chung</a>
         </div>
 
-        <nav class="flex-grow">
-            <div onclick="switchTab(this, 'BangTin', 'dashboard')" id="nav-BangTin" class="nav-item">
-                <i class="fa-solid fa-house-signal"></i> Bảng tin
+        <div class="main-content">
+            <div class="topbar">
+                <div>Xin chào, <span id="userEmail" style="font-weight:bold; color:#2271b1;">...</span></div>
+                <button id="btnLogout" class="logout">Đăng xuất</button>
             </div>
-            <div class="px-8 mt-8 mb-2 text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Cơ sở dữ liệu</div>
-            <div onclick="switchTab(this, 'DuAn', '809858153')" id="nav-DuAn" class="nav-item">
-                <i class="fa-solid fa-diagram-project"></i> Quản lý Dự án
-            </div>
-            <div onclick="switchTab(this, 'SanPham', '895747298')" id="nav-SanPham" class="nav-item">
-                <i class="fa-solid fa-boxes-stacked"></i> Quản lý Sản phẩm
-            </div>
-            <div onclick="switchTab(this, 'DuLieu', 'hosting')" id="nav-DuLieu" class="nav-item">
-                <i class="fa-solid fa-cloud-arrow-up"></i> Quản lý Dữ liệu
-            </div>
-        </nav>
 
-        <div class="mx-6 p-5 rounded-3xl bg-sky-500/5 border border-sky-500/10">
-            <p class="text-[9px] text-slate-500 font-bold mb-1 uppercase tracking-widest">Hỗ trợ</p>
-            <p class="text-[13px] font-black text-white">0844.900.099</p>
+            <div class="container">
+                
+                <div id="tab-dang-bai" class="tab-content">
+                    <div class="upload-section-dark">
+                        <h1 style="text-align: center; margin-bottom: 10px;">📸 Upload Ảnh Bài Viết</h1>
+                        <div class="stats" style="margin-bottom: 20px;">Tự động chuyển WebP • Resize tối đa 1600px • Copy URL tự động</div>
+                        
+                        <div id="dropzone" class="dropzone">
+                            <h2>Kéo thả ảnh vào đây</h2>
+                            <p>hoặc bấm để chọn nhiều ảnh</p>
+                        </div>
+                        <input id="fileInput" type="file" multiple accept="image/*" style="display: none;">
+                        
+                        <div id="stats" class="stats"></div>
+                        <div id="gallery" class="grid"></div>
+                        
+                        <div class="toolbar">
+                            <button class="btn-upload-style" id="btnUploadAll">Upload ảnh</button>
+                            <button class="btn-upload-style" id="btnCopyAllUrls">Copy tất cả URL</button>
+                        </div>
+                    </div>
+
+                    <div style="background: white; padding: 15px; border-radius: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScJWkjfa4gJaTSqq0Wep014vMJFXXXFi2oHEncqR1LdPqd78Q/viewform?embedded=true" style="height: 800px;"></iframe>
+                    </div>
+                </div>
+
+                <div id="tab-ql-bai" class="tab-content hidden">
+                    <h2>Quản lý bài viết (Google Sheets)</h2>
+                    <div class="iframe-container">
+                        <iframe src="https://docs.google.com/spreadsheets/d/1knLdhA1j69Qqfa6nMIe20vfufQnvGr4THpehnK0mHPk/edit?gid=1223294975#gid=1223294975"></iframe>
+                    </div>
+                </div>
+
+                <div id="tab-dang-sp" class="tab-content hidden">
+                    <div class="upload-section-dark">
+                        <h1 style="text-align: center; margin-bottom: 10px;">📸 Upload Ảnh Sản Phẩm</h1>
+                        <div class="stats" style="margin-bottom: 20px;">Tự động chuyển WebP • Resize tối đa 1600px • Copy URL tự động</div>
+                        
+                        <div id="dropzoneSp" class="dropzone">
+                            <h2>Kéo thả ảnh sản phẩm vào đây</h2>
+                            <p>hoặc bấm để chọn nhiều ảnh</p>
+                        </div>
+                        <input id="fileInputSp" type="file" multiple accept="image/*" style="display: none;">
+                        
+                        <div id="statsSp" class="stats"></div>
+                        <div id="gallerySp" class="grid"></div>
+                        
+                        <div class="toolbar">
+                            <button class="btn-upload-style" id="btnUploadAllSp">Upload ảnh</button>
+                            <button class="btn-upload-style" id="btnCopyAllUrlsSp">Copy tất cả URL</button>
+                        </div>
+                    </div>
+
+                    <div style="background: white; padding: 15px; border-radius: 18px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc_a0fwWoGEksBNXP5hjptWOwEDpvm1Ih0m7Ks-1d3pzNkmqg/viewform?embedded=true" style="height: 800px;"></iframe>
+                    </div>
+                </div>
+
+                <div id="tab-ql-sp" class="tab-content hidden">
+                    <h2>Quản lý sản phẩm (Google Sheets)</h2>
+                    <div class="iframe-container">
+                        <iframe src="https://docs.google.com/spreadsheets/d/1knLdhA1j69Qqfa6nMIe20vfufQnvGr4THpehnK0mHPk/edit?gid=2102361601"></iframe>
+                    </div>
+                </div>
+
+                <div id="tab-cai-dat" class="tab-content hidden">
+                    <h2>Cài đặt chung (Google Sheets)</h2>
+                    <div class="iframe-container">
+                        <iframe src="https://docs.google.com/spreadsheets/d/1knLdhA1j69Qqfa6nMIe20vfufQnvGr4THpehnK0mHPk/edit?gid=0#gid=0"></iframe>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </aside>
+    </div>
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-grow flex flex-col relative">
-        <header>
-            <div class="flex items-center gap-3">
-                <div class="h-2 w-2 bg-sky-400 rounded-full animate-pulse shadow-[0_0_10px_#38bdf8]"></div>
-                <span id="tab-label" class="text-[11px] font-bold text-slate-400 uppercase tracking-[0.3em]">Hệ thống đang trực tuyến</span>
-            </div>
-            <img src="https://raw.githubusercontent.com/Tconghanh/khanggiaphuc.com/main/data/logo.jpg" class="h-10 rounded shadow-lg border border-white/10">
-        </header>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, linkWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        <div id="view-port" class="flex-grow overflow-y-auto">
-            
-            <!-- DASHBOARD -->
-            <div id="dashboard-ui" class="p-10 max-w-7xl mx-auto hidden">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10 text-white">
-                    <div class="stat-card">
-                        <p class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-5">Số lượng dự án</p>
-                        <h3 id="stat-projects" class="text-6xl font-black tracking-tighter italic">...</h3>
-                        <p class="text-[11px] text-sky-500 font-bold mt-4 tracking-widest uppercase">Real-time Data</p>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCPF6eKvKX7gPFDLM0fSd0PjSQlPN_IHLA",
+    authDomain: "loginweb-e9b15.firebaseapp.com",
+    projectId: "loginweb-e9b15",
+    storageBucket: "loginweb-e9b15.firebasestorage.app",
+    messagingSenderId: "901539385947",
+    appId: "1:901539385947:web:43267ec391a442e5ce657e",
+    measurementId: "G-YR6Z4LE1SV"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const googleProvider = new GoogleAuthProvider();
+
+  const loginSection = document.getElementById('loginSection');
+  const dashboardSection = document.getElementById('dashboardSection');
+  const authStatus = document.getElementById('authStatus');
+  const userEmailSpan = document.getElementById('userEmail');
+
+  onAuthStateChanged(auth, (user) => {
+      if (user) {
+          loginSection.classList.add('hidden');
+          dashboardSection.classList.remove('hidden');
+          userEmailSpan.innerText = user.email || "Tài khoản Google";
+          authStatus.innerText = ""; 
+      } else {
+          loginSection.classList.remove('hidden');
+          dashboardSection.classList.add('hidden');
+      }
+  });
+
+  document.getElementById('btnLoginEmail').addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      try { await signInWithEmailAndPassword(auth, email, password); } catch (error) { authStatus.innerText = "Sai tài khoản hoặc mật khẩu!"; authStatus.style.color = "red"; }
+  });
+
+  document.getElementById('btnLoginGoogle').addEventListener('click', async () => {
+      if (auth.currentUser) {
+          try { await linkWithPopup(auth.currentUser, googleProvider); alert("Liên kết Google thành công!"); } catch (error) { authStatus.innerText = error.message; }
+      } else {
+          try { await signInWithPopup(auth, googleProvider); } catch (error) { authStatus.innerText = error.message; }
+      }
+  });
+
+  document.getElementById('btnLogout').addEventListener('click', () => { signOut(auth); });
+</script>
+
+<script>
+const WORKER_URL = "https://upload.tconghanh.workers.dev/";
+
+// Cấu hình khởi tạo cho nhóm Upload Bài Viết
+setupUploadModule({
+    dropzoneId: "dropzone", fileInputId: "fileInput", galleryId: "gallery", statsId: "stats",
+    btnUploadId: "btnUploadAll", btnCopyId: "btnCopyAllUrls"
+});
+
+// Cấu hình khởi tạo cho nhóm Upload Sản Phẩm
+setupUploadModule({
+    dropzoneId: "dropzoneSp", fileInputId: "fileInputSp", galleryId: "gallerySp", statsId: "statsSp",
+    btnUploadId: "btnUploadAllSp", btnCopyId: "btnCopyAllUrlsSp"
+});
+
+function setupUploadModule(config) {
+    let localFiles = [];
+    let localUploadedUrls = [];
+
+    const dz = document.getElementById(config.dropzoneId);
+    const fi = document.getElementById(config.fileInputId);
+    const gl = document.getElementById(config.galleryId);
+    const st = document.getElementById(config.statsId);
+
+    dz.onclick = () => fi.click();
+    fi.onchange = e => { localFiles = [...e.target.files]; render(); };
+
+    dz.addEventListener("dragover", e => { e.preventDefault(); dz.classList.add("drag"); });
+    dz.addEventListener("dragleave", () => { dz.classList.remove("drag"); });
+    dz.addEventListener("drop", e => {
+        e.preventDefault(); dz.classList.remove("drag");
+        localFiles = [...e.dataTransfer.files].filter(f => f.type.startsWith("image/"));
+        render();
+    });
+
+    function render() {
+        gl.innerHTML = ""; let total = 0;
+        localFiles.forEach((file, index) => {
+            total += file.size; const url = URL.createObjectURL(file);
+            gl.innerHTML += `
+                <div class="item" id="${config.galleryId}-item-${index}">
+                    <img src="${url}">
+                    <div class="info">
+                        <div class="filename">${file.name}</div>
+                        <div class="badge">${(file.size/1024/1024).toFixed(2)} MB</div>
+                        <div class="progress"><div class="progress-bar" id="${config.galleryId}-bar-${index}"></div></div>
+                        <div class="url" id="${config.galleryId}-url-${index}"></div>
                     </div>
-                    <div class="stat-card">
-                        <p class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-5">Danh mục sản phẩm</p>
-                        <h3 id="stat-products" class="text-6xl font-black tracking-tighter italic">...</h3>
-                        <p class="text-[11px] text-emerald-500 font-bold mt-4 tracking-widest uppercase">Active Items</p>
-                    </div>
-                    <div class="stat-card">
-                        <p class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-5">Bộ nhớ lưu trữ</p>
-                        <h3 id="stat-storage" class="text-6xl font-black tracking-tighter italic uppercase">...</h3>
-                        <p class="text-[11px] text-amber-500 font-bold mt-4 tracking-widest uppercase">Hosting /Data</p>
-                    </div>
-                </div>
-
-                <div class="stat-card !bg-transparent border-dashed border-slate-800">
-                    <h4 class="font-bold text-sky-400 mb-6 uppercase tracking-widest text-[11px]"><i class="fa-solid fa-terminal mr-2"></i> Hướng dẫn thêm dự án và sản phẩm</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-sm text-slate-400 leading-relaxed">
-                        <div class="space-y-4">
-                            <p><b class="text-white uppercase">Bước 1:</b> Nhập liệu tại tab <b>Dự án/Sản phẩm</b>.</p>
-                            <p><b class="text-white uppercase">Bước 2:</b> Đặt tên ảnh phải <b>trùng khớp hoàn toàn với ID</b> sản phẩm.</p>
-                        </div>
-                        <div class="space-y-4">
-                            <p><b class="text-white uppercase">Bước 3:</b> Tải ảnh lên tại tab <b>Dữ liệu</b>. Sử dụng <b>Mã xác thực</b> đã được cấp.</p>
-                            <p><b class="text-white uppercase">Bước 4:</b> Kiểm tra ảnh đã hiển thị tại tab <b>Dự án/Sản phẩm</b>.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- HOSTING -->
-            <div id="hosting-ui" class="hidden p-8 max-w-7xl mx-auto">
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
-                    <div class="stat-card lg:col-span-1">
-                        <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-3 block">Mã xác thực Admin</label>
-                        <input type="password" id="gh-token" class="w-full bg-black/40 border border-white/5 rounded-2xl p-3 text-sky-400 outline-none focus:border-sky-400 transition" placeholder="••••••••">
-                    </div>
-                    <div class="stat-card lg:col-span-3">
-                        <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-3 block">Tải tệp & Tối ưu AI</label>
-                        <div class="flex items-center gap-4">
-                            <input type="file" id="gh-file" onchange="updatePath(this)" class="text-xs text-slate-500 flex-grow file:bg-sky-500 file:border-0 file:rounded-xl file:text-white file:px-6 file:py-2 file:font-bold file:mr-4 cursor-pointer">
-                            <input type="hidden" id="gh-path" value="data/">
-                            <button onclick="uploadFile()" class="bg-sky-500 hover:bg-sky-400 text-white px-10 py-3 rounded-2xl text-[10px] font-black transition-all shadow-lg shadow-sky-900/20 uppercase tracking-widest">Tải lên</button>
-                        </div>
-                        <div id="upload-status" class="hidden mt-3 text-[10px] font-bold uppercase tracking-widest"></div>
-                    </div>
-                </div>
-
-                <div class="mb-4 relative">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-slate-500"></i>
-                    <input type="text" id="file-search" oninput="filterFiles(this.value)" class="search-input" placeholder="Tìm kiếm tệp tin nhanh...">
-                </div>
-
-                <div class="stat-card !p-0 overflow-hidden border-white/5">
-                    <table class="w-full text-left">
-                        <thead class="bg-white/5 text-[9px] text-slate-500 uppercase tracking-widest sticky top-0">
-                            <tr>
-                                <th class="p-5 font-bold cursor-pointer" onclick="sortTable('name')">Tên tệp tin</th>
-                                <th class="p-5 font-bold cursor-pointer" onclick="sortTable('size')">Dung lượng</th>
-                                <th class="p-5 font-bold">Loại</th>
-                                <th class="p-5 font-bold text-right">Thao tác</th>
-                            </tr>
-                        </thead>
-                    </table>
-                    <div class="file-scroll">
-                        <table class="w-full text-left">
-                            <tbody id="file-list" class="text-sm"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- IFRAME -->
-            <div id="iframe-container" class="hidden h-full">
-                <iframe id="main-frame" src=""></iframe>
-            </div>
-
-        </div>
-    </main>
-
-    <script>
-        // --- 1. CANVAS NỀN ---
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let p = [];
-        function init(){ 
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight; 
-            p = []; for(let i=0; i<60; i++) p.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3});
-        }
-        function draw(){
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = 'rgba(56,189,248,0.2)'; ctx.strokeStyle = 'rgba(56,189,248,0.03)';
-            p.forEach((i, idx) => {
-                i.x += i.vx; i.y += i.vy;
-                if(i.x<0 || i.x>canvas.width) i.vx*=-1; if(i.y<0 || i.y>canvas.height) i.vy*=-1;
-                ctx.beginPath(); ctx.arc(i.x, i.y, 1, 0, Math.PI*2); ctx.fill();
-                for(let j=idx+1; j<p.length; j++){
-                    let d = Math.hypot(i.x-p[j].x, i.y-p[j].y);
-                    if(d<150){ ctx.beginPath(); ctx.moveTo(i.x, i.y); ctx.lineTo(p[j].x, p[j].y); ctx.stroke(); }
-                }
-            });
-            requestAnimationFrame(draw);
-        }
-        init(); draw(); window.onresize = init;
-
-        // --- 2. LOGIC DASHBOARD ---
-        const repo = "Tconghanh/khanggiaphuc.com";
-        const sheetId = "1knLdhA1j69Qqfa6nMIe20vfufQnvGr4THpehnK0mHPk";
-        let cachedFiles = [];
-        let currentSort = { key: '', asc: true };
-
-        async function fetchStats() {
-            try {
-                // SỬ DỤNG QUERY SELECT ĐỂ LỌC DÒNG RỖNG TỪ MÁY CHỦ GOOGLE
-                const query = encodeURIComponent("SELECT A WHERE A IS NOT NULL");
-                const [rProj, rProd, rGH] = await Promise.all([
-                    fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=809858153&tq=${query}`),
-                    fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=895747298&tq=${query}`),
-                    fetch(`https://api.github.com/repos/${repo}/contents/data?t=${Date.now()}`)
-                ]);
-
-                // Xử lý đếm Dự án
-                const tProj = await rProj.text();
-                const linesProj = tProj.split('\n').filter(l => l.trim() !== "" && l.split(',')[0].replace(/"/g,'').trim() !== "");
-                document.getElementById('stat-projects').innerText = Math.max(0, linesProj.length - 1);
-
-                // Xử lý đếm Sản phẩm
-                const tProd = await rProd.text();
-                const linesProd = tProd.split('\n').filter(l => l.trim() !== "" && l.split(',')[0].replace(/"/g,'').trim() !== "");
-                document.getElementById('stat-products').innerText = Math.max(0, linesProd.length - 1);
-
-                // Tính dung lượng
-                const files = await rGH.json();
-                const bytes = files.reduce((s, f) => s + (f.size || 0), 0);
-                document.getElementById('stat-storage').innerText = (bytes / 1024 / 1024).toFixed(1) + " MB";
-            } catch (e) { console.error("Stats Error:", e); }
-        }
-
-        function switchTab(el, hash, gid) {
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            if(el) el.classList.add('active');
-            else document.getElementById(`nav-${hash}`).classList.add('active');
-
-            window.location.hash = hash;
-            document.getElementById('dashboard-ui').classList.add('hidden');
-            document.getElementById('hosting-ui').classList.add('hidden');
-            document.getElementById('iframe-container').classList.add('hidden');
-
-            if(hash === 'BangTin') {
-                document.getElementById('dashboard-ui').classList.remove('hidden');
-                fetchStats();
-            } else if(hash === 'DuLieu') {
-                document.getElementById('hosting-ui').classList.remove('hidden');
-                fetchFiles();
-            } else {
-                document.getElementById('iframe-container').classList.remove('hidden');
-                document.getElementById('main-frame').src = `https://docs.google.com/spreadsheets/d/${sheetId}/edit?rm=minimal&gid=${gid}`;
-            }
-        }
-
-        window.addEventListener('load', () => {
-            const h = window.location.hash.replace('#','');
-            if(h==='DuAn') switchTab(null,'DuAn','809858153');
-            else if(h==='SanPham') switchTab(null,'SanPham','895747298');
-            else if(h==='DuLieu') switchTab(null,'DuLieu','hosting');
-            else switchTab(null,'BangTin','dashboard');
+                </div>`;
         });
+        st.innerHTML = `${localFiles.length} ảnh • ${(total/1024/1024).toFixed(2)} MB`;
+    }
 
-        async function fetchFiles() {
-            const list = document.getElementById('file-list');
-            list.innerHTML = '<tr><td colspan="4" class="p-10 text-center text-slate-500 animate-pulse text-[10px] uppercase font-bold">Scanning Cloud...</td></tr>';
+    async function convertToWebP(file) {
+        return new Promise(resolve => {
+            const img = new Image();
+            img.onload = () => {
+                let w = img.width, h = img.height; const max = 1600;
+                if (w > h) { if (w > max) { h *= max / w; w = max; } } 
+                else { if (h > max) { w *= max / h; h = max; } }
+                const canvas = document.createElement("canvas"); canvas.width = w; canvas.height = h;
+                const ctx = canvas.getContext("2d"); ctx.drawImage(img, 0, 0, w, h);
+                canvas.toBlob(blob => resolve(blob), "image/webp", 0.82);
+            };
+            img.src = URL.createObjectURL(file);
+        });
+    }
+
+    document.getElementById(config.btnUploadId).onclick = async () => {
+        localUploadedUrls = [];
+        for (let i = 0; i < localFiles.length; i++) {
+            const bar = document.getElementById(`${config.galleryId}-bar-${i}`);
+            bar.style.width = "10%";
+            const webp = await convertToWebP(localFiles[i]);
+            bar.style.width = "40%";
+            const fd = new FormData();
+            const originalName = localFiles[i].name.substring(0, localFiles[i].name.lastIndexOf('.')) || localFiles[i].name;
+            fd.append("file", webp, `${originalName}.webp`);
+
             try {
-                const res = await fetch(`https://api.github.com/repos/${repo}/contents/data?t=${Date.now()}`);
-                const data = await res.json();
-                cachedFiles = data.map(f => ({ name: f.name, size: f.size, type: f.name.split('.').pop().toLowerCase(), path: f.path, sha: f.sha }));
-                renderTable(cachedFiles);
-            } catch (e) { list.innerHTML = 'Error.'; }
+                const res = await fetch(WORKER_URL, { method: "POST", body: fd });
+                bar.style.width = "80%"; const json = await res.json(); bar.style.width = "100%";
+                localUploadedUrls.push(json.url);
+                document.getElementById(`${config.galleryId}-url-${i}`).innerHTML = `<a href="${json.url}" target="_blank">${json.url}</a>`;
+            } catch (err) { alert("Lỗi khi upload ảnh thứ " + (i + 1)); }
         }
-
-        function renderTable(data) {
-            const list = document.getElementById('file-list');
-            list.innerHTML = data.map(f => `
-                <tr class="hover:bg-white/5 transition border-b border-white/5">
-                    <td class="p-5 font-bold text-slate-300 w-1/3">${f.name}</td>
-                    <td class="p-5 text-slate-500 font-mono text-[11px]">${(f.size/1024).toFixed(1)} KB</td>
-                    <td class="p-5"><span class="bg-sky-500/10 text-sky-400 text-[9px] font-black px-2 py-1 rounded uppercase">${f.type}</span></td>
-                    <td class="p-5 text-right">
-                        <button onclick="copyLink('${f.path}')" class="text-sky-500 mr-5 hover:text-white transition font-bold text-[9px]">URL</button>
-                        <button onclick="renameFile('${f.path}', '${f.sha}')" class="text-amber-500 mr-5 hover:text-white transition font-bold text-[9px]">SỬA</button>
-                        <button onclick="deleteFile('${f.path}', '${f.sha}')" class="text-rose-500 hover:text-white transition font-bold text-[9px]">XÓA</button>
-                    </td>
-                </tr>
-            `).join('');
+        if (localUploadedUrls.length) {
+            await navigator.clipboard.writeText(localUploadedUrls.join(","));
+            alert(`Upload thành công ${localUploadedUrls.length} ảnh. Tất cả đường dẫn đã được copy tự động!`);
         }
+    };
 
-        function filterFiles(v) { renderTable(cachedFiles.filter(f => f.name.toLowerCase().includes(v.toLowerCase()))); }
-        function copyLink(p) { navigator.clipboard.writeText(`https://raw.githubusercontent.com/${repo}/main/${p}`); alert("Đã copy URL!"); }
+    document.getElementById(config.btnCopyId).onclick = async () => {
+        if (!localUploadedUrls.length) return alert("Chưa có URL nào để copy!");
+        await navigator.clipboard.writeText(localUploadedUrls.join(","));
+        alert("Đã copy tất cả URL vào bộ nhớ tạm!");
+    };
+}
 
-        async function uploadFile() {
-            const t = document.getElementById('gh-token').value;
-            const fI = document.getElementById('gh-file');
-            const st = document.getElementById('upload-status');
-            if(!t || !fI.files[0]) return alert("Nhập mã xác thực!");
-            let file = fI.files[0];
-            st.classList.remove('hidden'); st.className="mt-3 text-sky-400 animate-pulse text-[10px]"; st.innerText=">> PROCESSING...";
-            try {
-                if (file.type.startsWith('image/')) file = await imageCompression(file, { maxSizeMB: 0.8, maxWidthOrHeight: 2000, useWebWorker: true });
-                const r = new FileReader(); r.readAsDataURL(file);
-                r.onloadend = async () => {
-                    const content = r.result.split(',')[1];
-                    let sha = "";
-                    const ck = await fetch(`https://api.github.com/repos/${repo}/contents/data/${file.name}`, { headers: {'Authorization': `token ${t}`} });
-                    if(ck.ok) sha = (await ck.json()).sha;
-                    const res = await fetch(`https://api.github.com/repos/${repo}/contents/data/${file.name}`, {
-                        method: 'PUT', headers: {'Authorization': `token ${t}`, 'Content-Type': 'application/json'},
-                        body: JSON.stringify({ message: `CMS Update`, content, sha })
-                    });
-                    if(res.ok) { st.className="mt-3 text-emerald-500 font-bold text-[10px]"; st.innerText=">> SUCCESS"; fetchFiles(); fetchStats(); }
-                    else alert("Error!");
-                };
-            } catch (e) { alert("Lỗi!"); }
-        }
-
-        function sortTable(k) {
-            if (currentSort.key === k) currentSort.asc = !currentSort.asc; else { currentSort.key = k; currentSort.asc = true; }
-            cachedFiles.sort((a,b) => currentSort.asc ? (a[k] > b[k] ? 1 : -1) : (a[k] < b[k] ? 1 : -1));
-            renderTable(cachedFiles);
-        }
-
-        async function deleteFile(p, sha) {
-            const t = document.getElementById('gh-token').value || prompt("Mã Admin:");
-            if(!t || !confirm("Xóa?")) return;
-            const res = await fetch(`https://api.github.com/repos/${repo}/contents/${p}`, {
-                method: 'DELETE', headers: {'Authorization': `token ${t}`, 'Content-Type': 'application/json'},
-                body: JSON.stringify({ message: `CMS Delete`, sha })
-            });
-            if(res.ok) { fetchFiles(); fetchStats(); }
-        }
-
-        async function renameFile(oldP, sha) {
-            const t = document.getElementById('gh-token').value || prompt("Mã Admin:");
-            const nN = prompt("Tên mới:");
-            if(!t || !nN) return;
-            const g = await fetch(`https://api.github.com/repos/${repo}/contents/${oldP}`, { headers: {'Authorization': `token ${t}`} });
-            const d = await g.json();
-            const c = await fetch(`https://api.github.com/repos/${repo}/contents/data/${nN}`, {
-                method: 'PUT', headers: {'Authorization': `token ${t}`, 'Content-Type': 'application/json'},
-                body: JSON.stringify({ message: `Rename`, content: d.content })
-            });
-            if(c.ok) { await fetch(`https://api.github.com/repos/${repo}/contents/${oldP}`, { method: 'DELETE', headers: {'Authorization': `token ${t}`, 'Content-Type': 'application/json'}, body: JSON.stringify({ message: `Clean`, sha }) }); fetchFiles(); }
-        }
-        function updatePath(i) { if(i.files[0]) document.getElementById('gh-path').value = "data/" + i.files[0].name; }
-    </script>
+// Hàm switchTab điều hướng
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    document.querySelectorAll('.sidebar a').forEach(i => i.classList.remove('active'));
+    document.getElementById(tabId).classList.remove('hidden');
+    document.getElementById(tabId.replace('tab-', 'menu-')).classList.add('active');
+}
+</script>
 </body>
 </html>
