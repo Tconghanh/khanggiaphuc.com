@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>KGP Telecom - Giải Pháp Viễn Thông & Công Nghệ Hàng Đầu</title>
+    <meta name="description" content="KGP Telecom chuyên cung cấp giải pháp viễn thông, camera giám sát, hệ thống mạng và điện năng lượng mặt trời uy tín. Công nghệ trong tầm tay bạn.">
+    <meta name="keywords" content="KGP Telecom, viễn thông, camera, thiết bị mạng, điện mặt trời, Khang Gia Phúc">
+    <link rel="canonical" href="https://khanggiaphuc.com/">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="KGP Telecom - Công Nghệ Trong Tầm Tay">
+    <meta property="og:description" content="Giải pháp viễn thông, thiết bị an ninh và năng lượng sạch chuyên nghiệp.">
+    <meta property="og:image" content="https://khanggiaphuc.com/data/logo.jpg">
+    <meta property="og:url" content="https://khanggiaphuc.com/">
+
+    <link rel="preconnect" href="https://docs.google.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --light-text: #666;
+            --accent-color: #e4a11b;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { color: var(--text-color); background-color: #fff; line-height: 1.6; padding-bottom: 60px; }
+
+        /* Header & Navigation */
+        header { background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 10px 20px; }
+        .logo { font-weight: 700; font-size: 24px; color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .logo img { height: 40px; }
+        
+        nav ul { display: flex; list-style: none; gap: 20px; }
+        nav a { text-decoration: none; color: var(--text-color); font-weight: 500; transition: var(--transition); font-size: 15px; }
+        nav a:hover, nav a.active { color: var(--primary-color); }
+
+        .menu-toggle { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-color); }
+
+        /* Sections */
+        section { padding: 60px 20px; max-width: 1200px; margin: 0 auto; scroll-margin-top: 70px; }
+        .section-title { text-align: center; margin-bottom: 40px; position: relative; font-size: 28px; color: var(--primary-color); }
+        .section-title::after { content: ''; display: block; width: 50px; height: 3px; background: var(--accent-color); margin: 10px auto 0; border-radius: 2px; }
+
+        /* Banner Hero */
+        #home { padding: 0; max-width: 100%; position: relative; background: #051937; height: 70vh; min-height: 400px; display: flex; align-items: center; overflow: hidden; }
+        .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; padding: 0 20px; text-align: center; color: #fff; }
+        .hero-content h1 { font-size: 42px; margin-bottom: 20px; font-weight: 700; line-height: 1.2; }
+        .hero-content p { font-size: 18px; margin-bottom: 30px; opacity: 0.9; }
+        .btn { display: inline-block; padding: 12px 30px; background: var(--accent-color); color: #fff; text-decoration: none; border-radius: 30px; font-weight: 600; transition: var(--transition); border: none; cursor: pointer; }
+        .btn:hover { background: #cb8d10; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+        /* Khối ngành nghề dịch vụ */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .service-card { background: var(--secondary-color); padding: 30px 20px; border-radius: var(--border-radius); text-align: center; transition: var(--transition); border: 1px solid #eee; }
+        .service-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); background: #fff; border-color: var(--primary-color); }
+        .service-icon { font-size: 40px; margin-bottom: 15px; color: var(--primary-color); }
+        .service-card h3 { margin-bottom: 12px; font-size: 18px; }
+        .service-card p { color: var(--light-text); font-size: 14px; }
+
+        /* Bộ lọc sản phẩm & Dự án */
+        .filter-container { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+        .filter-btn { padding: 8px 18px; background: #f0f0f0; border: none; border-radius: 20px; cursor: pointer; transition: var(--transition); font-weight: 500; font-size: 14px; }
+        .filter-btn.active, .filter-btn:hover { background: var(--primary-color); color: #fff; }
+
+        /* Grid hiển thị */
+        .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        
+        /* Card Sản phẩm */
+        .product-card { border: 1px solid #eee; border-radius: var(--border-radius); overflow: hidden; transition: var(--transition); display: flex; flex-direction: column; background: #fff; position: relative; }
+        .product-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+        .product-img-wrapper { position: relative; width: 100%; padding-top: 100%; background: #f9f9f9; overflow: hidden; cursor: pointer; }
+        .product-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; padding: 10px; transition: transform 0.5s ease; }
+        .product-card:hover .product-img { transform: scale(1.05); }
+        .product-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .product-brand { font-size: 12px; color: var(--light-text); text-transform: uppercase; margin-bottom: 5px; font-weight: 600; letter-spacing: 0.5px; }
+        .product-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; line-height: 1.4; height: 42px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; cursor: pointer; color: #111; }
+        .product-title:hover { color: var(--primary-color); }
+        .product-price { font-size: 16px; color: #cc0000; font-weight: 700; margin-top: auto; margin-bottom: 12px; }
+        
+        /* Card Dự án */
+        .project-card { border: 1px solid #eee; border-radius: var(--border-radius); overflow: hidden; transition: var(--transition); cursor: pointer; background: #fff; }
+        .project-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+        .project-img { width: 100%; height: 200px; object-fit: cover; }
+        .project-info { padding: 20px; }
+        .project-title { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+        .project-desc { color: var(--light-text); font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Liên hệ & Bản đồ */
+        .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .contact-info h3 { margin-bottom: 20px; color: var(--primary-color); }
+        .contact-item { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start; }
+        .contact-icon { font-size: 20px; color: var(--accent-color); margin-top: 3px; }
+        .contact-item p { margin: 0; }
+        .map-container { border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow); height: 350px; }
+        .map-container iframe { width: 100%; height: 100%; border: none; }
+
+        /* Footer */
+        footer { background: #111; color: #aaa; padding: 40px 20px; text-align: center; font-size: 14px; border-top: 4px solid var(--primary-color); }
+        footer p { max-width: 600px; margin: 0 auto 15px; }
+        footer .footer-logo { color: #fff; font-weight: 700; font-size: 20px; margin-bottom: 15px; display: block; }
+
+        /* Thanh điều hướng nhanh dưới Mobile (Zalo, Call) */
+        .quick-contact { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: #fff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: none; grid-template-columns: 1fr 1fr; z-index: 999; }
+        .quick-btn { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: #fff; font-weight: 600; font-size: 15px; }
+        .quick-zalo { background: #0068ff; }
+        .quick-call { background: #d9381e; }
+
+        /* Modals (Chi tiết sản phẩm / dự án) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: #fff; width: 100%; max-width: 800px; max-height: 90vh; border-radius: var(--border-radius); overflow-y: auto; position: relative; animation: fadeIn 0.3s ease; display: flex; flex-direction: column; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #aaa; transition: var(--transition); z-index: 10; }
+        .close-modal:hover { color: #333; }
+        
+        /* Chi tiết cấu trúc trong Modal sản phẩm */
+        .modal-body { padding: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .modal-gallery { display: flex; flex-direction: column; gap: 10px; }
+        .modal-main-img { width: 100%; height: 300px; object-fit: contain; background: #f9f9f9; border-radius: var(--border-radius); border: 1px solid #eee; }
+        .modal-thumbs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
+        .thumb-img { width: 60px; height: 60px; object-fit: contain; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: #fff; transition: var(--transition); flex-shrink: 0; }
+        .thumb-img.active, .thumb-img:hover { border-color: var(--primary-color); box-shadow: 0 0 4px rgba(0,86,179,0.3); }
+        .modal-details { display: flex; flex-direction: column; }
+        .modal-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; color: #111; line-height: 1.3; }
+        .modal-meta { font-size: 13px; color: var(--light-text); margin-bottom: 15px; }
+        .modal-price { font-size: 22px; color: #cc0000; font-weight: 700; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        .modal-desc-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+        .modal-desc { font-size: 14px; color: #444; line-height: 1.6; white-space: pre-line; margin-bottom: 25px; }
+        
+        /* Cấu trúc tích xanh cho mô tả sản phẩm */
+        .desc-tick-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+        .desc-tick-icon { color: #28a745; font-weight: bold; flex-shrink: 0; }
+
+        /* Modal Dự án */
+        .proj-modal-body { padding: 30px; }
+        .proj-modal-img { width: 100%; max-height: 400px; object-fit: cover; border-radius: var(--border-radius); margin-bottom: 20px; }
+        .proj-modal-title { font-size: 22px; font-weight: 700; margin-bottom: 15px; color: var(--primary-color); }
+        .proj-modal-desc { font-size: 15px; line-height: 1.7; color: #444; white-space: pre-line; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { padding-bottom: 55px; }
+            nav { display: none; width: 100%; position: absolute; top: 100%; left: 0; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 15px 20px; }
+            nav.active { display: block; }
+            nav ul { flex-direction: column; gap: 15px; }
+            .menu-toggle { display: block; }
+            .nav-container { position: relative; }
+            
+            #home { height: 50vh; }
+            .hero-content h1 { font-size: 28px; }
+            .hero-content p { font-size: 15px; }
+            
+            section { padding: 40px 15px; }
+            .section-title { font-size: 24px; }
+            
+            .contact-wrapper { grid-template-columns: 1fr; gap: 30px; }
+            .quick-contact { display: grid; }
+            
+            .modal-body { grid-template-columns: 1fr; gap: 20px; padding: 20px; }
+            .modal-main-img { height: 220px; }
+            .proj-modal-body { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <img src="https://khanggiaphuc.com/data/logo.jpg" alt="KGP Telecom Logo" onerror="this.style.display='none'">
+                <span>KGP Telecom</span>
+            </a>
+            <button class="menu-toggle" aria-label="Toggle Menu" onclick="toggleMenu()">☰</button>
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="#home" class="nav-link active">Trang Chủ</a></li>
+                    <li><a href="#services" class="nav-link">Dịch Vụ</a></li>
+                    <li><a href="#products" class="nav-link">Sản Phẩm</a></li>
+                    <li><a href="#projects" class="nav-link">Dự Án</a></li>
+                    <li><a href="#contact" class="nav-link">Liên Hệ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home">
+        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" alt="KGP Technology Background" class="hero-bg">
+        <div class="hero-content">
+            <h1>Khang Gia Phúc Telecom<br>Giải Pháp Công Nghệ Toàn Diện</h1>
+            <p>Chuyên nghiệp trong hạ tầng viễn thông, hệ thống an ninh giám sát thông minh, giải pháp mạng doanh nghiệp và điện năng lượng mặt trời tối ưu.</p>
+            <a href="#contact" class="btn">Liên Hệ Tư Vấn Ngay</a>
+        </div>
+    </section>
+
+    <section id="services">
+        <h2 class="section-title">Khối Ngành Nghề & Dịch Vụ</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">📹</div>
+                <h3>Hệ Thống Camera</h3>
+                <p>Giải pháp giám sát an ninh thông minh tích hợp AI, bảo vệ toàn diện cho gia đình, nhà xưởng và doanh nghiệp.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🌐</div>
+                <h3>Hạ Tầng Mạng LAN / Wifi</h3>
+                <p>Thiết kế, thi công giải pháp mạng nội bộ tốc độ cao, độ ổn định tuyệt đối và bảo mật tối ưu cho tổ chức.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">☀️</div>
+                <h3>Điện Năng Lượng Mặt Trời</h3>
+                <p>Tư vấn, lắp đặt hệ thống điện mặt trời áp mái lưu trữ và hòa lưới, tiết kiệm chi phí, xu hướng năng lượng xanh.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📞</div>
+                <h3>Viễn Thông & Tổng Đài</h3>
+                <p>Cung cấp thiết bị và hạ tầng viễn thông, giải pháp tổng đài nội bộ tối ưu hóa quy trình tương tác khách hàng.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="products">
+        <h2 class="section-title">Sản Phẩm Phân Phối</h2>
+        <div class="filter-container" id="product-filters">
+            <button class="filter-btn active" onclick="filterProducts('Nổi bật')">Nổi bật</button>
+        </div>
+        <div class="data-grid" id="product-container">
+            </div>
+    </section>
+
+    <section id="projects">
+        <h2 class="section-title">Dự Án Tiêu Biểu</h2>
+        <div class="filter-container" id="project-filters">
+            <button class="filter-btn active" onclick="filterProjects('Tất cả')">Tất cả</button>
+        </div>
+        <div class="data-grid" id="project-container">
+            </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="section-title">Liên Hệ Với Chúng Tôi</h2>
+        <div class="contact-wrapper">
+            <div class="contact-info">
+                <h3>CÔNG TY TNHH KHANG GIA PHÚC</h3>
+                <p style="margin-bottom: 25px; color: var(--light-text);">Hãy kết nối với đội ngũ chuyên gia của chúng tôi để được tư vấn khảo sát miễn phí và nhận báo giá tốt nhất cho công trình của bạn.</p>
+                
+                <div class="contact-item">
+                    <span class="contact-icon">📍</span>
+                    <p><strong>Địa chỉ:</strong> Toà nhà Gic, Số 90-92 Đinh Tiên Hoàng, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh, Việt Nam</p>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">📞</span>
+                    <p><strong>Điện thoại:</strong> <a href="tel:0934140049" style="color: inherit; text-decoration: none;">0934.140.049</a></p>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">✉️</span>
+                    <p><strong>Email:</strong> khanggiaphuc.co@gmail.com</p>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-icon">⏰</span>
+                    <p><strong>Giờ làm việc:</strong> Thứ 2 - Thứ 7: 8:00 - 17:30</p>
+                </div>
+            </div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.2364024346516!2d106.69469507570327!3d10.793198058882895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528cb61eddf4b%3A0x6bda1997dcf56230!2zOTAgxJDGlG5oIFRpw6puIEhvw6BuZywgxJDhIEthbywgUXXhuq1uIDEsIEjhu5MgQ2jDrSBNaW5oLCBWaWV0bmFt!5e0!3m2!1sen!2s!4v1711111111111!3m2!1sen!2s" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <span class="footer-logo">KGP Telecom</span>
+        <p>Chuyên cung cấp vật tư viễn thông, thiết bị an ninh mạng, giải pháp camera giám sát, thi công hạ tầng điện nhẹ M&E, lắp đặt hệ thống điện năng lượng mặt trời áp mái uy tín chất lượng.</p>
+        <p>© 2026 Khang Gia Phúc Co., Ltd. All Rights Reserved.</p>
+    </footer>
+
+    <div class="quick-contact">
+        <a href="https://zalo.me/0934140049" target="_blank" class="quick-btn quick-zalo">💬 Chat Zalo</a>
+        <a href="tel:0934140049" class="quick-btn quick-call">📞 Gọi Ngay</a>
+    </div>
+
+    <div id="productModal" class="modal" onclick="closeModal(event, 'productModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="document.getElementById('productModal').style.display='none'">&times;</span>
+            <div class="modal-body">
+                <div class="modal-gallery">
+                    <img id="modal-main-img" src="" alt="Main Product Image" class="modal-main-img">
+                    <div id="modal-thumbs" class="modal-thumbs"></div>
+                </div>
+                <div class="modal-details">
+                    <h2 id="modal-title" class="modal-title"></h2>
+                    <div id="modal-meta" class="modal-meta"></div>
+                    <div id="modal-price" class="modal-price"></div>
+                    <h3 class="modal-desc-title">Thông Số & Đặc Điểm:</h3>
+                    <div id="modal-desc" class="modal-desc"></div>
+                    <a id="modal-order-btn" href="" target="_blank" class="btn" style="text-align: center; margin-top: auto;">Liên Hệ Tư Vấn Qua Zalo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="projModal" class="modal" onclick="closeModal(event, 'projModal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="document.getElementById('projModal').style.display='none'">&times;</span>
+            <div class="proj-modal-body">
+                <img id="pj-main-preview" src="" alt="Project Preview" class="proj-modal-img">
+                <h2 id="pj-title" class="proj-modal-title"></h2>
+                <div id="pj-desc" class="proj-modal-desc"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cấu hình Google Sheet ID chung
+        const sheetId = '1knLdhA1j69Qqfa6nMIe20vfufQnvGr4THpehnK0mHPk';
+        
+        // Biến toàn cục lưu trữ dữ liệu
+        let allProducts = [];
+        let allProjects = [];
+        let activeProductFilter = 'Nổi bật';
+        let activeProjectFilter = 'Tất cả';
+
+        // Xử lý bật tắt Menu trên Mobile
+        function toggleMenu() {
+            document.getElementById('main-nav').classList.toggle('active');
+        }
+
+        // Tự động đóng menu mobile khi chọn link điều hướng
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('main-nav').classList.remove('active');
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+
+        // Theo dõi cuộn trang để đánh dấu menu đang active tương ứng
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            if(current) {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.add('active');
+                    }
+                });
+            }
+        });
+
+        // Đóng modal khi click ra vùng ngoài
+        function closeModal(e, modalId) {
+            if(e.target === document.getElementById(modalId)) {
+                document.getElementById(modalId).style.display = 'none';
+            }
+        }
+
+        // KHỞI TẠO TẢI DỮ LIỆU KHI TRANG TẢI XONG
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProducts();
+            fetchProjects();
+        });
+
+        // 1. TẢI VÀ XỬ LÝ DỮ LIỆU SẢN PHẨM (TỪ TAB 'SanPham')
+        function fetchProducts() {
+            // Thay đổi cấu trúc gọi dữ liệu từ tab San_Pham cũ sang tab SanPham mới
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=SanPham`;
+            
+            fetch(url)
+                .then(res => res.text())
+                .then(txt => {
+                    const data = JSON.parse(txt.substr(47).slice(0, -2));
+                    const rows = data.table.rows;
+                    
+                    allProducts = rows.map(row => {
+                        const cells = row.c;
+                        
+                        // Xử lý chuỗi ảnh cách nhau bằng dấu phẩy ở cột C (index 2)
+                        let imgStr = cells[2] && cells[2].v ? String(cells[2].v).trim() : '';
+                        let images = imgStr ? imgStr.split(',').map(s => s.trim()).filter(s => s) : [];
+                        
+                        // Xử lý chuỗi danh mục cách nhau bằng dấu phẩy ở cột D (index 3)
+                        let catStr = cells[3] && cells[3].v ? String(cells[3].v).trim() : 'Khác';
+                        let categories = catStr.split(',').map(s => s.trim()).filter(s => s);
+
+                        // Xử lý chuỗi mô tả cách nhau bằng dấu phẩy ở cột G (index 6)
+                        let descStr = cells[6] && cells[6].v ? String(cells[6].v).trim() : '';
+                        let descItems = descStr ? descStr.split(',').map(s => s.trim()).filter(s => s) : [];
+
+                        return {
+                            id: cells[0] && cells[0].v ? cells[0].v : 'SP-' + Math.random().toString(36).substr(2, 5),
+                            ten: cells[1] && cells[1].v ? cells[1].v : 'Sản phẩm chưa có tên',
+                            anhArr: images,
+                            danhmucArr: categories,
+                            thuonghieu: cells[4] && cells[4].v ? cells[4].v : 'Chính hãng',
+                            gia: cells[5] && cells[5].v ? cells[5].v : 'Liên hệ',
+                            motaArr: descItems
+                        };
+                    });
+
+                    buildProductFilters();
+                    renderProducts();
+                })
+                .catch(err => {
+                    console.error("Lỗi khi tải dữ liệu tab SanPham từ Google Sheet:", err);
+                    document.getElementById('product-container').innerHTML = '<p style="text-align:center; color:red;">Không thể tải danh sách sản phẩm lúc này. Vui lòng thử lại sau.</p>';
+                });
+        }
+
+        // Tạo bộ lọc động cho Sản phẩm dựa trên các danh mục thực tế từ Sheet
+        function buildProductFilters() {
+            const filterSet = new Set();
+            // Mặc định luôn có danh mục Nổi bật lên đầu
+            filterSet.add('Nổi bật');
+            
+            allProducts.forEach(p => {
+                p.danhmucArr.forEach(cat => {
+                    if(cat.toLowerCase() !== 'nổi bật') {
+                        filterSet.add(cat);
+                    }
+                });
+            });
+
+            const filterContainer = document.getElementById('product-filters');
+            filterContainer.innerHTML = '';
+            
+            filterSet.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = `filter-btn ${activeProductFilter === cat ? 'active' : ''}`;
+                btn.innerText = cat;
+                btn.onclick = () => filterProducts(cat);
+                filterContainer.appendChild(btn);
+            });
+        }
+
+        function filterProducts(category) {
+            activeProductFilter = category;
+            document.querySelectorAll('#product-filters .filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText === category);
+            });
+            renderProducts();
+        }
+
+        // Render cấu trúc sản phẩm ra lưới hiển thị giao diện
+        function renderProducts() {
+            const container = document.getElementById('product-container');
+            container.innerHTML = '';
+            
+            // Lọc danh sách theo bộ lọc danh mục đang active
+            const filtered = allProducts.filter(p => {
+                return p.danhmucArr.some(cat => cat.toLowerCase() === activeProductFilter.toLowerCase());
+            });
+
+            if(filtered.length === 0) {
+                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--light-text); padding: 30px;">Chưa có sản phẩm nào thuộc danh mục này.</p>';
+                return;
+            }
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                
+                // Sử dụng ảnh đầu tiên trong mảng ảnh, nếu rỗng thì thay thế bằng ảnh mặc định không lỗi
+                const firstImg = p.anhArr.length > 0 ? p.anhArr[0] : 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=400&q=80';
+                
+                card.innerHTML = `
+                    <div class="product-img-wrapper" onclick="openProductModal('${p.id}')">
+                        <img src="${firstImg}" alt="${p.ten}" class="product-img" onerror="this.src='https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=400&q=80';">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand">${p.thuonghieu}</div>
+                        <h3 class="product-title" onclick="openProductModal('${p.id}')">${p.ten}</h3>
+                        <div class="product-price">${formatGia(p.gia)}</div>
+                        <button class="btn" style="padding: 8px 15px; font-size: 13px; border-radius: 4px;" onclick="openProductModal('${p.id}')">Xem Chi Tiết</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Định dạng giá tiền linh hoạt
+        function formatGia(giaVal) {
+            if (!giaVal || String(giaVal).toLowerCase() === 'liên hệ' || String(giaVal).trim() === '0') {
+                return 'Giá: Liên hệ';
+            }
+            if (!isNaN(giaVal)) {
+                return Number(giaVal).toLocaleString('vi-VN') + ' đ';
+            }
+            return giaVal;
+        }
+
+        // Hiển thị chi tiết Album ảnh và mô tả dạng tích xanh xuống dòng trong Modal Sản phẩm
+        function openProductModal(productId) {
+            const p = allProducts.find(item => item.id === productId);
+            if(!p) return;
+
+            document.getElementById('modal-title').innerText = p.ten;
+            document.getElementById('modal-meta').innerText = `Thương hiệu: ${p.thuonghieu} | Danh mục: ${p.danhmucArr.join(', ')}`;
+            document.getElementById('modal-price').innerText = formatGia(p.gia);
+
+            // Xử lý cấu trúc mô tả xuống dòng có dấu tích xanh ở đầu dòng từng phần tử
+            const descContainer = document.getElementById('modal-desc');
+            descContainer.innerHTML = '';
+            if (p.motaArr.length > 0) {
+                p.motaArr.forEach(text => {
+                    const item = document.createElement('div');
+                    item.className = 'desc-tick-item';
+                    item.innerHTML = `<span class="desc-tick-icon">✔</span><span>${text}</span>`;
+                    descContainer.appendChild(item);
+                });
+            } else {
+                descContainer.innerText = 'Đang cập nhật thông tin chi tiết mô tả sản phẩm.';
+            }
+
+            // Xử lý tạo Album ảnh sản phẩm linh hoạt (nếu có nhiều ảnh)
+            const mainImg = document.getElementById('modal-main-img');
+            const thumbsContainer = document.getElementById('modal-thumbs');
+            thumbsContainer.innerHTML = '';
+
+            const defaultFallback = 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=400&q=80';
+
+            if(p.anhArr.length > 0) {
+                mainImg.src = p.anhArr[0];
+                mainImg.onerror = function() { this.src = defaultFallback; };
+
+                // Tạo ảnh nhỏ thumb bên dưới nếu có nhiều hơn 1 ảnh
+                p.anhArr.forEach((imgUrl, idx) => {
+                    const thumb = document.createElement('img');
+                    thumb.src = imgUrl;
+                    thumb.className = `thumb-img ${idx === 0 ? 'active' : ''}`;
+                    thumb.onerror = function() { this.style.display = 'none'; }; // Ẩn hoàn toàn nếu link ảnh lỗi không hiển thị text lỗi
+                    
+                    thumb.onclick = () => {
+                        mainImg.src = imgUrl;
+                        document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+                        thumb.classList.add('active');
+                    };
+                    thumbsContainer.appendChild(thumb);
+                });
+            } else {
+                mainImg.src = defaultFallback;
+            }
+
+            // Cấu hình link Zalo nút mua hàng liên hệ nhanh kèm theo tên sản phẩm cụ thể
+            document.getElementById('modal-order-btn').href = `https://zalo.me/0934140049?text=${encodeURIComponent('Xin chào KGP Telecom, tôi muốn nhận tư vấn báo giá chi tiết cho sản phẩm: ' + p.ten)}`;
+
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+
+        // 2. TẢI VÀ XỬ LÝ DỮ LIỆU DỰ ÁN (GIỮ NGUYÊN HOÀN TOÀN CỦA FILE GỐC)
+        function fetchProjects() {
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=Du_An`;
+            
+            fetch(url)
+                .then(res => res.text())
+                .then(txt => {
+                    const data = JSON.parse(txt.substr(47).slice(0, -2));
+                    const rows = data.table.rows;
+                    const imgBase = "https://khanggiaphuc.com/data/";
+                    
+                    allProjects = rows.map(row => {
+                        const cells = row.c;
+                        return {
+                            ma: cells[0] && cells[0].v ? cells[0].v : '',
+                            ten: cells[1] && cells[1].v ? cells[1].v : '',
+                            loai: cells[2] && cells[2].v ? cells[2].v : 'Khác',
+                            noidung: cells[3] && cells[3].v ? cells[3].v : ''
+                        };
+                    }).filter(pj => pj.ma && pj.ten);
+
+                    buildProjectFilters();
+                    renderProjects();
+                })
+                .catch(err => {
+                    console.error("Lỗi khi tải dữ liệu tab Du_An:", err);
+                    document.getElementById('project-container').innerHTML = '<p style="text-align:center; color:var(--light-text);">Đang cập nhật danh mục dự án...</p>';
+                });
+        }
+
+        function buildProjectFilters() {
+            const filterSet = new Set();
+            filterSet.add('Tất cả');
+            allProjects.forEach(pj => { if(pj.loai) filterSet.add(pj.loai); });
+
+            const filterContainer = document.getElementById('project-filters');
+            filterContainer.innerHTML = '';
+            
+            filterSet.forEach(loai => {
+                const btn = document.createElement('button');
+                btn.className = `filter-btn ${activeProjectFilter === loai ? 'active' : ''}`;
+                btn.innerText = loai;
+                btn.onclick = () => filterProjects(loai);
+                filterContainer.appendChild(btn);
+            });
+        }
+
+        function filterProjects(loai) {
+            activeProjectFilter = loai;
+            document.querySelectorAll('#project-filters .filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText === loai);
+            });
+            renderProjects();
+        }
+
+        function renderProjects() {
+            const container = document.getElementById('project-container');
+            container.innerHTML = '';
+            const imgBase = "https://khanggiaphuc.com/data/";
+
+            const filtered = allProjects.filter(pj => {
+                if (activeProjectFilter === 'Tất cả') return true;
+                return pj.loai === activeProjectFilter;
+            });
+
+            filtered.forEach(pj => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.onclick = () => openProjectModal(pj.ma);
+                
+                card.innerHTML = `
+                    <img src="${imgBase}${pj.ma}.jpg" alt="${pj.ten}" class="project-img" onerror="this.src='https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80';">
+                    <div class="project-info">
+                        <h3 class="project-title">${pj.ten}</h3>
+                        <div class="project-desc">${pj.noidung}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openProjectModal(maPj) {
+            const pj = allProjects.find(item => item.ma === maPj);
+            if(!pj) return;
+            const imgBase = "https://khanggiaphuc.com/data/";
+
+            document.getElementById('pj-title').innerText = pj.ten;
+            document.getElementById('pj-desc').innerHTML = pj.noidung;
+            
+            const mainPreview = document.getElementById('pj-main-preview');
+            mainPreview.src = `${imgBase}${pj.ma}.jpg`;
+            mainPreview.onerror = function() { this.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80'; };
+            
+            document.getElementById('projModal').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
