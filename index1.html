@@ -2,304 +2,553 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0071ba">
 
+    <!-- SEO Tối ưu -->
     <title>KGP Telecom - Giải Pháp Viễn Thông & Công Nghệ Hàng Đầu</title>
     <meta name="description" content="KGP Telecom chuyên cung cấp giải pháp viễn thông, camera giám sát, hệ thống mạng và điện năng lượng mặt trời uy tín.">
     
-    <!-- Preconnect & Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="icon" type="image/x-icon" href="https://khanggiaphuc.com/data/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --primary: #0071ba; --primary-light: #38bdf8; --primary-dark: #005a96;
-            --secondary: #ff8a22; --danger: #d92027;
-            --text-main: #1e293b; --text-muted: #64748b;
-            --bg-light: #f8fafc; --white: #ffffff;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-            --radius: 12px; --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --primary: #0071ba; --primary-dark: #005a96; --primary-glow: #38bdf8;
+            --price-red: #d92027; --btn-orange: #ff8a22;
+            --dark-gray: #2d3436; --light-gray: #636e72;
+            --light-bg: #f8fafc; --white: #ffffff;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-md: 0 6px 20px rgba(0,113,186,0.12);
+            --shadow-lg: 0 18px 50px rgba(0,0,0,0.15);
+            --radius: 16px;
+            --ease: cubic-bezier(.22,.61,.36,1);
+            --grad-primary: linear-gradient(135deg, #0071ba 0%, #38bdf8 100%);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; color: var(--text-main); line-height: 1.5; overflow-x: hidden; background: #fff; }
-        
-        /* Tối ưu render */
-        section { content-visibility: auto; contain-intrinsic-size: 1px 500px; padding: 60px 20px; max-width: 1300px; margin: auto; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Roboto', sans-serif; color: var(--dark-gray); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-        /* --- HEADER TỐI ƯU --- */
+        /* --- TỐI ƯU HIỆU ỨNG CUỘN --- */
+        [data-reveal] {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity .8s var(--ease), transform .8s var(--ease);
+            will-change: opacity, transform;
+        }
+        [data-reveal].in { opacity: 1; transform: none; }
+
+        /* --- HEADER --- */
         header {
-            position: fixed; top: 0; width: 100%; z-index: 1000; height: 70px;
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0,0,0,0.05); transition: var(--transition);
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(15px);
+            position: fixed; width: 100%; top: 0; z-index: 1000; height: 70px;
+            display: flex; align-items: center; transition: all .3s var(--ease);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
-        header.scrolled { height: 60px; box-shadow: var(--shadow); background: rgba(255, 255, 255, 0.95); }
+        header.scrolled { height: 60px; box-shadow: var(--shadow-md); }
+        nav { max-width: 1400px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; width: 100%; gap: 10px; }
         
-        nav { max-width: 1400px; margin: 0 auto; height: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
-        .logo img { height: 40px; width: auto; transition: transform 0.3s; }
+        .logo img { height: 45px; transition: transform .3s var(--ease); }
+        .logo:hover img { transform: scale(1.05); }
+
+        .search-container { position: relative; flex: 1; max-width: 350px; }
+        .search-box input {
+            width: 100%; padding: 10px 40px 10px 18px; border-radius: 25px;
+            border: 1.5px solid transparent; outline: none; background: #f1f5f9; height: 40px;
+        }
+        .search-box input:focus { background: #fff; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0,113,186,.1); }
+
+        /* MENU DESKTOP */
+        nav ul { display: flex; list-style: none; gap: 12px; align-items: center; }
+        nav ul li a {
+            text-decoration: none; color: var(--dark-gray); font-weight: 700;
+            font-size: 0.72rem; text-transform: uppercase; padding: 10px 5px;
+            transition: color .3s;
+        }
+        nav ul li a:hover { color: var(--primary); }
+
+        .nav-hotline { color: var(--price-red) !important; border: 1.5px solid var(--price-red); padding: 6px 15px !important; border-radius: 20px; }
+        .nav-hotline:hover { background: var(--price-red); color: #fff !important; }
+
+        /* --- SLIDER SIÊU MƯỢT --- */
+        .slider-container { width: 100%; height: 500px; margin-top: 70px; overflow: hidden; position: relative; background: #000; }
+        .slider-track { display: flex; height: 100%; transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1); will-change: transform; }
+        .slide { min-width: 100%; height: 100%; position: relative; overflow: hidden; }
+        .slide img { 
+            width: 100%; height: 100%; object-fit: cover; 
+            transform: scale(1.1); transition: transform 6s ease-out; 
+        }
+        .slide.is-active img { transform: scale(1); }
         
-        .search-box { position: relative; width: 300px; }
-        .search-box input { 
-            width: 100%; padding: 8px 35px 8px 15px; border-radius: 20px; border: 1px solid #e2e8f0; 
-            background: #f1f5f9; outline: none; transition: var(--transition);
+        .slider-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.2); color: #fff; border: none;
+            width: 45px; height: 45px; border-radius: 50%; cursor: pointer; z-index: 10;
+            backdrop-filter: blur(5px); transition: 0.3s;
         }
-        .search-box input:focus { background: #fff; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,113,186,0.1); }
-
-        .nav-links { display: flex; gap: 20px; list-style: none; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; transition: 0.3s; }
-        .nav-links a:hover { color: var(--primary); }
-
-        /* --- HERO SLIDER MƯỢT MÀ --- */
-        .hero-slider {
-            position: relative; height: 550px; margin-top: 70px; overflow: hidden; background: #000;
-        }
-        .slider-track {
-            display: flex; height: 100%; transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-            will-change: transform;
-        }
-        .slide {
-            min-width: 100%; height: 100%; position: relative;
-        }
-        .slide img {
-            width: 100%; height: 100%; object-fit: cover; opacity: 0.8;
-            transform: scale(1.1); transition: transform 6s linear;
-        }
-        .slide.active img { transform: scale(1); }
-
-        .slider-nav {
-            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 12px; z-index: 10;
-        }
-        .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: 0.3s; }
-        .dot.active { background: var(--white); width: 30px; border-radius: 10px; }
+        .slider-btn:hover { background: var(--primary); }
+        .prev-btn { left: 20px; } .next-btn { right: 20px; }
 
         /* --- PRODUCT GRID --- */
-        .section-title { text-align: center; margin-bottom: 40px; }
-        .section-title h2 { font-size: 2rem; font-weight: 800; color: var(--primary); text-transform: uppercase; position: relative; display: inline-block; }
-        .section-title h2::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 60px; height: 4px; background: var(--secondary); border-radius: 2px; }
+        section { padding: 60px 20px; max-width: 1300px; margin: auto; }
+        .section-title h2 { font-size: 2rem; color: var(--primary); text-align: center; text-transform: uppercase; font-weight: 900; margin-bottom: 10px; }
+        .underline { width: 60px; height: 4px; background: var(--btn-orange); margin: 0 auto 40px; border-radius: 2px; }
 
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
+        .filter-bar {
+            background: #fff; padding: 20px; border-radius: var(--radius);
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px; margin-bottom: 30px; box-shadow: var(--shadow-sm); border: 1px solid #eee;
+        }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
         .product-card {
-            background: #fff; border-radius: var(--radius); padding: 15px; border: 1px solid #f1f5f9;
-            transition: var(--transition); cursor: pointer; display: flex; flex-direction: column;
+            background: #fff; border: 1px solid #eee; border-radius: var(--radius);
+            padding: 15px; text-align: center; transition: all 0.3s var(--ease);
+            display: flex; flex-direction: column; cursor: pointer;
         }
-        .product-card:hover { transform: translateY(-10px); box-shadow: var(--shadow); border-color: var(--primary-light); }
-        .product-card img { width: 100%; height: 200px; object-fit: contain; margin-bottom: 15px; }
-        .product-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; height: 45px; overflow: hidden; }
-        .product-card .price { color: var(--danger); font-weight: 800; font-size: 1.1rem; margin-top: auto; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .product-card img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 10px; }
+        .product-card .price { color: var(--price-red); font-weight: 900; font-size: 1.1rem; margin: 10px 0; }
+        .btn-add-cart {
+            background: var(--grad-primary); color: #fff; border: none; padding: 10px;
+            border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
 
-        /* --- PROJECT SLIDER CAO CẤP --- */
-        .projects-section { background: #0f172a; color: #fff; overflow: hidden; }
-        .project-container { position: relative; padding: 0 50px; }
-        .project-slider {
-            display: flex; gap: 20px; transition: transform 0.6s var(--transition);
-            cursor: grab;
+        /* --- INTRO & ACTIVITY --- */
+        .intro-container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .intro-img-box img { width: 100%; border-radius: var(--radius); box-shadow: var(--shadow-lg); }
+
+        .activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .activity-item {
+            background: #fff; padding: 30px 20px; border-radius: var(--radius); text-align: center;
+            box-shadow: var(--shadow-sm); border-top: 4px solid var(--primary); transition: 0.3s;
         }
-        .project-card {
-            min-width: 320px; background: rgba(255,255,255,0.05); border-radius: 15px; overflow: hidden;
-            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); transition: 0.4s;
+        .activity-item:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+        .activity-icon { font-size: 2rem; color: var(--primary); margin-bottom: 15px; }
+
+        /* --- PROJECTS SLIDER (ĐÃ TỐI ƯU) --- */
+        #projects { background: #0f172a; color: #fff; padding: 60px 0; }
+        .marquee-wrap { overflow: hidden; width: 100%; position: relative; padding: 20px 0; }
+        .marquee-wrap::before, .marquee-wrap::after {
+            content: ""; position: absolute; top: 0; width: 100px; height: 100%; z-index: 2;
         }
-        .project-card:hover { background: rgba(255,255,255,0.1); transform: scale(1.02); }
-        .project-card img { width: 100%; height: 200px; object-fit: cover; }
-        .project-card .info { padding: 15px; }
+        .marquee-wrap::before { left: 0; background: linear-gradient(to right, #0f172a, transparent); }
+        .marquee-wrap::after { right: 0; background: linear-gradient(to left, #0f172a, transparent); }
+
+        .marquee { display: flex; width: max-content; gap: 25px; animation: scroll 40s linear infinite; }
+        .marquee:hover { animation-play-state: paused; }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         
-        .proj-btn {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            width: 45px; height: 45px; background: var(--primary); border: none;
-            border-radius: 50%; color: #fff; cursor: pointer; z-index: 5; transition: 0.3s;
+        .proj-card {
+            width: 300px; border-radius: 12px; overflow: hidden; background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.1); transition: 0.3s;
         }
-        .proj-btn:hover { background: var(--secondary); transform: translateY(-50%) scale(1.1); }
-        .prev-proj { left: 0; } .next-proj { right: 0; }
+        .proj-card img { width: 100%; height: 180px; object-fit: cover; }
+        .proj-card h4 { padding: 15px; font-size: 0.9rem; text-align: center; }
 
-        /* --- MOBILE TỐI ƯU --- */
+        /* MODALS */
+        .modal {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+            z-index: 2000; justify-content: center; align-items: center; padding: 15px; backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: #fff; width: 100%; max-width: 900px; border-radius: 20px;
+            display: grid; grid-template-columns: 45% 55%; position: relative; overflow: hidden; max-height: 90vh;
+        }
+        .modal-left { padding: 20px; border-right: 1px solid #eee; overflow-y: auto; }
+        .modal-right { padding: 30px; overflow-y: auto; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 25px; cursor: pointer; z-index: 10; }
+        
+        /* Album ảnh mini */
+        .thumb-box { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; justify-content: center; }
+        .thumb-box img { width: 55px; height: 55px; object-fit: cover; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; }
+        .thumb-box img:hover { border-color: var(--primary); }
+
+        /* Floating Buttons */
+        .cart-icon {
+            position: fixed; bottom: 25px; right: 25px; background: var(--btn-orange);
+            color: #fff; width: 60px; height: 60px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(255,138,34,0.3); z-index: 1001;
+        }
+        .cart-count { position: absolute; top: 0; right: 0; background: red; color: #fff; font-size: 12px; padding: 2px 6px; border-radius: 50%; }
+
+        /* PRINT SECTION (Giữ nguyên cho báo giá) */
+        #print-section { display: none; }
+        @media print {
+            body * { visibility: hidden; }
+            #print-section, #print-section * { visibility: visible; }
+            #print-section { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
+            .p-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            .p-table th, .p-table td { border: 1px solid #000; padding: 8px; font-size: 12px; }
+        }
+
         @media (max-width: 768px) {
-            header .search-box, .nav-links { display: none; }
-            .hero-slider { height: 250px; }
-            .project-card { min-width: 280px; }
-            .project-container { padding: 0 10px; }
-            .proj-btn { display: none; }
+            .intro-container, .modal-content { grid-template-columns: 1fr; }
+            .slider-container { height: 250px; }
+            nav ul { display: none; } /* Có thể thêm menu mobile sau */
         }
-
-        /* Loading Spinner */
-        #loader { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div id="loader"><div class="spinner"></div></div>
-
-    <header id="main-header">
+    <header id="site-header">
         <nav>
             <a href="#" class="logo"><img src="https://khanggiaphuc.com/data/logo.jpg" alt="Logo"></a>
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Tìm sản phẩm...">
-                <i class="fa-solid fa-magnifying-glass" style="position:absolute; right:12px; top:11px; color:var(--primary)"></i>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="product-search" placeholder="Tìm tên sản phẩm hoặc mã...">
+                </div>
+                <div id="search-results" style="position:absolute; background:#fff; width:100%; z-index:100; box-shadow:var(--shadow-lg); display:none; border-radius:10px; margin-top:5px; max-height:300px; overflow-y:auto;"></div>
             </div>
-            <ul class="nav-links">
+            <ul>
                 <li><a href="#products">Sản phẩm</a></li>
                 <li><a href="#intro">Giới thiệu</a></li>
-                <li><a href="#projects">Dự án</a></li>
-                <li><a href="tel:0844900099" style="color:var(--danger)"><i class="fa-solid fa-phone"></i> 0844.900.099</a></li>
+                <li><a href="#activity">Lĩnh vực</a></li>
+                <li><a href="tel:0844900099" class="nav-hotline"><i class="fa-solid fa-phone"></i> 0844.900.099</a></li>
             </ul>
         </nav>
     </header>
 
-    <div class="hero-slider">
-        <div class="slider-track" id="heroTrack">
-            <div class="slide active"><img src="https://khanggiaphuc.com/data/SL1.jpg" fetchpriority="high" alt="Slide 1"></div>
-            <div class="slide"><img src="https://khanggiaphuc.com/data/SL2.jpg" loading="lazy" alt="Slide 2"></div>
-            <div class="slide"><img src="https://khanggiaphuc.com/data/SL3.jpg" loading="lazy" alt="Slide 3"></div>
-            <div class="slide"><img src="https://khanggiaphuc.com/data/SL4.jpg" loading="lazy" alt="Slide 4"></div>
+    <div class="slider-container">
+        <button class="slider-btn prev-btn" onclick="moveSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="slider-btn next-btn" onclick="moveSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+        <div class="slider-track" id="slider">
+            <div class="slide is-active"><img src="https://khanggiaphuc.com/data/SL1.jpg" alt="1"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/data/SL2.jpg" alt="2"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/data/SL3.jpg" alt="3"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/data/SL4.jpg" alt="4"></div>
         </div>
-        <div class="slider-nav" id="heroNav"></div>
     </div>
 
     <section id="products">
-        <div class="section-title"><h2>Sản phẩm nổi bật</h2></div>
-        <div class="product-grid" id="productGrid">
-            <!-- Sản phẩm sẽ load từ JS -->
+        <div class="section-title"><h2>Sản phẩm tiêu biểu</h2><div class="underline"></div></div>
+        <div class="filter-bar">
+            <select id="filter-category" onchange="applyFilters()"><option value="TẤT CẢ">-- Tất cả danh mục --</option></select>
+            <select id="filter-brand" onchange="applyFilters()"><option value="TẤT CẢ">-- Tất cả thương hiệu --</option></select>
+            <select id="filter-price" onchange="applyFilters()">
+                <option value="DEFAULT">-- Sắp xếp giá --</option>
+                <option value="LOW_HIGH">Giá thấp đến cao</option>
+                <option value="HIGH_LOW">Giá cao đến thấp</option>
+            </select>
+        </div>
+        <div class="product-grid" id="product-grid"></div>
+        <div id="pagination" style="display:flex; justify-content:center; gap:10px; margin-top:30px;"></div>
+    </section>
+
+    <section id="intro" style="background: var(--light-bg); max-width: 100%;">
+        <div style="max-width: 1300px; margin: auto;" class="intro-container">
+            <div class="intro-img-box" data-reveal><img src="https://khanggiaphuc.com/data/GioiThieu.jpg" alt="Giới thiệu"></div>
+            <div id="intro-text" data-reveal></div>
         </div>
     </section>
 
-    <section id="projects" class="projects-section">
-        <div class="section-title"><h2 style="color:#fff">Dự án tiêu biểu</h2></div>
-        <div class="project-container">
-            <button class="proj-btn prev-proj" onclick="moveProject(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-            <div style="overflow: hidden;">
-                <div class="project-slider" id="projectSlider">
-                    <!-- Dự án sẽ load từ JS -->
+    <section id="activity">
+        <div class="section-title"><h2>Lĩnh vực hoạt động</h2><div class="underline"></div></div>
+        <div class="activity-grid" id="activity-list"></div>
+    </section>
+
+    <section id="projects" style="max-width: 100%;">
+        <div class="section-title"><h2 style="color:#fff">Dự án triển khai</h2><div class="underline"></div></div>
+        <div class="marquee-wrap">
+            <div class="marquee" id="project-list"></div>
+        </div>
+    </section>
+
+    <!-- MODAL CHI TIẾT SẢN PHẨM (Album ảnh) -->
+    <div id="pModal" class="modal" onclick="if(event.target==this) closeModal()">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="modal-left">
+                <img id="main-preview" style="width:100%; height:300px; object-fit:contain" src="">
+                <div id="thumb-box" class="thumb-box"></div>
+            </div>
+            <div class="modal-right">
+                <div id="m-cat" style="color:var(--btn-orange); font-weight:700; font-size:0.8rem"></div>
+                <h2 id="m-title" style="margin:10px 0"></h2>
+                <div id="m-price" style="font-size:1.8rem; color:var(--price-red); font-weight:900"></div>
+                <div style="margin-top:20px; font-weight:700; border-bottom:1px solid #eee">THÔNG SỐ KỸ THUẬT:</div>
+                <ul id="m-specs" style="margin-top:10px; padding-left:20px; font-size:0.9rem; line-height:1.6"></ul>
+                <button onclick="addToCartModal()" class="btn-add-cart" style="width:100%; margin-top:20px; padding:15px">THÊM VÀO GIỎ HÀNG</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GIỎ HÀNG -->
+    <div id="cartModal" class="modal" onclick="if(event.target==this) this.style.display='none'">
+        <div style="background:#fff; padding:25px; border-radius:15px; width:100%; max-width:700px;">
+            <h2 style="text-align:center; color:var(--primary); margin-bottom:20px">GIỎ HÀNG BÁO GIÁ</h2>
+            <div style="max-height:350px; overflow-y:auto">
+                <table style="width:100%; border-collapse:collapse">
+                    <tbody id="cart-items"></tbody>
+                </table>
+            </div>
+            <div style="text-align:right; margin-top:20px">
+                <h3>Tổng cộng: <span id="cart-total-web" style="color:red">0đ</span></h3>
+                <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end">
+                    <button onclick="preparePrint(false)" style="background:#27ae60; color:#fff; border:none; padding:10px 20px; border-radius:5px; cursor:pointer">XUẤT BÁO GIÁ</button>
+                    <button onclick="shareCart()" style="background:#3498db; color:#fff; border:none; padding:10px 20px; border-radius:5px; cursor:pointer">CHIA SẺ LINK</button>
                 </div>
             </div>
-            <button class="proj-btn next-proj" onclick="moveProject(1)"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
-    </section>
+    </div>
 
-    <footer style="background:#0b1220; color:#94a3b8; padding:50px 20px; text-align:center">
-        <p>© 2024 KGP Telecom - Giải pháp công nghệ chuyên nghiệp</p>
+    <!-- NÚT GIỎ HÀNG NỔI -->
+    <div class="cart-icon" onclick="openCart()">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-count" id="cart-count">0</span>
+    </div>
+
+    <!-- PHẦN IN ẤN (GIỮ NGUYÊN LOGIC CŨ) -->
+    <div id="print-section">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:20px">
+            <img src="https://khanggiaphuc.com/data/logo.jpg" style="width:200px">
+            <div style="text-align:right">
+                <h2 style="color:red">CÔNG TY TNHH KHANG GIA PHÚC</h2>
+                <p>Website: www.khanggiaphuc.com | Hotline: 0844.900.099</p>
+            </div>
+        </div>
+        <h1 style="text-align:center; color:#0071ba; margin:20px 0">BẢNG BÁO GIÁ CHI TIẾT</h1>
+        <table class="p-table">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên sản phẩm / Quy cách</th>
+                    <th>Hình ảnh</th>
+                    <th>SL</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody id="print-table-body"></tbody>
+        </table>
+        <div id="print-summary" style="text-align:right; padding:20px; font-weight:700; font-size:1.2rem"></div>
+        <div id="print-word" style="font-style:italic; padding:0 20px"></div>
+    </div>
+
+    <footer style="background:#0f172a; color:#fff; padding:50px 20px; margin-top:50px">
+        <div style="max-width:1300px; margin:auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:30px">
+            <div>
+                <img src="https://khanggiaphuc.com/data/logo.jpg" style="height:50px; margin-bottom:15px">
+                <p id="footer-intro"></p>
+            </div>
+            <div>
+                <h4>LIÊN HỆ</h4>
+                <ul id="footer-contact" style="list-style:none; margin-top:10px"></ul>
+            </div>
+        </div>
     </footer>
 
     <script>
-        const SHEET_ID = '1knLdhA1j69Qqfa6nMIe20vfufQnvGr4THpehnK0mHPk';
-        const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+        const sheetId = '1knLdhA1j69Qqfa6nMIe20vfufQnvGr4THpehnK0mHPk';
+        const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
+        let products = [], cart = [], curSlide = 0;
+        let filteredProducts = [];
 
-        let currentHero = 0;
-        let projectIndex = 0;
-
-        // 1. FETCH DATA TỐI ƯU
-        async function loadAllData() {
+        async function init() {
             try {
-                const [prodRes, projRes] = await Promise.all([
-                    fetch(`${BASE_URL}&sheet=SanPham`),
-                    fetch(`${BASE_URL}&sheet=Du_An`)
+                const [homeData, prodData, projData] = await Promise.all([
+                    fetchData('Trang_Chu'),
+                    fetchData('SanPham'),
+                    fetchData('Du_An')
                 ]);
-
-                const prodData = await parseSheet(prodRes);
-                const projData = await parseSheet(projRes);
-
-                renderProducts(prodData);
+                
+                renderHome(homeData);
+                renderProductsData(prodData);
                 renderProjects(projData);
                 
-                document.getElementById('loader').style.display = 'none';
-                initHeroSlider();
-            } catch (error) {
-                console.error("Lỗi tải dữ liệu:", error);
-            }
+                startHeroSlider();
+                observeReveals();
+            } catch (e) { console.error(e); }
         }
 
-        async function parseSheet(res) {
-            const text = await res.text();
-            const json = JSON.parse(text.substring(47).slice(0, -2));
-            return json.table.rows;
+        async function fetchData(sheet) {
+            const r = await fetch(`${base}&sheet=${sheet}`);
+            const text = await r.text();
+            const data = JSON.parse(text.substring(47).slice(0,-2)).table.rows;
+            return data;
         }
 
-        // 2. RENDER PRODUCTS
-        function renderProducts(rows) {
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = rows.slice(0, 12).map(r => {
-                const ma = r.c[0]?.v || '';
-                const ten = r.c[1]?.v || '';
-                const gia = r.c[5]?.v || 0;
-                return `
-                    <div class="product-card">
-                        <img src="https://khanggiaphuc.com/data/${ma}.jpg" onerror="this.src='https://via.placeholder.com/200'" alt="${ten}" loading="lazy">
-                        <h3>${ten}</h3>
-                        <div class="price">${gia > 0 ? gia.toLocaleString() + 'đ' : 'Liên hệ'}</div>
-                    </div>
-                `;
+        // RENDER TRANG CHỦ
+        function renderHome(data) {
+            document.getElementById('intro-text').innerHTML = data[2]?.c[1]?.v || "";
+            const actLines = (data[3]?.c[1]?.v || "").split('\n').filter(l => l.trim());
+            document.getElementById('activity-list').innerHTML = actLines.map(l => {
+                const p = l.split(':');
+                return `<div class="activity-item">
+                    <div class="activity-icon"><i class="fa-solid fa-star"></i></div>
+                    <h4>${p[0]}</h4><p>${p[1]||''}</p>
+                </div>`;
             }).join('');
+            
+            document.getElementById('footer-intro').innerText = data[4]?.c[1]?.v || "";
+            const contactLines = (data[5]?.c[1]?.v || "").split('\n').map(l => `<li>${l}</li>`).join('');
+            document.getElementById('footer-contact').innerHTML = contactLines;
         }
 
-        // 3. RENDER PROJECTS (SLIDER)
-        function renderProjects(rows) {
-            const slider = document.getElementById('projectSlider');
-            slider.innerHTML = rows.slice(1).map(r => `
-                <div class="project-card">
-                    <img src="https://khanggiaphuc.com/data/${r.c[0]?.v}.jpg" loading="lazy" alt="Project">
-                    <div class="info">
-                        <h4 style="font-weight:700">${r.c[1]?.v}</h4>
-                        <p style="font-size:0.8rem; opacity:0.7; margin-top:5px">${r.c[2]?.v}</p>
-                    </div>
+        // RENDER SẢN PHẨM
+        function renderProductsData(data) {
+            products = data.map(r => ({
+                ma: r.c[0]?.v || "",
+                ten: r.c[1]?.v || "",
+                imgStr: r.c[2]?.v || "",
+                cat: r.c[3]?.v || "Khác",
+                brand: r.c[4]?.v || "Khác",
+                gia: r.c[5]?.v || 0,
+                mota: r.c[6]?.v || ""
+            })).filter(p => p.ma && p.ma !== "Mã");
+
+            // Load filters
+            const cats = [...new Set(products.map(p => p.cat))];
+            const brands = [...new Set(products.map(p => p.brand))];
+            cats.forEach(c => document.getElementById('filter-category').innerHTML += `<option value="${c}">${c}</option>`);
+            brands.forEach(b => document.getElementById('filter-brand').innerHTML += `<option value="${b}">${b}</option>`);
+
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const cat = document.getElementById('filter-category').value;
+            const brand = document.getElementById('filter-brand').value;
+            const sort = document.getElementById('filter-price').value;
+
+            filteredProducts = products.filter(p => 
+                (cat === 'TẤT CẢ' || p.cat === cat) && (brand === 'TẤT CẢ' || p.brand === brand)
+            );
+
+            if(sort === 'LOW_HIGH') filteredProducts.sort((a,b) => a.gia - b.gia);
+            if(sort === 'HIGH_LOW') filteredProducts.sort((a,b) => b.gia - a.gia);
+
+            renderProductGrid(filteredProducts);
+        }
+
+        function renderProductGrid(list) {
+            document.getElementById('product-grid').innerHTML = list.map(p => `
+                <div class="product-card" onclick="openModal('${p.ma}')">
+                    <img src="https://khanggiaphuc.com/data/${p.ma}.jpg" onerror="this.src='https://via.placeholder.com/200'">
+                    <h3>${p.ten}</h3>
+                    <div class="price">${p.gia > 0 ? p.gia.toLocaleString() + 'đ' : 'Liên hệ'}</div>
+                    <button class="btn-add-cart" onclick="event.stopPropagation(); addToCart('${p.ma}')">THÊM GIỎ HÀNG</button>
                 </div>
             `).join('');
         }
 
-        // 4. HERO SLIDER LOGIC
-        function initHeroSlider() {
-            const track = document.getElementById('heroTrack');
-            const slides = document.querySelectorAll('.slide');
-            const nav = document.getElementById('heroNav');
+        // RENDER DỰ ÁN
+        function renderProjects(data) {
+            const list = data.slice(1).map(r => `
+                <div class="proj-card">
+                    <img src="https://khanggiaphuc.com/data/${r.c[0]?.v}.jpg">
+                    <h4>${r.c[1]?.v}</h4>
+                </div>
+            `).join('');
+            document.getElementById('project-list').innerHTML = list + list; // Nhân đôi để chạy vô tận
+        }
+
+        // MODAL & ALBUM ẢNH
+        function openModal(ma) {
+            const p = products.find(x => x.ma == ma);
+            if(!p) return;
+            document.getElementById('m-title').innerText = p.ten;
+            document.getElementById('m-price').innerText = p.gia > 0 ? p.gia.toLocaleString() + 'đ' : 'Liên hệ';
+            document.getElementById('main-preview').src = `https://khanggiaphuc.com/data/${p.ma}.jpg`;
             
-            slides.forEach((_, i) => {
-                const dot = document.createElement('div');
-                dot.className = `dot ${i === 0 ? 'active' : ''}`;
-                dot.onclick = () => goToHero(i);
-                nav.appendChild(dot);
+            // Xử lý thông số
+            const specs = p.mota.split(',').map(s => `<li>${s.trim()}</li>`).join('');
+            document.getElementById('m-specs').innerHTML = specs;
+
+            // Xử lý album ảnh mini (Giả sử ảnh đặt tên ma.jpg, ma.1.jpg, ma.2.jpg...)
+            let thumbs = `<img src="https://khanggiaphuc.com/data/${p.ma}.jpg" onclick="changeMainImg(this.src)">`;
+            [1,2,3].forEach(i => {
+                thumbs += `<img src="https://khanggiaphuc.com/data/${p.ma}.${i}.jpg" onerror="this.style.display='none'" onclick="changeMainImg(this.src)">`;
             });
+            document.getElementById('thumb-box').innerHTML = thumbs;
 
-            setInterval(() => {
-                currentHero = (currentHero + 1) % slides.length;
-                updateHeroUI();
-            }, 5000);
+            document.getElementById('pModal').style.display = 'flex';
         }
 
-        function updateHeroUI() {
-            const track = document.getElementById('heroTrack');
-            const dots = document.querySelectorAll('.dot');
+        function changeMainImg(src) { document.getElementById('main-preview').src = src; }
+        function closeModal() { document.getElementById('pModal').style.display = 'none'; }
+
+        // GIỎ HÀNG LOGIC
+        function addToCart(ma) {
+            const p = products.find(x => x.ma == ma);
+            const exist = cart.find(x => x.ma == ma);
+            if(exist) exist.qty++; else cart.push({...p, qty: 1});
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.reduce((s,i) => s + i.qty, 0);
+            let total = 0;
+            document.getElementById('cart-items').innerHTML = cart.map((item, idx) => {
+                total += item.gia * item.qty;
+                return `<tr>
+                    <td>${item.ten}</td>
+                    <td><input type="number" value="${item.qty}" style="width:40px" onchange="updateQty(${idx}, this.value)"></td>
+                    <td>${(item.gia * item.qty).toLocaleString()}đ</td>
+                    <td onclick="cart.splice(${idx},1); updateCartUI()">❌</td>
+                </tr>`;
+            }).join('');
+            document.getElementById('cart-total-web').innerText = total.toLocaleString() + 'đ';
+        }
+
+        function updateQty(idx, val) { cart[idx].qty = parseInt(val); updateCartUI(); }
+        function openCart() { document.getElementById('cartModal').style.display = 'flex'; }
+
+        // IN BÁO GIÁ
+        function preparePrint(isCompany) {
+            if(cart.length === 0) return alert("Giỏ hàng trống");
+            let subtotal = 0;
+            const rows = cart.map((item, i) => {
+                const tt = item.gia * item.qty;
+                subtotal += tt;
+                return `<tr>
+                    <td>${i+1}</td>
+                    <td>${item.ten}</td>
+                    <td><img src="https://khanggiaphuc.com/data/${item.ma}.jpg" width="50"></td>
+                    <td>${item.qty}</td>
+                    <td>${item.gia.toLocaleString()}</td>
+                    <td>${tt.toLocaleString()}</td>
+                </tr>`;
+            }).join('');
+            
+            document.getElementById('print-table-body').innerHTML = rows;
+            document.getElementById('print-summary').innerText = "TỔNG CỘNG: " + subtotal.toLocaleString() + " VNĐ";
+            window.print();
+        }
+
+        // SLIDER ĐẦU TRANG
+        function moveSlide(dir) {
             const slides = document.querySelectorAll('.slide');
-            
-            track.style.transform = `translate3d(-${currentHero * 100}%, 0, 0)`;
-            dots.forEach((d, i) => d.classList.toggle('active', i === currentHero));
-            slides.forEach((s, i) => s.classList.toggle('active', i === currentHero));
+            slides[curSlide].classList.remove('is-active');
+            curSlide = (curSlide + dir + slides.length) % slides.length;
+            document.getElementById('slider').style.transform = `translateX(-${curSlide * 100}%)`;
+            slides[curSlide].classList.add('is-active');
         }
 
-        function goToHero(i) { currentHero = i; updateHeroUI(); }
+        function startHeroSlider() { setInterval(() => moveSlide(1), 6000); }
 
-        // 5. PROJECT SLIDER NAVIGATION
-        function moveProject(dir) {
-            const slider = document.getElementById('projectSlider');
-            const cardWidth = 340; // width + gap
-            const maxScroll = slider.children.length - 1;
-            
-            projectIndex += dir;
-            if (projectIndex < 0) projectIndex = 0;
-            if (projectIndex > maxScroll - 2) projectIndex = maxScroll - 2;
-
-            slider.style.transform = `translate3d(-${projectIndex * cardWidth}px, 0, 0)`;
+        // HIỆU ỨNG HIỆN HÌNH KHI CUỘN
+        function observeReveals() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
         }
 
-        // 6. SCROLL EFFECT
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('main-header');
-            header.classList.toggle('scrolled', window.scrollY > 50);
+        // SEARCH NHANH
+        document.getElementById('product-search').addEventListener('input', (e) => {
+            const k = e.target.value.toLowerCase();
+            const res = document.getElementById('search-results');
+            if(!k) { res.style.display = 'none'; return; }
+            const found = products.filter(p => p.ten.toLowerCase().includes(k) || p.ma.toLowerCase().includes(k)).slice(0,10);
+            if(found.length) {
+                res.innerHTML = found.map(p => `<div style="padding:10px; border-bottom:1px solid #eee; cursor:pointer" onclick="openModal('${p.ma}')">${p.ten} - <span style="color:red">${p.gia.toLocaleString()}đ</span></div>`).join('');
+                res.style.display = 'block';
+            } else res.style.display = 'none';
         });
 
-        // Khởi chạy
-        loadAllData();
+        init();
     </script>
 </body>
 </html>
