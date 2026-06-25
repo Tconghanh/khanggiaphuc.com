@@ -125,8 +125,8 @@
         .modal-left { padding: 30px; border-right: 1px solid #eee; overflow-y: auto; text-align: center; }
         .modal-right { padding: 40px; overflow-y: auto; display: flex; flex-direction: column; }
         .specs-list { list-style: none; margin-top: 15px; }
-        .specs-list li { position: relative; padding-left: 25px; margin-bottom: 8px; font-size: 0.95rem; text-align: left; }
-        .specs-list li::before { content: '✓'; position: absolute; left: 0; color: #2ecc71; font-weight: 700; }
+        .specs-list li { position: relative; padding-left: 25px; margin-bottom: 8px; font-size: 0.95rem; text-align: left; display: flex; align-items: flex-start; gap: 5px; }
+        .specs-list li::before { content: '✓'; color: #2ecc71; font-weight: 700; flex-shrink: 0; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 35px; color: #999; cursor: pointer; z-index: 10; }
 
         .cart-icon { position: fixed; bottom: 25px; right: 25px; background: var(--btn-orange); color: var(--white); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 1001; }
@@ -328,13 +328,21 @@
         let curSlide = 0, sliderInterval, itemsPerPage = 20, currentPage = 1, filteredProductsGlobal = [];
         const icons = ["fa-camera", "fa-network-wired", "fa-solar-panel", "fa-shield-halved", "fa-microchip", "fa-tools", "fa-wifi"];
 
-        // Performance: Fetch Data with Cache
+        // Hàm xóa dấu tiếng Việt và khoảng trắng để build URL
+        function generateProductSlug(str) {
+            if (!str) return "";
+            return str.normalize('NFD')
+                      .replace(/[\u0300-\u036f]/g, '')
+                      .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+                      .replace(/[^a-zA-Z0-9]/g, '');
+        }
+
         async function fetchData(s) {
             const cacheKey = `kgp_cache_${s}`;
             const cached = localStorage.getItem(cacheKey);
             if (cached) {
                 const parts = JSON.parse(cached);
-                if (Date.now() - parts.time < 300000) { // Cache 5 phút
+                if (Date.now() - parts.time < 300000) {
                     setTimeout(() => processInitialData(s, parts.data), 10);
                     return parts.data;
                 }
@@ -397,28 +405,70 @@
                 const fb = data[6]?.c[1]?.v || "";
                 document.getElementById('f3-fb').innerHTML = `<iframe src="https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=340&height=250&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true" width="100%" height="250" style="border:none;overflow:hidden" scrolling="no" frameborder="0"></iframe>`;
             }
-            if (sheetName === 'San_Pham') {
+            
+            if (sheetName === 'SanPham') {
                 products = data.map(r => {
+                    const ma = r.c[0]?.v ? r.c[0].v.toString().trim() : "";
                     const ten = r.c[1]?.v || "";
-                    const brand = r.c[5]?.v ? r.c[5].v.toString().trim().toUpperCase() : "KHÁC";
-                    return { ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", ten: ten, brand: brand, cats: r.c[2]?.v ? r.c[2].v.toString().split(';') : [], gia: r.c[3]?.v || 0, mota: r.c[4]?.v || "" };
+                    
+                    const imgStr = r.c[2]?.v ? r.c[2].v.toString().trim() : "";
+                    const images = imgStr ? imgStr.split(',').map(s => s.trim()).filter(s => s) : [];
+                    
+                    const catStr = r.c[3]?.v ? r.c[3].v.toString().trim() : "TẤT CẢ";
+                    const categories = catStr.split(',').map(s => s.trim()).filter(s => s);
+                    
+                    const brand = r.c[4]?.v ? r.c[4].v.toString().trim().toUpperCase() : "KHÁC";
+                    const gia = r.c[5]?.v || 0;
+                    
+                    const descStr = r.c[6]?.v ? r.c[6].v.toString().trim() : "";
+                    const descItems = descStr ? descStr.split(',').map(s => s.trim()).filter(s => s) : [];
+
+                    // Tạo URL Slug định danh không dấu không khoảng trắng từ tên
+                    const slug = generateProductSlug(ten);
+
+                    return { 
+                        ma: ma, 
+                        ten: ten, 
+                        brand: brand, 
+                        cats: categories, 
+                        gia: gia, 
+                        motaArr: descItems,
+                        anhArr: images,
+                        slug: slug
+                    };
                 }).filter(x => x.ma && x.ma.toLowerCase() !== "mã");
                 
                 const catsSet = new Set(), brandsSet = new Set();
-                products.forEach(p => { p.cats.forEach(c => catsSet.add(c.trim())); brandsSet.add(p.brand); });
-                const catList = Array.from(catsSet).sort(), brandList = Array.from(brandsSet).sort();
+                catsSet.add('Nổi bật');
+                
+                products.forEach(p => { 
+                    p.cats.forEach(c => catsSet.add(c.trim())); 
+                    brandsSet.add(p.brand); 
+                });
+                
+                const catList = Array.from(catsSet), brandList = Array.from(brandsSet).sort();
                 
                 const submenu = document.getElementById('submenu-products'), selectCat = document.getElementById('filter-category');
                 submenu.innerHTML = ""; selectCat.innerHTML = '<option value="TẤT CẢ">-- Tất cả danh mục --</option>';
+                
                 catList.forEach(c => {
                     submenu.innerHTML += `<li><a href="#products" onclick="setFilter('cat', '${c}')">${c}</a></li>`;
                     selectCat.innerHTML += `<option value="${c}">${c}</option>`;
                 });
+                
                 const selectBrand = document.getElementById('filter-brand');
                 selectBrand.innerHTML = '<option value="TẤT CẢ">-- Tất cả thương hiệu --</option>';
                 brandList.forEach(b => { selectBrand.innerHTML += `<option value="${b}">${b}</option>`; });
                 applyFilters();
+
+                // Check URL Hash dạng Tên Sản Phẩm sau khi nạp xong dữ liệu
+                const hash = window.location.hash.substring(1);
+                if (hash && hash !== "products" && hash !== "intro" && hash !== "activity" && hash !== "projects") {
+                    const matchedProduct = products.find(p => p.slug.toLowerCase() === hash.toLowerCase() || p.ma.toLowerCase() === hash.toLowerCase());
+                    if (matchedProduct) setTimeout(() => openModal(matchedProduct.ma), 600);
+                }
             }
+            
             if (sheetName === 'Du_An') {
                 allProjects = data.slice(1).map(r => ({ ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", ten: r.c[1]?.v || "", hangmuc: r.c[2]?.v || "", noidung: r.c[3]?.v || "", nam: r.c[4]?.v || "" })).filter(x => x.ma);
                 let pjH = ""; allProjects.forEach(pj => pjH += `<div class="proj-card" onclick="openProjModal('${pj.ma}')"><img src="${imgBase}${pj.ma}.jpg" alt="${pj.ten}"><h4>${pj.ten}</h4></div>`);
@@ -432,20 +482,20 @@
                 const homeData = await fetchData('Trang_Chu');
                 await processInitialData('Trang_Chu', homeData);
 
-                const prodData = await fetchData('San_Pham');
-                await processInitialData('San_Pham', prodData);
+                const prodData = await fetchData('SanPham');
+                await processInitialData('SanPham', prodData);
 
                 const projData = await fetchData('Du_An');
                 await processInitialData('Du_An', projData);
 
-                // Check Shared Quote
+                // Check Shared Quote Link
                 const urlParams = new URLSearchParams(window.location.search);
                 const sharedQuote = urlParams.get('quote');
                 if (sharedQuote) {
                     const items = sharedQuote.split(',');
                     items.forEach(it => {
                         const [ma, qty] = it.split(':');
-                        const p = products.find(x => x.ma.toString() === ma.toString());
+                        const p = products.find(x => x.ma.toString().toLowerCase() === ma.toString().toLowerCase());
                         if (p) cart.push({ ...p, qty: parseInt(qty) || 1 });
                     });
                     updateCartUI();
@@ -459,7 +509,10 @@
                     if(k.length < 1) { searchRes.style.display = 'none'; return; }
                     const f = products.filter(p => p.ten.toLowerCase().includes(k) || p.ma.toLowerCase().includes(k)).slice(0, 8);
                     if(f.length > 0) {
-                        searchRes.innerHTML = f.map(p => `<div class="search-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #eee;cursor:pointer" onclick="openModal('${p.ma}'); searchRes.style.display='none'"><img src="${imgBase}${p.ma}.jpg" style="width:40px;height:40px;object-fit:contain" alt="${p.ten}"><div><b style="font-size:0.8rem">${p.ten}</b><br><span style="color:red;font-size:0.75rem">${p.gia > 0 ? p.gia.toLocaleString() + 'đ' : 'Giá liên hệ'}</span></div></div>`).join('');
+                        searchRes.innerHTML = f.map(p => {
+                            const mainImgUrl = p.anhArr.length > 0 ? p.anhArr[0] : `${imgBase}${p.ma}.jpg`;
+                            return `<div class="search-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #eee;cursor:pointer" onclick="openModal('${p.ma}'); searchRes.style.display='none'"><img src="${mainImgUrl}" style="width:40px;height:40px;object-fit:contain" alt="${p.ten}" onerror="this.src='https://via.placeholder.com/200'"><div><b style="font-size:0.8rem">${p.ten}</b><br><span style="color:red;font-size:0.75rem">${p.gia > 0 ? p.gia.toLocaleString() + 'đ' : 'Giá liên hệ'}</span></div></div>`;
+                        }).join('');
                         searchRes.style.display = 'block';
                     } else searchRes.style.display = 'none';
                 });
@@ -467,8 +520,6 @@
                 document.addEventListener('click', (e) => { if(!e.target.closest('.search-container')) searchRes.style.display='none'; });
 
                 initSlider();
-                const hash = window.location.hash.substring(1);
-                if (hash) setTimeout(() => openModal(hash), 600);
                 document.getElementById('loader').style.display = 'none';
             } catch (e) { console.error(e); }
         }
@@ -479,10 +530,16 @@
             const cat = document.getElementById('filter-category').value;
             const brand = document.getElementById('filter-brand').value;
             const sort = document.getElementById('filter-price').value;
-            let filtered = products.filter(p => (cat === 'TẤT CẢ' || p.cats.some(c => c.trim() === cat)) && (brand === 'TẤT CẢ' || p.brand === brand));
+            
+            let filtered = products.filter(p => {
+                const matchCat = (cat === 'TẤT CẢ' || p.cats.some(c => c.trim().toLowerCase() === cat.trim().toLowerCase()));
+                const matchBrand = (brand === 'TẤT CẢ' || p.brand.toLowerCase() === brand.toLowerCase());
+                return matchCat && matchBrand;
+            });
+            
             if (cat === 'TẤT CẢ' && brand === 'TẤT CẢ' && sort === 'DEFAULT') {
-                const featured = filtered.filter(p => p.cats.some(c => c.trim().toUpperCase() === "NỔI BẬT")).slice(0, 20);
-                const others = filtered.filter(p => !p.cats.some(c => c.trim().toUpperCase() === "NỔI BẬT"));
+                const featured = filtered.filter(p => p.cats.some(c => c.trim().toLowerCase() === "nổi bật")).slice(0, 20);
+                const others = filtered.filter(p => !p.cats.some(c => c.trim().toLowerCase() === "nổi bật"));
                 filtered = [...featured, ...others];
             }
             if (sort === 'LOW_HIGH') filtered.sort((a, b) => a.gia - b.gia);
@@ -497,9 +554,11 @@
             renderPagination(filteredProductsGlobal.length);
         }
 
-        // Performance: Add Alt text and Lazy load
         function renderProducts(data) {
-            document.getElementById('product-grid').innerHTML = data.map(p => `<div class="product-card"><img src="${imgBase}${p.ma}.jpg" loading="lazy" alt="${p.ten}" onclick="openModal('${p.ma}')" onerror="this.src='https://via.placeholder.com/200'"><h3 onclick="openModal('${p.ma}')">${p.ten}</h3><div class="price">${p.gia > 0 ? p.gia.toLocaleString() + 'đ' : 'Giá liên hệ'}</div><button class="btn-add-cart" onclick="addToCart('${p.ma}')">🛒 THÊM GIỎ HÀNG</button></div>`).join('');
+            document.getElementById('product-grid').innerHTML = data.map(p => {
+                const displayImg = p.anhArr.length > 0 ? p.anhArr[0] : `${imgBase}${p.ma}.jpg`;
+                return `<div class="product-card"><img src="${displayImg}" loading="lazy" alt="${p.ten}" onclick="openModal('${p.ma}')" onerror="this.src='https://via.placeholder.com/200'"><h3 onclick="openModal('${p.ma}')">${p.ten}</h3><div class="price">${p.gia > 0 ? p.gia.toLocaleString() + 'đ' : 'Giá liên hệ'}</div><button class="btn-add-cart" onclick="addToCart('${p.ma}')">🛒 THÊM GIỎ HÀNG</button></div>`;
+            }).join('');
         }
 
         function renderPagination(totalItems) {
@@ -525,17 +584,39 @@
         }
 
         function openModal(ma) {
-            const p = products.find(x => x.ma.toString() === ma.toString());
+            const p = products.find(x => x.ma.toString().toLowerCase() === ma.toString().toLowerCase());
             if(!p) return;
-            window.location.hash = ma; currentProductMA = p.ma;
+            
+            // Thay đổi URL Hash sang định dạng tên sản phẩm viết liền không dấu không khoảng trắng
+            window.location.hash = p.slug; 
+            currentProductMA = p.ma;
+            
             document.getElementById('m-title').innerText = p.ten;
             document.getElementById('m-price').innerText = p.gia > 0 ? p.gia.toLocaleString() + ' đ' : 'Giá liên hệ';
             document.getElementById('m-cat').innerText = p.cats.join(' | ');
-            document.getElementById('main-preview').src = `${imgBase}${p.ma}.jpg`;
-            document.getElementById('main-preview').alt = p.ten;
-            document.getElementById('m-specs').innerHTML = p.mota.split('\n').filter(l => l.trim()).map(l => `<li>${l}</li>`).join('');
-            let th = `<img src="${imgBase}${p.ma}.jpg" alt="thumbnail" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onclick="document.getElementById('main-preview').src=this.src">`;
-            [1,2,3,4].forEach(n => th += `<img src="${imgBase}${p.ma}.${n}.jpg" alt="thumbnail ${n}" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onerror="this.style.display='none'" onclick="document.getElementById('main-preview').src=this.src">`);
+            
+            const mainPreview = document.getElementById('main-preview');
+            const defaultFallback = 'https://via.placeholder.com/200';
+            const firstImg = p.anhArr.length > 0 ? p.anhArr[0] : `${imgBase}${p.ma}.jpg`;
+            mainPreview.src = firstImg;
+            mainPreview.onerror = function() { this.src = defaultFallback; };
+            mainPreview.alt = p.ten;
+
+            if (p.motaArr && p.motaArr.length > 0) {
+                document.getElementById('m-specs').innerHTML = p.motaArr.map(l => `<li>${l}</li>`).join('');
+            } else {
+                document.getElementById('m-specs').innerHTML = '<li>Đang cập nhật thông số kỹ thuật.</li>';
+            }
+            
+            let th = "";
+            if (p.anhArr && p.anhArr.length > 0) {
+                p.anhArr.forEach((imgUrl, idx) => {
+                    th += `<img src="${imgUrl}" alt="thumbnail ${idx}" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer; margin:2px;" onerror="this.style.display='none'" onclick="document.getElementById('main-preview').src=this.src">`;
+                });
+            } else {
+                th += `<img src="${imgBase}${p.ma}.jpg" alt="thumbnail" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onerror="this.style.display='none'" onclick="document.getElementById('main-preview').src=this.src">`;
+                [1,2,3,4].forEach(n => th += `<img src="${imgBase}${p.ma}.${n}.jpg" alt="thumbnail ${n}" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onerror="this.style.display='none'" onclick="document.getElementById('main-preview').src=this.src">`);
+            }
             document.getElementById('thumb-box').innerHTML = th;
             document.getElementById('pModal').style.display = 'flex';
         }
@@ -543,9 +624,9 @@
         function closeModal() { document.getElementById('pModal').style.display = 'none'; history.pushState("", document.title, window.location.pathname + window.location.search); }
 
         function addToCart(ma) {
-            const p = products.find(x => x.ma.toString() === ma.toString());
+            const p = products.find(x => x.ma.toString().toLowerCase() === ma.toString().toLowerCase());
             if(!p) return;
-            const ex = cart.find(x => x.ma.toString() === ma.toString());
+            const ex = cart.find(x => x.ma.toString().toLowerCase() === ma.toString().toLowerCase());
             if (ex) ex.qty++; else cart.push({...p, qty: 1});
             updateCartUI();
         }
@@ -576,12 +657,19 @@
             const n = new Date(); const qID = `${String(n.getDate()).padStart(2,'0')}${String(n.getMonth()+1).padStart(2,'0')}${String(n.getFullYear()).slice(-2)}/BG-KGP`;
             document.getElementById('print-no').innerText = qID; document.getElementById('print-no-footer').innerText = "Thanh toán cho báo giá số: " + qID;
             document.getElementById('print-date').innerText = n.toLocaleDateString('vi-VN');
-            let sub = 0; document.getElementById('print-table-body').innerHTML = cart.map((item, i) => {
-                const t = item.gia * item.qty; sub += t;
+            
+            let sub = 0; // Đảm bảo khai báo từ đầu phạm vi để tránh treo script
+            
+            document.getElementById('print-table-body').innerHTML = cart.map((item, i) => {
+                const t = item.gia * item.qty; 
+                if(item.gia > 0) sub += t;
                 const priceCell = item.gia > 0 ? item.gia.toLocaleString() : "Liên hệ";
                 const totalCell = item.gia > 0 ? t.toLocaleString() : "Liên hệ";
-                return `<tr><td align="center">${i+1}</td><td><b>${item.ten}</b>\n${item.mota}</td><td align="center"><img src="${imgBase}${item.ma}.jpg" style="width:50px" alt="img"></td><td align="center">Bộ</td><td align="center">${item.qty}</td><td align="right">${priceCell}</td><td align="right">${totalCell}</td></tr>`;
+                const printImg = item.anhArr.length > 0 ? item.anhArr[0] : `${imgBase}${item.ma}.jpg`;
+                const motaPrintStr = item.motaArr && item.motaArr.length > 0 ? item.motaArr.map(m => `• ${m}`).join('<br>') : '';
+                return `<tr><td align="center">${i+1}</td><td><b>${item.ten}</b><br><span style="font-size:10px; color:#555;">${motaPrintStr}</span></td><td align="center"><img src="${printImg}" style="width:50px" alt="img" onerror="this.src='https://via.placeholder.com/100'"></td><td align="center">Bộ</td><td align="center">${item.qty}</td><td align="right">${priceCell}</td><td align="right">${totalCell}</td></tr>`;
             }).join('');
+            
             const vat = isCompany ? Math.round(sub * 0.1) : 0; const gt = sub + vat;
             document.getElementById('p-subtotal').innerText = sub.toLocaleString(); document.getElementById('p-vat').innerText = vat.toLocaleString();
             document.getElementById('p-grandtotal').innerText = gt.toLocaleString(); document.getElementById('p-word').innerText = docSoTien(gt) + " đồng chẵn.";
