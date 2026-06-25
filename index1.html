@@ -328,7 +328,7 @@
         let curSlide = 0, sliderInterval, itemsPerPage = 20, currentPage = 1, filteredProductsGlobal = [];
         const icons = ["fa-camera", "fa-network-wired", "fa-solar-panel", "fa-shield-halved", "fa-microchip", "fa-tools", "fa-wifi"];
 
-        // Hàm xóa dấu tiếng Việt và khoảng trắng để build URL
+        // Hàm định dạng slug URL viết liền từ tên sản phẩm
         function generateProductSlug(str) {
             if (!str) return "";
             return str.normalize('NFD')
@@ -414,6 +414,7 @@
                     const imgStr = r.c[2]?.v ? r.c[2].v.toString().trim() : "";
                     const images = imgStr ? imgStr.split(',').map(s => s.trim()).filter(s => s) : [];
                     
+                    // SỬA LỖI: Cắt tỉa (trim) khoảng trắng cho từng danh mục con ngay khi tạo mảng
                     const catStr = r.c[3]?.v ? r.c[3].v.toString().trim() : "TẤT CẢ";
                     const categories = catStr.split(',').map(s => s.trim()).filter(s => s);
                     
@@ -422,8 +423,6 @@
                     
                     const descStr = r.c[6]?.v ? r.c[6].v.toString().trim() : "";
                     const descItems = descStr ? descStr.split(',').map(s => s.trim()).filter(s => s) : [];
-
-                    // Tạo URL Slug định danh không dấu không khoảng trắng từ tên
                     const slug = generateProductSlug(ten);
 
                     return { 
@@ -442,11 +441,11 @@
                 catsSet.add('Nổi bật');
                 
                 products.forEach(p => { 
-                    p.cats.forEach(c => catsSet.add(c.trim())); 
+                    p.cats.forEach(c => catsSet.add(c)); // Danh mục đã sạch khoảng trắng
                     brandsSet.add(p.brand); 
                 });
                 
-                const catList = Array.from(catsSet), brandList = Array.from(brandsSet).sort();
+                const catList = Array.from(catsSet).sort(), brandList = Array.from(brandsSet).sort();
                 
                 const submenu = document.getElementById('submenu-products'), selectCat = document.getElementById('filter-category');
                 submenu.innerHTML = ""; selectCat.innerHTML = '<option value="TẤT CẢ">-- Tất cả danh mục --</option>';
@@ -461,7 +460,7 @@
                 brandList.forEach(b => { selectBrand.innerHTML += `<option value="${b}">${b}</option>`; });
                 applyFilters();
 
-                // Check URL Hash dạng Tên Sản Phẩm sau khi nạp xong dữ liệu
+                // Kiểm tra điều hướng link trực tiếp dạng hash tên
                 const hash = window.location.hash.substring(1);
                 if (hash && hash !== "products" && hash !== "intro" && hash !== "activity" && hash !== "projects") {
                     const matchedProduct = products.find(p => p.slug.toLowerCase() === hash.toLowerCase() || p.ma.toLowerCase() === hash.toLowerCase());
@@ -526,20 +525,21 @@
 
         function setFilter(type, val) { if(type === 'cat') document.getElementById('filter-category').value = val; applyFilters(); closeMenu(); }
 
+        // SỬA LỖI: Đồng bộ hóa hoàn toàn phương thức làm sạch chuỗi (trim) khi lọc sản phẩm
         function applyFilters() {
             const cat = document.getElementById('filter-category').value;
             const brand = document.getElementById('filter-brand').value;
             const sort = document.getElementById('filter-price').value;
             
             let filtered = products.filter(p => {
-                const matchCat = (cat === 'TẤT CẢ' || p.cats.some(c => c.trim().toLowerCase() === cat.trim().toLowerCase()));
-                const matchBrand = (brand === 'TẤT CẢ' || p.brand.toLowerCase() === brand.toLowerCase());
+                const matchCat = (cat === 'TẤT CẢ' || p.cats.some(c => c.toLowerCase() === cat.trim().toLowerCase()));
+                const matchBrand = (brand === 'TẤT CẢ' || p.brand.toLowerCase() === brand.trim().toLowerCase());
                 return matchCat && matchBrand;
             });
             
             if (cat === 'TẤT CẢ' && brand === 'TẤT CẢ' && sort === 'DEFAULT') {
-                const featured = filtered.filter(p => p.cats.some(c => c.trim().toLowerCase() === "nổi bật")).slice(0, 20);
-                const others = filtered.filter(p => !p.cats.some(c => c.trim().toLowerCase() === "nổi bật"));
+                const featured = filtered.filter(p => p.cats.some(c => c.toLowerCase() === "nổi bật")).slice(0, 20);
+                const others = filtered.filter(p => !p.cats.some(c => c.toLowerCase() === "nổi bật"));
                 filtered = [...featured, ...others];
             }
             if (sort === 'LOW_HIGH') filtered.sort((a, b) => a.gia - b.gia);
@@ -587,7 +587,6 @@
             const p = products.find(x => x.ma.toString().toLowerCase() === ma.toString().toLowerCase());
             if(!p) return;
             
-            // Thay đổi URL Hash sang định dạng tên sản phẩm viết liền không dấu không khoảng trắng
             window.location.hash = p.slug; 
             currentProductMA = p.ma;
             
@@ -658,7 +657,7 @@
             document.getElementById('print-no').innerText = qID; document.getElementById('print-no-footer').innerText = "Thanh toán cho báo giá số: " + qID;
             document.getElementById('print-date').innerText = n.toLocaleDateString('vi-VN');
             
-            let sub = 0; // Đảm bảo khai báo từ đầu phạm vi để tránh treo script
+            let sub = 0;
             
             document.getElementById('print-table-body').innerHTML = cart.map((item, i) => {
                 const t = item.gia * item.qty; 
