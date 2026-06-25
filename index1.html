@@ -18,648 +18,661 @@
     <link rel="preconnect" href="https://docs.google.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    
+    <link rel="icon" type="image/x-icon" href="data/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --primary-color: #0056b3;
-            --secondary-color: #f8f9fa;
-            --text-color: #333;
-            --light-text: #666;
-            --accent-color: #e4a11b;
-            --border-radius: 8px;
-            --shadow: 0 4px 6px rgba(0,0,0,0.1);
-            --transition: all 0.3s ease;
+            --primary: #0071ba; --primary-dark: #005a96; --price-red: #d92027;
+            --btn-orange: #ff8a22; --dark-gray: #2d3436; --light-gray: #636e72;
+            --light-bg: #f8fafc; --white: #ffffff; --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+            --radius: 16px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { color: var(--text-color); background-color: #fff; line-height: 1.6; padding-bottom: 60px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Roboto', sans-serif; line-height: 1.6; color: var(--dark-gray); background: #fff; overflow-x: hidden; }
 
-        /* Header & Navigation */
-        header { background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 10px 20px; }
-        .logo { font-weight: 700; font-size: 24px; color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 10px; }
-        .logo img { height: 40px; }
+        /* --- HEADER & NAV --- */
+        header { background: rgba(255,255,255,0.96); backdrop-filter: blur(15px); box-shadow: var(--shadow-sm); position: fixed; width: 100%; top: 0; z-index: 1000; height: 70px; display: flex; align-items: center; }
+        nav { max-width: 1400px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; width: 100%; gap: 10px; }
+        .nav-left { display: flex; align-items: center; gap: 10px; flex: 1; }
         
-        nav ul { display: flex; list-style: none; gap: 20px; }
-        nav a { text-decoration: none; color: var(--text-color); font-weight: 500; transition: var(--transition); font-size: 15px; }
-        nav a:hover, nav a.active { color: var(--primary-color); }
-
-        .menu-toggle { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-color); }
-
-        /* Sections */
-        section { padding: 60px 20px; max-width: 1200px; margin: 0 auto; scroll-margin-top: 70px; }
-        .section-title { text-align: center; margin-bottom: 40px; position: relative; font-size: 28px; color: var(--primary-color); }
-        .section-title::after { content: ''; display: block; width: 50px; height: 3px; background: var(--accent-color); margin: 10px auto 0; border-radius: 2px; }
-
-        /* Banner Hero */
-        #home { padding: 0; max-width: 100%; position: relative; background: #051937; height: 70vh; min-height: 400px; display: flex; align-items: center; overflow: hidden; }
-        .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; }
-        .hero-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; padding: 0 20px; text-align: center; color: #fff; }
-        .hero-content h1 { font-size: 42px; margin-bottom: 20px; font-weight: 700; line-height: 1.2; }
-        .hero-content p { font-size: 18px; margin-bottom: 30px; opacity: 0.9; }
-        .btn { display: inline-block; padding: 12px 30px; background: var(--accent-color); color: #fff; text-decoration: none; border-radius: 30px; font-weight: 600; transition: var(--transition); border: none; cursor: pointer; }
-        .btn:hover { background: #cb8d10; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-
-        /* Khối ngành nghề dịch vụ */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
-        .service-card { background: var(--secondary-color); padding: 30px 20px; border-radius: var(--border-radius); text-align: center; transition: var(--transition); border: 1px solid #eee; }
-        .service-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); background: #fff; border-color: var(--primary-color); }
-        .service-icon { font-size: 40px; margin-bottom: 15px; color: var(--primary-color); }
-        .service-card h3 { margin-bottom: 12px; font-size: 18px; }
-        .service-card p { color: var(--light-text); font-size: 14px; }
-
-        /* Bộ lọc sản phẩm & Dự án */
-        .filter-container { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
-        .filter-btn { padding: 8px 18px; background: #f0f0f0; border: none; border-radius: 20px; cursor: pointer; transition: var(--transition); font-weight: 500; font-size: 14px; }
-        .filter-btn.active, .filter-btn:hover { background: var(--primary-color); color: #fff; }
-
-        /* Grid hiển thị */
-        .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+        /* SEO: H1 cho Logo */
+        h1.logo-wrap { margin: 0; line-height: 0; }
+        .logo img { height: 42px; width: auto; transition: 0.3s; }
         
-        /* Card Sản phẩm */
-        .product-card { border: 1px solid #eee; border-radius: var(--border-radius); overflow: hidden; transition: var(--transition); display: flex; flex-direction: column; background: #fff; position: relative; }
-        .product-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
-        .product-img-wrapper { position: relative; width: 100%; padding-top: 100%; background: #f9f9f9; overflow: hidden; cursor: pointer; }
-        .product-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; padding: 10px; transition: transform 0.5s ease; }
-        .product-card:hover .product-img { transform: scale(1.05); }
-        .product-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
-        .product-brand { font-size: 12px; color: var(--light-text); text-transform: uppercase; margin-bottom: 5px; font-weight: 600; letter-spacing: 0.5px; }
-        .product-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; line-height: 1.4; height: 42px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; cursor: pointer; color: #111; }
-        .product-title:hover { color: var(--primary-color); }
-        .product-price { font-size: 16px; color: #cc0000; font-weight: 700; margin-top: auto; margin-bottom: 12px; }
+        .search-container { position: relative; flex: 1; max-width: 350px; }
+        .search-box input { width: 100%; padding: 10px 40px 10px 15px; border-radius: 25px; border: 1.5px solid #eee; outline: none; font-size: 0.85rem; transition: 0.3s; background: #f1f5f9; height: 40px; }
+        .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); cursor: pointer; }
+        .search-results { position: absolute; top: 110%; left: 0; width: 100%; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow-lg); max-height: 350px; overflow-y: auto; display: none; z-index: 1001; border: 1px solid #eee; }
+
+        /* MENU DESKTOP */
+        nav ul { display: flex; list-style: none; gap: 15px; align-items: center; }
+        nav ul li { position: relative; }
+        nav ul li a { text-decoration: none; color: var(--dark-gray); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; padding: 10px 0; display: block; }
         
-        /* Card Dự án */
-        .project-card { border: 1px solid #eee; border-radius: var(--border-radius); overflow: hidden; transition: var(--transition); cursor: pointer; background: #fff; }
-        .project-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
-        .project-img { width: 100%; height: 200px; object-fit: cover; }
-        .project-info { padding: 20px; }
-        .project-title { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
-        .project-desc { color: var(--light-text); font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .dropdown-menu { 
+            position: absolute; top: 100%; left: 0; background: #fff; min-width: 220px; 
+            box-shadow: var(--shadow-lg); border-radius: 8px; display: none; 
+            list-style: none; padding: 10px 0; z-index: 1100; border: 1px solid #eee;
+        }
+        .dropdown-menu li a { padding: 8px 20px; font-size: 0.75rem; color: #555; text-transform: none; font-weight: 500; border-bottom: none; }
+        .dropdown-menu li a:hover { background: var(--light-bg); color: var(--primary); }
+        .dropdown:hover .dropdown-menu { display: block; }
 
-        /* Liên hệ & Bản đồ */
-        .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .contact-info h3 { margin-bottom: 20px; color: var(--primary-color); }
-        .contact-item { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start; }
-        .contact-icon { font-size: 20px; color: var(--accent-color); margin-top: 3px; }
-        .contact-item p { margin: 0; }
-        .map-container { border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--shadow); height: 350px; }
-        .map-container iframe { width: 100%; height: 100%; border: none; }
+        .nav-hotline { color: var(--price-red) !important; border: 1.5px solid var(--price-red); padding: 6px 15px !important; border-radius: 20px; display: flex !important; align-items: center; gap: 6px; font-size: 0.75rem; }
+        .nav-zalo { color: #0068ff !important; border: 1.5px solid #0068ff; padding: 6px 15px !important; border-radius: 20px; display: flex !important; align-items: center; gap: 6px; font-size: 0.75rem; }
+        .menu-toggle { display: none; font-size: 1.5rem; color: var(--primary); cursor: pointer; }
 
-        /* Footer */
-        footer { background: #111; color: #aaa; padding: 40px 20px; text-align: center; font-size: 14px; border-top: 4px solid var(--primary-color); }
-        footer p { max-width: 600px; margin: 0 auto 15px; }
-        footer .footer-logo { color: #fff; font-weight: 700; font-size: 20px; margin-bottom: 15px; display: block; }
+        /* --- SLIDER --- */
+        .slider-container { width: 100%; height: 500px; margin-top: 70px; overflow: hidden; position: relative; background: #eee; }
+        .slider { display: flex; width: 100%; height: 100%; transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1); }
+        .slide { min-width: 100%; height: 100%; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.4); color: #fff; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; z-index: 10; backdrop-filter: blur(5px); }
+        .prev-btn { left: 20px; } .next-btn { right: 20px; }
+        .slider-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+        .dot { width: 10px; height: 10px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; }
+        .dot.active { background: #fff; width: 25px; border-radius: 10px; }
 
-        /* Thanh điều hướng nhanh dưới Mobile (Zalo, Call) */
-        .quick-contact { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: #fff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: none; grid-template-columns: 1fr 1fr; z-index: 999; }
-        .quick-btn { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: #fff; font-weight: 600; font-size: 15px; }
-        .quick-zalo { background: #0068ff; }
-        .quick-call { background: #d9381e; }
-
-        /* Modals (Chi tiết sản phẩm / dự án) */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
-        .modal-content { background: #fff; width: 100%; max-width: 800px; max-height: 90vh; border-radius: var(--border-radius); overflow-y: auto; position: relative; animation: fadeIn 0.3s ease; display: flex; flex-direction: column; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #aaa; transition: var(--transition); z-index: 10; }
-        .close-modal:hover { color: #333; }
+        /* --- PRODUCT SECTION --- */
+        section { padding: 60px 20px; max-width: 1300px; margin: auto; scroll-margin-top: 80px; }
+        .section-title h2 { font-size: 2.2rem; color: var(--primary); text-align: center; text-transform: uppercase; font-style: italic; }
+        .underline { width: 70px; height: 4px; background: var(--btn-orange); margin: 10px auto 30px; border-radius: 2px; }
         
-        /* Chi tiết cấu trúc trong Modal sản phẩm */
-        .modal-body { padding: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .modal-gallery { display: flex; flex-direction: column; gap: 10px; }
-        .modal-main-img { width: 100%; height: 300px; object-fit: contain; background: #f9f9f9; border-radius: var(--border-radius); border: 1px solid #eee; }
-        .modal-thumbs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
-        .thumb-img { width: 60px; height: 60px; object-fit: contain; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: #fff; transition: var(--transition); flex-shrink: 0; }
-        .thumb-img.active, .thumb-img:hover { border-color: var(--primary-color); box-shadow: 0 0 4px rgba(0,86,179,0.3); }
-        .modal-details { display: flex; flex-direction: column; }
-        .modal-title { font-size: 22px; font-weight: 700; margin-bottom: 10px; color: #111; line-height: 1.3; }
-        .modal-meta { font-size: 13px; color: var(--light-text); margin-bottom: 15px; }
-        .modal-price { font-size: 22px; color: #cc0000; font-weight: 700; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        .modal-desc-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
-        .modal-desc { font-size: 14px; color: #444; line-height: 1.6; white-space: pre-line; margin-bottom: 25px; }
-        
-        /* Cấu trúc tích xanh cho mô tả sản phẩm */
-        .desc-tick-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
-        .desc-tick-icon { color: #28a745; font-weight: bold; flex-shrink: 0; }
+        .filter-bar { 
+            background: var(--light-bg); padding: 20px; border-radius: var(--radius); 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 20px; margin-bottom: 30px; box-shadow: var(--shadow-sm); border: 1px solid #edf2f7;
+        }
+        .filter-group label { font-size: 0.75rem; font-weight: 700; color: var(--light-gray); text-transform: uppercase; padding-left: 5px; margin-bottom: 5px; display: block; }
+        .filter-bar select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; outline: none; background: #fff; cursor: pointer; font-size: 0.85rem; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; background-size: 14px; }
 
-        /* Modal Dự án */
-        .proj-modal-body { padding: 30px; }
-        .proj-modal-img { width: 100%; max-height: 400px; object-fit: cover; border-radius: var(--border-radius); margin-bottom: 20px; }
-        .proj-modal-title { font-size: 22px; font-weight: 700; margin-bottom: 15px; color: var(--primary-color); }
-        .proj-modal-desc { font-size: 15px; line-height: 1.7; color: #444; white-space: pre-line; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; min-height: 400px; }
+        .product-card { background: var(--white); border: 1px solid #f1f5f9; border-radius: var(--radius); padding: 15px; text-align: center; transition: 0.3s; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; cursor: pointer; }
+        .product-card img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 12px; }
+        .product-card h3 { font-size: 0.85rem; height: 40px; overflow: hidden; margin-bottom: 10px; font-weight: 700; }
+        .product-card .price { color: var(--price-red); font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; }
+        .btn-add-cart { background: var(--primary); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 
-        /* Responsive */
+        .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
+        .page-btn { padding: 8px 15px; border: 1px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; font-weight: 700; }
+        .page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        /* --- INTRO & ACTIVITY --- */
+        .intro-container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .intro-img-box { border-radius: var(--radius); overflow: hidden; height: 380px; box-shadow: var(--shadow-lg); }
+        .intro-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .activity-item { background: #fff; padding: 30px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow-sm); border-top: 4px solid var(--primary); }
+
+        /* --- PROJECTS --- */
+        #projects { background: #0f172a; color: #fff; overflow: hidden; padding: 60px 0; }
+        .marquee { display: flex; width: max-content; animation: scroll 40s linear infinite; gap: 20px; }
+        .proj-card { width: 300px; border-radius: var(--radius); overflow: hidden; background: #1e293b; cursor: pointer; }
+        .proj-card img { width: 100%; height: 180px; object-fit: cover; }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* MODALS */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center; padding: 15px; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--white); width: 100%; max-width: 1000px; border-radius: 25px; display: grid; grid-template-columns: 45% 55%; position: relative; overflow: hidden; max-height: 90vh; }
+        .modal-left { padding: 30px; border-right: 1px solid #eee; overflow-y: auto; text-align: center; }
+        .modal-right { padding: 40px; overflow-y: auto; display: flex; flex-direction: column; }
+        .specs-list { list-style: none; margin-top: 15px; }
+        .specs-list li { position: relative; padding-left: 25px; margin-bottom: 8px; font-size: 0.95rem; text-align: left; display: flex; align-items: flex-start; gap: 5px; }
+        .specs-list li::before { content: '✓'; color: #2ecc71; font-weight: 700; flex-shrink: 0; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 35px; color: #999; cursor: pointer; z-index: 10; }
+
+        .cart-icon { position: fixed; bottom: 25px; right: 25px; background: var(--btn-orange); color: var(--white); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 1001; }
+        .cart-count { position: absolute; top: -2px; right: -2px; background: var(--price-red); color: var(--white); border-radius: 50%; padding: 2px 7px; font-size: 11px; border: 2px solid var(--white); }
+
+        /* --- MOBILE REFINEMENT --- */
         @media (max-width: 768px) {
-            body { padding-bottom: 55px; }
-            nav { display: none; width: 100%; position: absolute; top: 100%; left: 0; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 15px 20px; }
-            nav.active { display: block; }
-            nav ul { flex-direction: column; gap: 15px; }
-            .menu-toggle { display: block; }
-            .nav-container { position: relative; }
+            header { height: 65px; }
+            .logo img { height: 35px; }
+            .menu-toggle { display: block; order: 3; }
+            nav ul { 
+                position: fixed; top: 0; right: -100%; width: 75%; height: 100vh; 
+                background: #fff; flex-direction: column; padding: 80px 20px; 
+                transition: 0.4s; z-index: 1002; box-shadow: -10px 0 20px rgba(0,0,0,0.1); 
+                align-items: flex-start; 
+            }
+            nav ul.active { right: 0; }
+            nav ul li { width: 100%; }
+            nav ul li a { font-size: 1rem; border-bottom: 1px solid #f1f5f9; width: 100%; padding: 12px 0; }
             
-            #home { height: 50vh; }
-            .hero-content h1 { font-size: 28px; }
-            .hero-content p { font-size: 15px; }
-            
-            section { padding: 40px 15px; }
-            .section-title { font-size: 24px; }
-            
-            .contact-wrapper { grid-template-columns: 1fr; gap: 30px; }
-            .quick-contact { display: grid; }
-            
-            .modal-body { grid-template-columns: 1fr; gap: 20px; padding: 20px; }
-            .modal-main-img { height: 220px; }
-            .proj-modal-body { padding: 20px; }
+            .dropdown-menu { position: static; display: none; box-shadow: none; border: none; padding: 0 0 0 20px; width: 100%; }
+            .dropdown.open .dropdown-menu { display: block; }
+            .dropdown-menu li a { border-bottom: none; font-weight: 400; color: #666; font-size: 0.9rem; padding: 8px 0; }
+
+            .slider-container { height: 200px; margin-top: 65px; }
+            .intro-container { grid-template-columns: 1fr; }
+            .modal-content { grid-template-columns: 1fr; overflow-y: auto; }
+            .modal-left { border-right: none; border-bottom: 1px solid #eee; }
         }
+
+        /* PRINT */
+        #print-section { display: none; }
+        @media print {
+            body * { visibility: hidden; }
+            #print-section, #print-section * { visibility: visible; }
+            #print-section { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: white; color: black; }
+            .no-print { display: none !important; }
+            .p-table { width: 100% !important; border-collapse: collapse; margin-top: 10px; }
+            .p-table th, .p-table td { border: 1px solid black !important; padding: 6px; font-size: 11px; vertical-align: middle; }
+            .p-table th { background-color: #BDD7EE !important; -webkit-print-color-adjust: exact; font-weight: 700; }
+            .p-company-red { color: #d92027 !important; font-weight: 700; font-size: 20px; text-align: right; }
+            .p-title-blue { color: #0071ba !important; font-size: 28px; font-weight: 800; text-align: center; margin: 15px 0; }
+        }
+
+        footer { background: #0f172a; color: #94a3b8; padding: 60px 20px; }
+        .footer-grid { max-width: 1300px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        #loader { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { width: 45px; height: 45px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <a href="#home" class="logo">
-                <img src="https://khanggiaphuc.com/data/logo.jpg" alt="KGP Telecom Logo" onerror="this.style.display='none'">
-                <span>KGP Telecom</span>
-            </a>
-            <button class="menu-toggle" aria-label="Toggle Menu" onclick="toggleMenu()">☰</button>
-            <nav id="main-nav">
-                <ul>
-                    <li><a href="#home" class="nav-link active">Trang Chủ</a></li>
-                    <li><a href="#services" class="nav-link">Dịch Vụ</a></li>
-                    <li><a href="#products" class="nav-link">Sản Phẩm</a></li>
-                    <li><a href="#projects" class="nav-link">Dự Án</a></li>
-                    <li><a href="#contact" class="nav-link">Liên Hệ</a></li>
-                </ul>
-            </nav>
-        </div>
+    <div id="loader"><div class="spinner"></div><p style="margin-top:10px">KGP TELECOM...</p></div>
+
+    <header class="no-print">
+        <nav>
+            <div class="nav-left">
+                <h1 class="logo-wrap">
+                    <a href="#" class="logo"><img src="https://khanggiaphuc.com/data/logo.jpg" alt="KGP Telecom - Thiết bị viễn thông"></a>
+                </h1>
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="product-search" placeholder="Tìm sản phẩm..." autocomplete="off">
+                        <i class="fa-solid fa-magnifying-glass" onclick="handleSearch()" aria-label="Tìm kiếm"></i>
+                    </div>
+                    <div id="search-results" class="search-results"></div>
+                </div>
+            </div>
+            <div class="menu-toggle" onclick="toggleMenu()" aria-label="Menu"><i class="fa-solid fa-bars-staggered"></i></div>
+            <ul id="nav-menu">
+                <li><a href="#" onclick="closeMenu()"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+                <li class="dropdown" id="dropdown-li">
+                    <a href="javascript:void(0)" onclick="handleDropdownClick(this)"><i class="fa-solid fa-box"></i> Sản phẩm <i class="fa-solid fa-chevron-down" style="font-size: 0.6rem;"></i></a>
+                    <ul class="dropdown-menu" id="submenu-products"></ul>
+                </li>
+                <li><a href="#intro" onclick="closeMenu()"><i class="fa-solid fa-info-circle"></i> Giới thiệu</a></li>
+                <li><a href="#activity" onclick="closeMenu()"><i class="fa-solid fa-briefcase"></i> Lĩnh vực</a></li>
+                <li><a href="#projects" onclick="closeMenu()"><i class="fa-solid fa-project-diagram"></i> Dự án</a></li>
+                <li><a href="tel:0844900099" class="nav-hotline"><i class="fa-solid fa-phone"></i> 0844.900.099</a></li>
+                <li><a href="https://zalo.me/0844900099" target="_blank" class="nav-zalo"><i class="fa-solid fa-comment-dots"></i> Zalo</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <section id="home">
-        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" alt="KGP Technology Background" class="hero-bg">
-        <div class="hero-content">
-            <h1>Khang Gia Phúc Telecom<br>Giải Pháp Công Nghệ Toàn Diện</h1>
-            <p>Chuyên nghiệp trong hạ tầng viễn thông, hệ thống an ninh giám sát thông minh, giải pháp mạng doanh nghiệp và điện năng lượng mặt trời tối ưu.</p>
-            <a href="#contact" class="btn">Liên Hệ Tư Vấn Ngay</a>
+    <div class="slider-container no-print">
+        <button class="slider-btn prev-btn" onclick="moveSlide(-1)" aria-label="Slide trước"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="slider-btn next-btn" onclick="moveSlide(1)" aria-label="Slide sau"><i class="fa-solid fa-chevron-right"></i></button>
+        <div class="slider" id="slider">
+            <div class="slide"><img src="https://khanggiaphuc.com/data/SL1.jpg" alt="Slide 1"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/data/SL2.jpg" alt="Slide 2"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/data/SL3.jpg" alt="Slide 3"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/data/SL4.jpg" alt="Slide 4"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/data/SL5.jpg" alt="Slide 5"></div>
+            <div class="slide"><img src="https://khanggiaphuc.com/data/SL6.jpg" alt="Slide 6"></div>
+        </div>
+        <div class="slider-dots" id="slider-dots"></div>
+    </div>
+
+    <section id="products" class="no-print">
+        <div class="section-title"><h2>Sản phẩm tiêu biểu</h2><div class="underline"></div></div>
+        <div class="filter-bar">
+            <div class="filter-group"><label>Danh mục</label><select id="filter-category" onchange="applyFilters()"><option value="TẤT CẢ">-- Tất cả danh mục --</option></select></div>
+            <div class="filter-group"><label>Thương hiệu</label><select id="filter-brand" onchange="applyFilters()"><option value="TẤT CẢ">-- Tất cả thương hiệu --</option></select></div>
+            <div class="filter-group"><label>Sắp xếp giá</label><select id="filter-price" onchange="applyFilters()"><option value="DEFAULT">-- Mặc định --</option><option value="LOW_HIGH">Giá thấp đến cao</option><option value="HIGH_LOW">Giá cao đến thấp</option></select></div>
+        </div>
+        <div class="product-grid" id="product-grid"></div>
+        <div class="pagination" id="pagination"></div>
+    </section>
+
+    <section id="intro" class="no-print">
+        <div class="section-title"><h2>Giới thiệu</h2><div class="underline"></div></div>
+        <div class="intro-container">
+            <div class="intro-img-box"><img src="data/GioiThieu.jpg" alt="Giới thiệu KGP Telecom"></div>
+            <div id="intro-text"></div>
         </div>
     </section>
 
-    <section id="services">
-        <h2 class="section-title">Khối Ngành Nghề & Dịch Vụ</h2>
-        <div class="services-grid">
-            <div class="service-card">
-                <div class="service-icon">📹</div>
-                <h3>Hệ Thống Camera</h3>
-                <p>Giải pháp giám sát an ninh thông minh tích hợp AI, bảo vệ toàn diện cho gia đình, nhà xưởng và doanh nghiệp.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">🌐</div>
-                <h3>Hạ Tầng Mạng LAN / Wifi</h3>
-                <p>Thiết kế, thi công giải pháp mạng nội bộ tốc độ cao, độ ổn định tuyệt đối và bảo mật tối ưu cho tổ chức.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">☀️</div>
-                <h3>Điện Năng Lượng Mặt Trời</h3>
-                <p>Tư vấn, lắp đặt hệ thống điện mặt trời áp mái lưu trữ và hòa lưới, tiết kiệm chi phí, xu hướng năng lượng xanh.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">📞</div>
-                <h3>Viễn Thông & Tổng Đài</h3>
-                <p>Cung cấp thiết bị và hạ tầng viễn thông, giải pháp tổng đài nội bộ tối ưu hóa quy trình tương tác khách hàng.</p>
-            </div>
+    <section id="activity" class="no-print" style="background: var(--light-bg); max-width: 100%;">
+        <div style="max-width: 1300px; margin: auto;">
+            <div class="section-title"><h2>Lĩnh vực hoạt động</h2><div class="underline"></div></div>
+            <div class="activity-grid" id="activity-list"></div>
         </div>
     </section>
 
-    <section id="products">
-        <h2 class="section-title">Sản Phẩm Phân Phối</h2>
-        <div class="filter-container" id="product-filters">
-            <button class="filter-btn active" onclick="filterProducts('Nổi bật')">Nổi bật</button>
-        </div>
-        <div class="data-grid" id="product-container">
-            </div>
+    <section id="projects" class="no-print">
+        <div class="section-title"><h2 style="color: white;">Dự án đã triển khai</h2><div class="underline"></div></div>
+        <div class="marquee" id="project-list"></div>
     </section>
 
-    <section id="projects">
-        <h2 class="section-title">Dự Án Tiêu Biểu</h2>
-        <div class="filter-container" id="project-filters">
-            <button class="filter-btn active" onclick="filterProjects('Tất cả')">Tất cả</button>
-        </div>
-        <div class="data-grid" id="project-container">
-            </div>
-    </section>
+    <div class="cart-icon no-print" onclick="openCart()" aria-label="Giỏ hàng"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count" id="cart-count">0</span></div>
 
-    <section id="contact">
-        <h2 class="section-title">Liên Hệ Với Chúng Tôi</h2>
-        <div class="contact-wrapper">
-            <div class="contact-info">
-                <h3>CÔNG TY TNHH KHANG GIA PHÚC</h3>
-                <p style="margin-bottom: 25px; color: var(--light-text);">Hãy kết nối với đội ngũ chuyên gia của chúng tôi để được tư vấn khảo sát miễn phí và nhận báo giá tốt nhất cho công trình của bạn.</p>
-                
-                <div class="contact-item">
-                    <span class="contact-icon">📍</span>
-                    <p><strong>Địa chỉ:</strong> Toà nhà Gic, Số 90-92 Đinh Tiên Hoàng, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh, Việt Nam</p>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-icon">📞</span>
-                    <p><strong>Điện thoại:</strong> <a href="tel:0934140049" style="color: inherit; text-decoration: none;">0934.140.049</a></p>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-icon">✉️</span>
-                    <p><strong>Email:</strong> khanggiaphuc.co@gmail.com</p>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-icon">⏰</span>
-                    <p><strong>Giờ làm việc:</strong> Thứ 2 - Thứ 7: 8:00 - 17:30</p>
-                </div>
-            </div>
-            <div class="map-container">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.349633659223!2d106.6967733!3d10.784511!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f350ecaaab5%3A0xbb1d27993a409744!2zOTAgxJDDrG5oIFRpw6puIEhvw6BuZywgxJDhContentIEthbywgUXXhuq1uIDEsIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1710925200000!5m2!1svi!2s" allowfullscreen="" loading="lazy"></iframe>
-            </div>
-        </div>
-    </section>
+    <div id="pModal" class="modal no-print" onclick="if(event.target==this) closeModal()"><div class="modal-content"><span class="close-btn" onclick="closeModal()">&times;</span><div class="modal-left"><img id="main-preview" style="width:100%; height:300px; object-fit:contain" src="" alt="Sản phẩm"><div id="thumb-box" style="margin-top:15px; display:flex; gap:5px; justify-content:center; flex-wrap:wrap"></div></div><div class="modal-right"><div id="m-cat" style="color:var(--btn-orange); font-weight:700; font-size:0.8rem"></div><h2 id="m-title" style="margin:10px 0; line-height:1.3"></h2><div id="m-price" style="color:var(--price-red); font-size:2rem; font-weight:700"></div><div style="margin-top:20px; font-weight:700; border-bottom:2px solid #eee; padding-bottom:5px">⚙ THÔNG SỐ KỸ THUẬT</div><ul id="m-specs" class="specs-list"></ul><button onclick="addToCartModal()" style="background:var(--btn-orange); color:#fff; border:none; padding:18px; border-radius:12px; font-weight:700; cursor:pointer; margin-top:auto; position:sticky; bottom:0">🛒 THÊM VÀO GIỎ HÀNG</button></div></div></div>
 
-    <footer>
-        <span class="footer-logo">KGP Telecom</span>
-        <p>Chuyên cung cấp vật tư viễn thông, thiết bị an ninh mạng, giải pháp camera giám sát, thi công hạ tầng điện nhẹ M&E, lắp đặt hệ thống điện năng lượng mặt trời áp mái uy tín chất lượng.</p>
-        <p>© 2026 Khang Gia Phúc Co., Ltd. All Rights Reserved.</p>
+    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position:relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align:center; color:var(--primary); margin-bottom:20px">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height:400px; overflow-y:auto"><table style="width:100%; border-collapse:collapse"><thead><tr style="border-bottom:2px solid #eee; text-align:left"><th>Sản phẩm</th><th style="width:80px">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align:right; margin-top:20px"><h3>Tổng: <span id="cart-total-web" style="color:var(--price-red)">0đ</span></h3><div style="display:flex; flex-direction:column; gap:8px; margin-top:20px"><button onclick="shareCart()" style="background:#3498db; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">🔗 CHIA SẺ GIỎ HÀNG (ZALO/FB)</button><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px"><button onclick="preparePrint(true)" style="background:#e67e22; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">🏢 BÁO GIÁ CÔNG TY</button><button onclick="preparePrint(false)" style="background:#27ae60; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">👤 BÁO GIÁ CÁ NHÂN</button></div></div></div></div></div>
+
+    <div id="projModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="modal-content"><span class="close-btn" onclick="document.getElementById('projModal').style.display='none'">&times;</span><div class="modal-left"><img id="pj-main-preview" style="width:100%; height:300px; object-fit:contain" src="" alt="Dự án"></div><div class="modal-right"><div id="pj-cat" style="color:var(--primary); font-weight:700; font-size:0.9rem"></div><h2 id="pj-title" style="margin:15px 0"></h2><div id="pj-content" style="white-space:pre-line; color:#555; line-height:1.7"></div></div></div></div>
+
+    <div id="print-section">
+        <table style="width: 100%; border: none !important;">
+            <tr><td style="width: 45%; border:none"><img src="https://khanggiaphuc.com/data/logo.jpg" style="width: 250px;"></td><td style="width: 55%; text-align: right; border:none"><div class="p-company-red">CÔNG TY TNHH KHANG GIA PHÚC</div><div style="color: #0071ba; text-decoration: underline; font-weight: bold; font-size: 13px;">www.khanggiaphuc.com</div></td></tr>
+        </table>
+        <div class="p-title-blue">BẢNG BÁO GIÁ</div>
+        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
+            <div>Số: <b id="print-no">...</b></div>
+            <div>TP.HCM, Ngày <span id="print-date">...</span></div>
+        </div>
+        <table class="p-table"><thead id="p-thead"><tr><th style="width: 5%;">STT</th><th style="width: 42%;">Thiết bị và dịch vụ</th><th style="width: 13%;">Hình ảnh</th><th style="width: 7%;">ĐVT</th><th style="width: 6%;">SL</th><th style="width: 13.5%;">Đơn giá</th><th style="width: 13.5%;">Thành tiền</th></tr></thead><tbody id="print-table-body"></tbody></table>
+        <div class="p-footer-block">
+            <table class="p-table" style="margin-top: -1px;">
+                <tr><td colspan="6" style="text-align: right; font-weight: 700;">Tổng cộng tiền hàng:</td><td id="p-subtotal" style="text-align: right; font-weight: 700;"></td></tr>
+                <tr id="p-vat-row"><td colspan="6" style="text-align: right; font-weight: 700;">Thuế GTGT (VAT 10%):</td><td id="p-vat" style="text-align: right; font-weight: 700;"></td></tr>
+                <tr style="background-color: #f2f2f2 !important;"><td colspan="6" style="text-align: right; font-weight: 800; font-size: 12px;">TỔNG GIÁ TRỊ THANH TOÁN:</td><td id="p-grandtotal" style="text-align: right; font-weight: 800; font-size: 12px;"></td></tr>
+            </table>
+            <p style="font-style: italic; margin-top: 10px; font-size: 13px;">Bằng chữ: <b id="p-word" style="text-transform: capitalize;">...</b></p>
+            <div style="border: 1px solid black; padding: 10px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <div id="p-payment-info" style="font-size: 12px; line-height: 1.7; flex: 1;"><b style="text-decoration: underline;">Thanh toán chuyển khoản:</b><br><span id="p-receiver">...</span><br><span id="p-bank-stk">...</span><br>Nội dung: <span id="print-no-footer" style="font-weight: 700;">...</span></div>
+                <div><img id="qr-payment" style="width: 110px; border: 1px solid #eee;"></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; text-align: center; margin-top: 30px;"><div><b>ĐẠI DIỆN KGP TELECOM</b><div style="height:120px; position:relative"><img src="https://khanggiaphuc.com/data/dau.png" style="width:180px; position:absolute; top:0; left:50%; transform:translateX(-50%); opacity:0.9"></div></div><div><b>XÁC NHẬN KHÁCH HÀNG</b><div style="height: 120px"></div><div style="font-style:italic; font-size:11px">(Ký tên và đóng dấu)</div></div></div>
+        </div>
+    </div>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "KGP Telecom",
+      "image": "https://khanggiaphuc.com/data/logo.jpg",
+      "telephone": "0844900099",
+      "email": "info@khanggiaphuc.com",
+      "url": "https://khanggiaphuc.com/",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Ho Chi Minh City",
+        "addressCountry": "VN"
+      }
+    }
+    </script>
+
+    <footer id="footer" class="no-print">
+        <div class="footer-grid">
+            <div class="footer-col"><img src="https://khanggiaphuc.com/data/logo.jpg" style="height: 50px; margin-bottom: 20px;" alt="KGP Telecom Logo Footer"><div id="f1" style="font-size:0.9rem"></div></div>
+            <div class="footer-col"><h4>THÔNG TIN LIÊN HỆ</h4><ul id="f2-contact" style="list-style:none; padding:0"></ul></div>
+            <div class="footer-col"><h4>KẾT NỐI VỚI CHÚNG TÔI</h4><div id="f3-fb" style="background:#fff; border-radius:10px; overflow:hidden"></div></div>
+        </div>
     </footer>
 
-    <div class="quick-contact">
-        <a href="https://zalo.me/0934140049" target="_blank" class="quick-btn quick-zalo">💬 Chat Zalo</a>
-        <a href="tel:0934140049" class="quick-btn quick-call">📞 Gọi Ngay</a>
-    </div>
-
-    <div id="productModal" class="modal" onclick="closeModal(event, 'productModal')">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="document.getElementById('productModal').style.display='none'">×</span>
-            <div class="modal-body">
-                <div class="modal-gallery">
-                    <img id="modal-main-img" src="" alt="Main Product Image" class="modal-main-img">
-                    <div id="modal-thumbs" class="modal-thumbs"></div>
-                </div>
-                <div class="modal-details">
-                    <h2 id="modal-title" class="modal-title"></h2>
-                    <div id="modal-meta" class="modal-meta"></div>
-                    <div id="modal-price" class="modal-price"></div>
-                    <h3 class="modal-desc-title">Thông Số & Đặc Điểm:</h3>
-                    <div id="modal-desc" class="modal-desc"></div>
-                    <a id="modal-order-btn" href="" target="_blank" class="btn" style="text-align: center; margin-top: auto;">Liên Hệ Tư Vấn Qua Zalo</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="projModal" class="modal" onclick="closeModal(event, 'projModal')">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="document.getElementById('projModal').style.display='none'">×</span>
-            <div class="proj-modal-body">
-                <img id="pj-main-preview" src="" alt="Project Preview" class="proj-modal-img">
-                <h2 id="pj-title" class="proj-modal-title"></h2>
-                <div id="pj-desc" class="proj-modal-desc"></div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Cấu hình Google Sheet ID chung
         const sheetId = '1knLdhA1j69Qqfa6nMIe20vfufQnvGr4THpehnK0mHPk';
-        
-        // Biến toàn cục lưu trữ dữ liệu
-        let allProducts = [];
-        let allProjects = [];
-        let activeProductFilter = 'Nổi bật';
-        let activeProjectFilter = 'Tất cả';
+        const imgBase = `https://khanggiaphuc.com/data/`;
+        const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
 
-        // Xử lý bật tắt Menu trên Mobile
-        function toggleMenu() {
-            document.getElementById('main-nav').classList.toggle('active');
-        }
+        let products = [], allProjects = [], cart = [], currentProductMA = "";
+        let curSlide = 0, sliderInterval, itemsPerPage = 20, currentPage = 1, filteredProductsGlobal = [];
+        const icons = ["fa-camera", "fa-network-wired", "fa-solar-panel", "fa-shield-halved", "fa-microchip", "fa-tools", "fa-wifi"];
 
-        // Tự động đóng menu mobile khi chọn link điều hướng
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                document.getElementById('main-nav').classList.remove('active');
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-            });
-        });
-
-        // Theo dõi cuộn trang để đánh dấu menu đang active tương ứng
-        window.addEventListener('scroll', () => {
-            let current = '';
-            const sections = document.querySelectorAll('section');
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (pageYOffset >= sectionTop - 100) {
-                    current = section.getAttribute('id');
+        // Performance: Fetch Data with Cache
+        async function fetchData(s) {
+            const cacheKey = `kgp_cache_${s}`;
+            const cached = localStorage.getItem(cacheKey);
+            if (cached) {
+                const parts = JSON.parse(cached);
+                if (Date.now() - parts.time < 300000) { // Cache 5 phút
+                    setTimeout(() => processInitialData(s, parts.data), 10);
+                    return parts.data;
                 }
-            });
-            if(current) {
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href').substring(1) === current) {
-                        link.classList.add('active');
-                    }
-                });
             }
-        });
-
-        // Đóng modal khi click ra vùng ngoài
-        function closeModal(e, modalId) {
-            if(e.target === document.getElementById(modalId)) {
-                document.getElementById(modalId).style.display = 'none';
-            }
+            const r = await fetch(`${base}&sheet=${encodeURIComponent(s)}`);
+            const text = await r.text();
+            const data = JSON.parse(text.substring(47).slice(0,-2)).table.rows;
+            localStorage.setItem(cacheKey, JSON.stringify({time: Date.now(), data: data}));
+            return data;
         }
 
-        // KHỞI TẠO TẢI DỮ LIỆU KHI TRANG TẢI XONG
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchProducts();
-            fetchProjects();
-        });
+        function toggleMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
+        function closeMenu() { document.getElementById('nav-menu').classList.remove('active'); document.getElementById('dropdown-li').classList.remove('open'); }
 
-        // 1. TẢI VÀ XỬ LÝ DỮ LIỆU SẢN PHẨM (TỪ TAB 'SanPham')
-        function fetchProducts() {
-            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=SanPham`;
-            
-            fetch(url)
-                .then(res => res.text())
-                .then(txt => {
-                    const data = JSON.parse(txt.substr(47).slice(0, -2));
-                    const rows = data.table.rows;
-                    
-                    allProducts = rows.map(row => {
-                        const cells = row.c;
-                        
-                        // Cột B (index 1): Tên sản phẩm
-                        let tenSP = cells[1] && cells[1].v ? cells[1].v : 'Sản phẩm chưa có tên';
-
-                        // Cột C (index 2): Link chứa ảnh sản phẩm cách nhau bằng dấu ","
-                        let imgStr = cells[2] && cells[2].v ? String(cells[2].v).trim() : '';
-                        let images = imgStr ? imgStr.split(',').map(s => s.trim()).filter(s => s) : [];
-                        
-                        // Cột D (index 3): Danh mục cách nhau bằng dấu ","
-                        let catStr = cells[3] && cells[3].v ? String(cells[3].v).trim() : 'Khác';
-                        let categories = catStr.split(',').map(s => s.trim()).filter(s => s);
-
-                        // Cột E (index 4): Thương hiệu
-                        let thuongHieu = cells[4] && cells[4].v ? cells[4].v : 'Chính hãng';
-
-                        // Cột F (index 5): Giá sản phẩm
-                        let giaSP = cells[5] && cells[5].v ? cells[5].v : 'Liên hệ';
-
-                        // Cột G (index 6): Mô tả sản phẩm cách nhau bằng dấu ","
-                        let descStr = cells[6] && cells[6].v ? String(cells[6].v).trim() : '';
-                        let descItems = descStr ? descStr.split(',').map(s => s.trim()).filter(s => s) : [];
-
-                        return {
-                            id: cells[0] && cells[0].v ? cells[0].v : 'SP-' + Math.random().toString(36).substr(2, 5),
-                            ten: tenSP,
-                            anhArr: images,
-                            danhmucArr: categories,
-                            thuonghieu: thuongHieu,
-                            gia: giaSP,
-                            motaArr: descItems
-                        };
-                    });
-
-                    buildProductFilters();
-                    renderProducts();
-                })
-                .catch(err => {
-                    console.error("Lỗi khi tải dữ liệu sản phẩm:", err);
-                    document.getElementById('product-container').innerHTML = '<p style="text-align:center; color:red;">Không thể tải danh sách sản phẩm lúc này.</p>';
-                });
-        }
-
-        // Tạo bộ lọc cho Sản phẩm
-        function buildProductFilters() {
-            const filterSet = new Set();
-            filterSet.add('Nổi bật'); // Luôn ưu tiên hiển thị danh mục "Nổi bật"
-            
-            allProducts.forEach(p => {
-                p.danhmucArr.forEach(cat => {
-                    if(cat.toLowerCase() !== 'nổi bật') {
-                        filterSet.add(cat);
-                    }
-                });
-            });
-
-            const filterContainer = document.getElementById('product-filters');
-            filterContainer.innerHTML = '';
-            
-            filterSet.forEach(cat => {
-                const btn = document.createElement('button');
-                btn.className = `filter-btn ${activeProductFilter === cat ? 'active' : ''}`;
-                btn.innerText = cat;
-                btn.onclick = () => filterProducts(cat);
-                filterContainer.appendChild(btn);
-            });
-        }
-
-        function filterProducts(category) {
-            activeProductFilter = category;
-            document.querySelectorAll('#product-filters .filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText === category);
-            });
-            renderProducts();
-        }
-
-        // Render sản phẩm ra giao diện
-        function renderProducts() {
-            const container = document.getElementById('product-container');
-            container.innerHTML = '';
-            
-            const filtered = allProducts.filter(p => {
-                return p.danhmucArr.some(cat => cat.toLowerCase() === activeProductFilter.toLowerCase());
-            });
-
-            if(filtered.length === 0) {
-                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--light-text); padding: 30px;">Chưa có sản phẩm nào thuộc danh mục này.</p>';
-                return;
-            }
-
-            filtered.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                
-                const firstImg = p.anhArr.length > 0 ? p.anhArr[0] : 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=400&q=80';
-                
-                card.innerHTML = `
-                    <div class="product-img-wrapper" onclick="openProductModal('${p.id}')">
-                        <img src="${firstImg}" alt="${p.ten}" class="product-img" onerror="this.src='https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=400&q=80';">
-                    </div>
-                    <div class="product-info">
-                        <div class="product-brand">${p.thuonghieu}</div>
-                        <h3 class="product-title" onclick="openProductModal('${p.id}')">${p.ten}</h3>
-                        <div class="product-price">${formatGia(p.gia)}</div>
-                        <button class="btn" style="padding: 8px 15px; font-size: 13px; border-radius: 4px;" onclick="openProductModal('${p.id}')">Xem Chi Tiết</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function formatGia(giaVal) {
-            if (!giaVal || String(giaVal).toLowerCase() === 'liên hệ' || String(giaVal).trim() === '0') {
-                return 'Giá: Liên hệ';
-            }
-            if (!isNaN(giaVal)) {
-                return Number(giaVal).toLocaleString('vi-VN') + ' đ';
-            }
-            return giaVal;
-        }
-
-        // Mở Modal xem chi tiết sản phẩm
-        function openProductModal(productId) {
-            const p = allProducts.find(item => item.id === productId);
-            if(!p) return;
-
-            document.getElementById('modal-title').innerText = p.ten;
-            document.getElementById('modal-meta').innerText = `Thương hiệu: ${p.thuonghieu} | Danh mục: ${p.danhmucArr.join(', ')}`;
-            document.getElementById('modal-price').innerText = formatGia(p.gia);
-
-            // Định dạng mô tả: tạo dấu tích xanh đầu dòng và xuống dòng cho từng mục
-            const descContainer = document.getElementById('modal-desc');
-            descContainer.innerHTML = '';
-            if (p.motaArr.length > 0) {
-                p.motaArr.forEach(text => {
-                    const item = document.createElement('div');
-                    item.className = 'desc-tick-item';
-                    item.innerHTML = `<span class="desc-tick-icon">✔</span><span>${text}</span>`;
-                    descContainer.appendChild(item);
-                });
+        function handleDropdownClick(el) {
+            if (window.innerWidth <= 768) {
+                el.parentElement.classList.toggle('open');
             } else {
-                descContainer.innerText = 'Đang cập nhật thông tin chi tiết.';
+                window.location.href = "#products";
+                closeMenu();
             }
+        }
 
-            // Xử lý hiển thị Album ảnh
-            const mainImg = document.getElementById('modal-main-img');
-            const thumbsContainer = document.getElementById('modal-thumbs');
-            thumbsContainer.innerHTML = '';
+        // --- SLIDER ---
+        function initSlider() {
+            const dots = document.getElementById('slider-dots');
+            dots.innerHTML = "";
+            for(let i=0; i<6; i++) {
+                const dot = document.createElement('div');
+                dot.className = `dot ${i===0?'active':''}`;
+                dot.onclick = () => goToSlide(i);
+                dots.appendChild(dot);
+            }
+            startSlider();
+        }
+        function moveSlide(dir) { curSlide = (curSlide + dir + 6) % 6; updateSliderUI(); resetSliderTimer(); }
+        function goToSlide(idx) { curSlide = idx; updateSliderUI(); resetSliderTimer(); }
+        function updateSliderUI() {
+            document.getElementById('slider').style.transform = `translateX(-${curSlide * 100}%)`;
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((d, i) => d.classList.toggle('active', i === curSlide));
+        }
+        function startSlider() { sliderInterval = setInterval(() => moveSlide(1), 5000); }
+        function resetSliderTimer() { clearInterval(sliderInterval); startSlider(); }
 
-            const defaultFallback = 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=400&q=80';
-
-            if(p.anhArr.length > 0) {
-                mainImg.src = p.anhArr[0];
-                mainImg.onerror = function() { this.src = defaultFallback; };
-
-                p.anhArr.forEach((imgUrl, idx) => {
-                    const thumb = document.createElement('img');
-                    thumb.src = imgUrl;
-                    thumb.className = `thumb-img ${idx === 0 ? 'active' : ''}`;
-                    // Nếu không tìm thấy ảnh (lỗi link) thì bỏ qua không hiển thị
-                    thumb.onerror = function() { this.style.display = 'none'; };
+        // --- PROCESS DATA ---
+        async function processInitialData(sheetName, data) {
+            if (sheetName === 'Trang_Chu') {
+                document.getElementById('intro-text').innerHTML = data[2]?.c[1]?.v || "";
+                const actLines = (data[3]?.c[1]?.v || "").split('\n').filter(l => l.trim());
+                let actH = ""; actLines.forEach((l, i) => {
+                    let p = l.split(':');
+                    actH += `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${icons[i % icons.length]}"></i></div><h4>${p[0].trim()}</h4><p style="font-size:0.8rem; color:#888">${p[1] ? p[1].trim() : ""}</p></div>`;
+                });
+                document.getElementById('activity-list').innerHTML = actH;
+                document.getElementById('f1').innerHTML = data[4]?.c[1]?.v || "";
+                const cLines = (data[5]?.c[1]?.v || "").split('\n').filter(l => l.trim());
+                let cH = ""; cLines.forEach(l => cH += `<li style="margin-bottom:12px; display:flex; gap:10px; color:inherit"><i class="fa-solid fa-check-circle" style="color:var(--primary); margin-top:4px"></i><span>${l}</span></li>`);
+                document.getElementById('f2-contact').innerHTML = cH;
+                const fb = data[6]?.c[1]?.v || "";
+                document.getElementById('f3-fb').innerHTML = `<iframe src="https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=340&height=250&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true" width="100%" height="250" style="border:none;overflow:hidden" scrolling="no" frameborder="0"></iframe>`;
+            }
+            
+            // Xử lý dữ liệu sản phẩm mới (Tách dấu phẩy, tab mới 'SanPham')
+            if (sheetName === 'SanPham') {
+                products = data.map(r => {
+                    // Cột B (index 1): Tên sản phẩm
+                    const ten = r.c[1]?.v || "";
                     
-                    thumb.onclick = () => {
-                        mainImg.src = imgUrl;
-                        document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
-                        thumb.classList.add('active');
+                    // Cột C (index 2): Link chứa ảnh sản phẩm cách nhau bằng dấu ","
+                    const imgStr = r.c[2]?.v ? r.c[2].v.toString().trim() : "";
+                    const images = imgStr ? imgStr.split(',').map(s => s.trim()).filter(s => s) : [];
+                    
+                    // Cột D (index 3): Danh mục cách nhau bằng dấu ","
+                    const catStr = r.c[3]?.v ? r.c[3].v.toString().trim() : "TẤT CẢ";
+                    const categories = catStr.split(',').map(s => s.trim()).filter(s => s);
+                    
+                    // Cột E (index 4): Thương hiệu
+                    const brand = r.c[4]?.v ? r.c[4].v.toString().trim().toUpperCase() : "KHÁC";
+                    
+                    // Cột F (index 5): Giá sản phẩm
+                    const gia = r.c[5]?.v || 0;
+                    
+                    // Cột G (index 6): Mô tả sản phẩm cách nhau bằng dấu ","
+                    const descStr = r.c[6]?.v ? r.c[6].v.toString().trim() : "";
+                    const descItems = descStr ? descStr.split(',').map(s => s.trim()).filter(s => s) : [];
+
+                    return { 
+                        ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", 
+                        ten: ten, 
+                        brand: brand, 
+                        cats: categories, 
+                        gia: gia, 
+                        motaArr: descItems,
+                        anhArr: images
                     };
-                    thumbsContainer.appendChild(thumb);
+                }).filter(x => x.ma && x.ma.toLowerCase() !== "mã");
+                
+                const catsSet = new Set(), brandsSet = new Set();
+                catsSet.add('Nổi bật'); // Đảm bảo luôn ưu tiên có danh mục Nổi bật lên đầu
+                
+                products.forEach(p => { 
+                    p.cats.forEach(c => catsSet.add(c.trim())); 
+                    brandsSet.add(p.brand); 
+                });
+                
+                const catList = Array.from(catsSet).sort(), brandList = Array.from(brandsSet).sort();
+                
+                const submenu = document.getElementById('submenu-products'), selectCat = document.getElementById('filter-category');
+                submenu.innerHTML = ""; selectCat.innerHTML = '<option value="TẤT CẢ">-- Tất cả danh mục --</option>';
+                
+                catList.forEach(c => {
+                    submenu.innerHTML += `<li><a href="#products" onclick="setFilter('cat', '${c}')">${c}</a></li>`;
+                    selectCat.innerHTML += `<option value="${c}">${c}</option>`;
+                });
+                
+                const selectBrand = document.getElementById('filter-brand');
+                selectBrand.innerHTML = '<option value="TẤT CẢ">-- Tất cả thương hiệu --</option>';
+                brandList.forEach(b => { selectBrand.innerHTML += `<option value="${b}">${b}</option>`; });
+                applyFilters();
+            }
+            
+            if (sheetName === 'Du_An') {
+                allProjects = data.slice(1).map(r => ({ ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", ten: r.c[1]?.v || "", hangmuc: r.c[2]?.v || "", noidung: r.c[3]?.v || "", nam: r.c[4]?.v || "" })).filter(x => x.ma);
+                let pjH = ""; allProjects.forEach(pj => pjH += `<div class="proj-card" onclick="openProjModal('${pj.ma}')"><img src="${imgBase}${pj.ma}.jpg" alt="${pj.ten}"><h4>${pj.ten}</h4></div>`);
+                document.getElementById('project-list').innerHTML = pjH + pjH;
+            }
+        }
+
+        // --- INIT ---
+        async function init() {
+            try {
+                const homeData = await fetchData('Trang_Chu');
+                await processInitialData('Trang_Chu', homeData);
+
+                // Chuyển đổi gọi tên tab đích sang 'SanPham'
+                const prodData = await fetchData('SanPham');
+                await processInitialData('SanPham', prodData);
+
+                const projData = await fetchData('Du_An');
+                await processInitialData('Du_An', projData);
+
+                // Check Shared Quote
+                const urlParams = new URLSearchParams(window.location.search);
+                const sharedQuote = urlParams.get('quote');
+                if (sharedQuote) {
+                    const items = sharedQuote.split(',');
+                    items.forEach(it => {
+                        const [ma, qty] = it.split(':');
+                        const p = products.find(x => x.ma.toString() === ma.toString());
+                        if (p) cart.push({ ...p, qty: parseInt(qty) || 1 });
+                    });
+                    updateCartUI();
+                    setTimeout(() => openCart(), 1000);
+                }
+
+                // Search logic
+                const searchInp = document.getElementById('product-search'), searchRes = document.getElementById('search-results');
+                searchInp.addEventListener('input', (e) => {
+                    const k = e.target.value.toLowerCase().trim();
+                    if(k.length < 1) { searchRes.style.display = 'none'; return; }
+                    const f = products.filter(p => p.ten.toLowerCase().includes(k) || p.ma.toLowerCase().includes(k)).slice(0, 8);
+                    if(f.length > 0) {
+                        searchRes.innerHTML = f.map(p => {
+                            const mainImgUrl = p.anhArr.length > 0 ? p.anhArr[0] : `${imgBase}${p.ma}.jpg`;
+                            return `<div class="search-item" style="display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #eee;cursor:pointer" onclick="openModal('${p.ma}'); searchRes.style.display='none'"><img src="${mainImgUrl}" style="width:40px;height:40px;object-fit:contain" alt="${p.ten}" onerror="this.src='https://via.placeholder.com/200'"><div><b style="font-size:0.8rem">${p.ten}</b><br><span style="color:red;font-size:0.75rem">${p.gia > 0 ? p.gia.toLocaleString() + 'đ' : 'Giá liên hệ'}</span></div></div>`;
+                        }).join('');
+                        searchRes.style.display = 'block';
+                    } else searchRes.style.display = 'none';
+                });
+                searchInp.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSearch(); });
+                document.addEventListener('click', (e) => { if(!e.target.closest('.search-container')) searchRes.style.display='none'; });
+
+                initSlider();
+                const hash = window.location.hash.substring(1);
+                if (hash) setTimeout(() => openModal(hash), 600);
+                document.getElementById('loader').style.display = 'none';
+            } catch (e) { console.error(e); }
+        }
+
+        function setFilter(type, val) { if(type === 'cat') document.getElementById('filter-category').value = val; applyFilters(); closeMenu(); }
+
+        function applyFilters() {
+            const cat = document.getElementById('filter-category').value;
+            const brand = document.getElementById('filter-brand').value;
+            const sort = document.getElementById('filter-price').value;
+            let filtered = products.filter(p => (cat === 'TẤT CẢ' || p.cats.some(c => c.trim().toLowerCase() === cat.toLowerCase())) && (brand === 'TẤT CẢ' || p.brand === brand));
+            if (cat === 'TẤT CẢ' && brand === 'TẤT CẢ' && sort === 'DEFAULT') {
+                const featured = filtered.filter(p => p.cats.some(c => c.trim().toUpperCase() === "NỔI BẬT")).slice(0, 20);
+                const others = filtered.filter(p => !p.cats.some(c => c.trim().toUpperCase() === "NỔI BẬT"));
+                filtered = [...featured, ...others];
+            }
+            if (sort === 'LOW_HIGH') filtered.sort((a, b) => a.gia - b.gia);
+            if (sort === 'HIGH_LOW') filtered.sort((a, b) => b.gia - a.gia);
+            filteredProductsGlobal = filtered; currentPage = 1; displayPaginatedItems();
+        }
+
+        function displayPaginatedItems() {
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            renderProducts(filteredProductsGlobal.slice(start, end));
+            renderPagination(filteredProductsGlobal.length);
+        }
+
+        // Render sản phẩm ngoài danh sách lưới
+        function renderProducts(data) {
+            document.getElementById('product-grid').innerHTML = data.map(p => {
+                const displayImg = p.anhArr.length > 0 ? p.anhArr[0] : `${imgBase}${p.ma}.jpg`;
+                return `<div class="product-card"><img src="${displayImg}" loading="lazy" alt="${p.ten}" onclick="openModal('${p.ma}')" onerror="this.src='https://via.placeholder.com/200'"><h3 onclick="openModal('${p.ma}')">${p.ten}</h3><div class="price">${p.gia > 0 ? p.gia.toLocaleString() + 'đ' : 'Giá liên hệ'}</div><button class="btn-add-cart" onclick="addToCart('${p.ma}')">🛒 THÊM GIỎ HÀNG</button></div>`;
+            }).join('');
+        }
+
+        function renderPagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const container = document.getElementById('pagination');
+            container.innerHTML = "";
+            if (totalPages <= 1) return;
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.innerText = i; btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                btn.onclick = () => { currentPage = i; displayPaginatedItems(); document.getElementById('products').scrollIntoView({ behavior: 'smooth' }); };
+                container.appendChild(btn);
+            }
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('product-search').value.toLowerCase().trim();
+            if(!query) return;
+            filteredProductsGlobal = products.filter(p => p.ten.toLowerCase().includes(query) || p.ma.toLowerCase().includes(query));
+            currentPage = 1; displayPaginatedItems();
+            document.getElementById('search-results').style.display = 'none';
+            window.location.href = "#products";
+        }
+
+        // Mở Modal xem chi tiết thông số và album ảnh sản phẩm
+        function openModal(ma) {
+            const p = products.find(x => x.ma.toString() === ma.toString());
+            if(!p) return;
+            window.location.hash = ma; currentProductMA = p.ma;
+            document.getElementById('m-title').innerText = p.ten;
+            document.getElementById('m-price').innerText = p.gia > 0 ? p.gia.toLocaleString() + ' đ' : 'Giá liên hệ';
+            document.getElementById('m-cat').innerText = p.cats.join(' | ');
+            
+            // Xử lý ảnh chính đại diện
+            const mainPreview = document.getElementById('main-preview');
+            const defaultFallback = 'https://via.placeholder.com/200';
+            const firstImg = p.anhArr.length > 0 ? p.anhArr[0] : `${imgBase}${p.ma}.jpg`;
+            mainPreview.src = firstImg;
+            mainPreview.onerror = function() { this.src = defaultFallback; };
+            mainPreview.alt = p.ten;
+
+            // Render mô tả xuống dòng có cấu trúc dấu tích xanh đầu dòng ✓
+            if (p.motaArr && p.motaArr.length > 0) {
+                document.getElementById('m-specs').innerHTML = p.motaArr.map(l => `<li>${l}</li>`).join('');
+            } else {
+                document.getElementById('m-specs').innerHTML = '<li>Đang cập nhật thông số kỹ thuật.</li>';
+            }
+            
+            // Tạo Album ảnh nhỏ thumbnails
+            let th = "";
+            if (p.anhArr && p.anhArr.length > 0) {
+                p.anhArr.forEach((imgUrl, idx) => {
+                    th += `<img src="${imgUrl}" alt="thumbnail ${idx}" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer; margin:2px;" onerror="this.style.display='none'" onclick="document.getElementById('main-preview').src=this.src">`;
                 });
             } else {
-                mainImg.src = defaultFallback;
+                th += `<img src="${imgBase}${p.ma}.jpg" alt="thumbnail" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onerror="this.style.display='none'" onclick="document.getElementById('main-preview').src=this.src">`;
+                [1,2,3,4].forEach(n => th += `<img src="${imgBase}${p.ma}.${n}.jpg" alt="thumbnail ${n}" style="width:60px; height:60px; object-fit:contain; border:1px solid #eee; cursor:pointer" onerror="this.style.display='none'" onclick="document.getElementById('main-preview').src=this.src">`);
             }
-
-            document.getElementById('modal-order-btn').href = `https://zalo.me/0934140049?text=${encodeURIComponent('Xin chào KGP Telecom, tôi muốn nhận tư vấn báo giá chi tiết cho sản phẩm: ' + p.ten)}`;
-            document.getElementById('productModal').style.display = 'flex';
+            document.getElementById('thumb-box').innerHTML = th;
+            document.getElementById('pModal').style.display = 'flex';
         }
 
-        // 2. TẢI VÀ XỬ LÝ DỮ LIỆU DỰ ÁN (GIỮ NGUYÊN 100% GỐC)
-        function fetchProjects() {
-            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=Du_An`;
+        function closeModal() { document.getElementById('pModal').style.display = 'none'; history.pushState("", document.title, window.location.pathname + window.location.search); }
+
+        function addToCart(ma) {
+            const p = products.find(x => x.ma.toString() === ma.toString());
+            if(!p) return;
+            const ex = cart.find(x => x.ma.toString() === ma.toString());
+            if (ex) ex.qty++; else cart.push({...p, qty: 1});
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.reduce((s, i) => s + i.qty, 0);
+            let total = 0;
+            document.getElementById('cart-items').innerHTML = cart.map((item, i) => {
+                const sub = item.gia * item.qty; total += sub;
+                const subDisplay = item.gia > 0 ? sub.toLocaleString() + 'đ' : 'Liên hệ';
+                return `<tr style="border-bottom:1px solid #eee"><td style="padding:10px 0"><b style="color:var(--primary);cursor:pointer" onclick="openModal('${item.ma}')">${item.ten}</b></td><td><input type="number" value="${item.qty}" min="1" style="width:40px" onchange="cart[${i}].qty=parseInt(this.value);updateCartUI()"></td><td>${subDisplay}</td><td><button onclick="cart.splice(${i},1);updateCartUI()" style="border:none;background:none;color:red;cursor:pointer">❌</button></td></tr>`;
+            }).join('');
+            document.getElementById('cart-total-web').innerText = total.toLocaleString() + 'đ';
+        }
+
+        function openCart() { document.getElementById('cartModal').style.display = 'flex'; }
+        function addToCartModal() { addToCart(currentProductMA); closeModal(); }
+
+        function shareCart() {
+            if (cart.length === 0) return alert("Giỏ hàng trống!");
+            const data = cart.map(item => `${item.ma}:${item.qty}`).join(',');
+            const shareUrl = window.location.origin + window.location.pathname + "?quote=" + encodeURIComponent(data);
+            navigator.clipboard.writeText(shareUrl).then(() => alert("Đã sao chép link báo giá! Hãy gửi link này cho khách hàng qua Zalo/Facebook."));
+        }
+
+        function preparePrint(isCompany) {
+            if (!cart.length) return alert("Giỏ hàng trống!");
+            const n = new Date(); const qID = `${String(n.getDate()).padStart(2,'0')}${String(n.getMonth()+1).padStart(2,'0')}${String(n.getFullYear()).slice(-2)}/BG-KGP`;
+            document.getElementById('print-no').innerText = qID; document.getElementById('print-no-footer').innerText = "Thanh toán cho báo giá số: " + qID;
+            document.getElementById('print-date').innerText = n.toLocaleDateString('vi-VN');
             
-            fetch(url)
-                .then(res => res.text())
-                .then(txt => {
-                    const data = JSON.parse(txt.substr(47).slice(0, -2));
-                    const rows = data.table.rows;
-                    
-                    allProjects = rows.map(row => {
-                        const cells = row.c;
-                        return {
-                            ma: cells[0] && cells[0].v ? cells[0].v : '',
-                            ten: cells[1] && cells[1].v ? cells[1].v : '',
-                            loai: cells[2] && cells[2].v ? cells[2].v : 'Khác',
-                            noidung: cells[3] && cells[3].v ? cells[3].v : ''
-                        };
-                    }).filter(pj => pj.ma && pj.ten);
-
-                    buildProjectFilters();
-                    renderProjects();
-                })
-                .catch(err => {
-                    console.error("Lỗi khi tải dữ liệu dự án:", err);
-                    document.getElementById('project-container').innerHTML = '<p style="text-align:center; color:var(--light-text);">Đang cập nhật danh mục dự án...</p>';
-                });
-        }
-
-        function buildProjectFilters() {
-            const filterSet = new Set();
-            filterSet.add('Tất cả');
-            allProjects.forEach(pj => { if(pj.loai) filterSet.add(pj.loai); });
-
-            const filterContainer = document.getElementById('project-filters');
-            filterContainer.innerHTML = '';
+            document.getElementById('print-table-body').innerHTML = cart.map((item, i) => {
+                const t = item.gia * item.qty; sub += t;
+                const priceCell = item.gia > 0 ? item.gia.toLocaleString() : "Liên hệ";
+                const totalCell = item.gia > 0 ? t.toLocaleString() : "Liên hệ";
+                const printImg = item.anhArr.length > 0 ? item.anhArr[0] : `${imgBase}${item.ma}.jpg`;
+                const motaPrintStr = item.motaArr && item.motaArr.length > 0 ? item.motaArr.map(m => `• ${m}`).join('<br>') : '';
+                return `<tr><td align="center">${i+1}</td><td><b>${item.ten}</b><br><span style="font-size:10px; color:#555;">${motaPrintStr}</span></td><td align="center"><img src="${printImg}" style="width:50px" alt="img" onerror="this.src='https://via.placeholder.com/100'"></td><td align="center">Bộ</td><td align="center">${item.qty}</td><td align="right">${priceCell}</td><td align="right">${totalCell}</td></tr>`;
+            }).join('');
             
-            filterSet.forEach(loai => {
-                const btn = document.createElement('button');
-                btn.className = `filter-btn ${activeProjectFilter === loai ? 'active' : ''}`;
-                btn.innerText = loai;
-                btn.onclick = () => filterProjects(loai);
-                filterContainer.appendChild(btn);
-            });
+            let sub = 0; 
+            cart.forEach(item => { if(item.gia > 0) sub += (item.gia * item.qty); });
+            
+            const vat = isCompany ? Math.round(sub * 0.1) : 0; const gt = sub + vat;
+            document.getElementById('p-subtotal').innerText = sub.toLocaleString(); document.getElementById('p-vat').innerText = vat.toLocaleString();
+            document.getElementById('p-grandtotal').innerText = gt.toLocaleString(); document.getElementById('p-word').innerText = docSoTien(gt) + " đồng chẵn.";
+            document.getElementById('p-vat-row').style.display = isCompany ? 'table-row' : 'none';
+            if(isCompany) {
+                document.getElementById('p-receiver').innerHTML = 'Đơn vị: <span style="color:red; font-weight:700">CÔNG TY TNHH KHANG GIA PHÚC</span>';
+                document.getElementById('p-bank-stk').innerHTML = '<b>Techcombank</b> | STK: <b>1793418868</b>';
+                document.getElementById('qr-payment').src = `https://img.vietqr.io/image/techcombank-1793418868-compact.png?amount=${gt}&addInfo=Thanh toan bao gia ${qID}`;
+            } else {
+                document.getElementById('p-receiver').innerHTML = 'Chủ tài khoản: <span style="color:red; font-weight:700">TRAN CONG HANH</span>';
+                document.getElementById('p-bank-stk').innerHTML = '<b>Ngân hàng VIB</b> | STK: <b>024845</b>';
+                document.getElementById('qr-payment').src = `https://img.vietqr.io/image/VIB-024845-compact.png?amount=${gt}&addInfo=Bao gia ca nhan ${qID}`;
+            }
+            setTimeout(() => window.print(), 800);
         }
 
-        function filterProjects(loai) {
-            activeProjectFilter = loai;
-            document.querySelectorAll('#project-filters .filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText === loai);
-            });
-            renderProjects();
-        }
-
-        function renderProjects() {
-            const container = document.getElementById('project-container');
-            container.innerHTML = '';
-            const imgBase = "https://khanggiaphuc.com/data/";
-
-            const filtered = allProjects.filter(pj => {
-                if (activeProjectFilter === 'Tất cả') return true;
-                return pj.loai === activeProjectFilter;
-            });
-
-            filtered.forEach(pj => {
-                const card = document.createElement('div');
-                card.className = 'project-card';
-                card.onclick = () => openProjectModal(pj.ma);
-                
-                card.innerHTML = `
-                    <img src="${imgBase}${pj.ma}.jpg" alt="${pj.ten}" class="project-img" onerror="this.src='https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80';">
-                    <div class="project-info">
-                        <h3 class="project-title">${pj.ten}</h3>
-                        <div class="project-desc">${pj.noidung}</div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function openProjectModal(maPj) {
-            const pj = allProjects.find(item => item.ma === maPj);
+        function openProjModal(ma) {
+            const pj = allProjects.find(x => x.ma.toString() === ma.toString());
             if(!pj) return;
-            const imgBase = "https://khanggiaphuc.com/data/";
-
-            document.getElementById('pj-title').innerText = pj.ten;
-            document.getElementById('pj-desc').innerHTML = pj.noidung;
-            
-            const mainPreview = document.getElementById('pj-main-preview');
-            mainPreview.src = `${imgBase}${pj.ma}.jpg`;
-            mainPreview.onerror = function() { this.src = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80'; };
-            
+            document.getElementById('pj-title').innerText = pj.ten; document.getElementById('pj-cat').innerText = pj.hangmuc + " | " + pj.nam;
+            document.getElementById('pj-content').innerHTML = pj.noidung; document.getElementById('pj-main-preview').src = `${imgBase}${pj.ma}.jpg`;
             document.getElementById('projModal').style.display = 'flex';
         }
 
-        // HÀM ĐỌC SỐ TIỀN THÀNH CHỮ NGUYÊN BẢN CŨ CỦA TRANG
         function docSoTien(number) {
             if (number === 0) return "Không";
             const digits = ["không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"];
@@ -672,14 +685,16 @@
                 else if (t === 0 && d > 0) { if (h > 0 || !isFirst) r += "lẻ "; r += digits[d]; }
                 return r;
             }
-            let res = "", i = 0, str = String(number);
-            while (str.length > 0) {
-                let chunk = Number(str.slice(-3)); str = str.slice(0, -3);
-                if (chunk > 0) res = read3(chunk, str.length === 0) + units[i] + " " + res;
-                i++;
+            let res = "", arr = [];
+            while (number > 0) { arr.push(number % 1000); number = Math.floor(number / 1000); }
+            for (let j = arr.length - 1; j >= 0; j--) {
+                let s = read3(arr[j], j === arr.length - 1);
+                if (s !== "") res += s + units[j] + " ";
             }
-            return res.trim().charAt(0).toUpperCase() + res.trim().slice(1) + " đồng";
+            return res.trim().charAt(0).toUpperCase() + res.trim().slice(1);
         }
+
+        init();
     </script>
 </body>
 </html>
