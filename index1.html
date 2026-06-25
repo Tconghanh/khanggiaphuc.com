@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
+    <meta name="theme-color" content="#0071ba">
+
     <!-- SEO Tối ưu -->
     <title>KGP Telecom - Giải Pháp Viễn Thông & Công Nghệ Hàng Đầu</title>
     <meta name="description" content="KGP Telecom chuyên cung cấp giải pháp viễn thông, camera giám sát, hệ thống mạng và điện năng lượng mặt trời uy tín. Công nghệ trong tầm tay bạn.">
     <meta name="keywords" content="KGP Telecom, viễn thông, camera, thiết bị mạng, điện mặt trời, Khang Gia Phúc">
     <link rel="canonical" href="https://khanggiaphuc.com/">
-    
-    <!-- Open Graph SEO (Facebook, Zalo) -->
+
+    <!-- Open Graph SEO -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="KGP Telecom - Công Nghệ Trong Tầm Tay">
     <meta property="og:description" content="Giải pháp viễn thông, thiết bị an ninh và năng lượng sạch chuyên nghiệp.">
@@ -21,141 +22,476 @@
     <link rel="preconnect" href="https://docs.google.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
     <link rel="icon" type="image/x-icon" href="data/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
-            --primary: #0071ba; --primary-dark: #005a96; --price-red: #d92027;
-            --btn-orange: #ff8a22; --dark-gray: #2d3436; --light-gray: #636e72;
-            --light-bg: #f8fafc; --white: #ffffff; --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
-            --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+            --primary: #0071ba; --primary-dark: #005a96; --primary-glow: #38bdf8;
+            --price-red: #d92027; --btn-orange: #ff8a22;
+            --dark-gray: #2d3436; --light-gray: #636e72;
+            --light-bg: #f8fafc; --white: #ffffff;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-md: 0 6px 20px rgba(0,113,186,0.12);
+            --shadow-lg: 0 18px 50px rgba(0,0,0,0.15);
+            --shadow-glow: 0 10px 30px -8px rgba(0,113,186,0.45);
             --radius: 16px;
+            --ease: cubic-bezier(.22,.61,.36,1);
+            --ease-snap: cubic-bezier(.34,1.56,.64,1);
+            --grad-primary: linear-gradient(135deg, #0071ba 0%, #38bdf8 100%);
+            --grad-orange: linear-gradient(135deg, #ff8a22 0%, #ffb347 100%);
+            --grad-red: linear-gradient(135deg, #d92027 0%, #ff5757 100%);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-        body { font-family: 'Roboto', sans-serif; line-height: 1.6; color: var(--dark-gray); background: #fff; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Roboto', sans-serif; line-height: 1.6;
+            color: var(--dark-gray); background: #fff; overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
 
-        /* --- HEADER & NAV --- */
-        header { background: rgba(255,255,255,0.96); backdrop-filter: blur(15px); box-shadow: var(--shadow-sm); position: fixed; width: 100%; top: 0; z-index: 1000; height: 70px; display: flex; align-items: center; }
+        /* === Selection === */
+        ::selection { background: var(--primary); color: #fff; }
+
+        /* === Custom scrollbar === */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(var(--primary), var(--primary-glow)); border-radius: 10px; border: 2px solid #f1f5f9; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+        /* === Reveal on scroll === */
+        [data-reveal] {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity .9s var(--ease), transform .9s var(--ease);
+            will-change: opacity, transform;
+        }
+        [data-reveal].in { opacity: 1; transform: none; }
+        [data-reveal="left"]  { transform: translateX(-40px); }
+        [data-reveal="right"] { transform: translateX(40px); }
+        [data-reveal="zoom"]  { transform: scale(.92); }
+        [data-reveal="left"].in,[data-reveal="right"].in,[data-reveal="zoom"].in { transform: none; }
+
+        /* --- HEADER --- */
+        header {
+            background: rgba(255,255,255,0.78);
+            -webkit-backdrop-filter: blur(18px) saturate(140%);
+            backdrop-filter: blur(18px) saturate(140%);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            height: 70px; display: flex; align-items: center;
+            transition: background .35s var(--ease), box-shadow .35s var(--ease), height .35s var(--ease);
+        }
+        header.scrolled {
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);
+            height: 62px;
+        }
         nav { max-width: 1400px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; width: 100%; gap: 10px; }
         .nav-left { display: flex; align-items: center; gap: 10px; flex: 1; }
-        
-        /* SEO: H1 cho Logo */
+
         h1.logo-wrap { margin: 0; line-height: 0; }
-        .logo img { height: 42px; width: auto; transition: 0.3s; }
-        
+        .logo img { height: 42px; width: auto; transition: transform .4s var(--ease-snap), filter .4s var(--ease); }
+        .logo:hover img { transform: scale(1.08) rotate(-2deg); filter: drop-shadow(0 4px 10px rgba(0,113,186,.35)); }
+
         .search-container { position: relative; flex: 1; max-width: 350px; }
-        .search-box input { width: 100%; padding: 10px 40px 10px 15px; border-radius: 25px; border: 1.5px solid #eee; outline: none; font-size: 0.85rem; transition: 0.3s; background: #f1f5f9; height: 40px; }
-        .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); cursor: pointer; }
-        .search-results { position: absolute; top: 110%; left: 0; width: 100%; background: #fff; border-radius: var(--radius); box-shadow: var(--shadow-lg); max-height: 350px; overflow-y: auto; display: none; z-index: 1001; border: 1px solid #eee; }
+        .search-box input {
+            width: 100%; padding: 10px 40px 10px 18px; border-radius: 25px;
+            border: 1.5px solid transparent; outline: none; font-size: 0.85rem;
+            background: #f1f5f9; height: 40px;
+            transition: background .3s, border-color .3s, box-shadow .3s, transform .3s;
+        }
+        .search-box input:focus {
+            background: #fff; border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0,113,186,.12);
+            transform: translateY(-1px);
+        }
+        .search-box i {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            color: var(--primary); cursor: pointer; transition: transform .3s var(--ease-snap);
+        }
+        .search-box i:hover { transform: translateY(-50%) scale(1.2) rotate(8deg); }
+        .search-results {
+            position: absolute; top: 110%; left: 0; width: 100%; background: #fff;
+            border-radius: var(--radius); box-shadow: var(--shadow-lg); max-height: 350px;
+            overflow-y: auto; display: none; z-index: 1001; border: 1px solid #eee;
+            animation: dropIn .35s var(--ease) both;
+        }
+        .search-item { transition: background .25s, transform .25s, padding-left .25s; }
+        .search-item:hover { background: var(--light-bg); padding-left: 18px !important; }
+
+        @keyframes dropIn { from { opacity:0; transform: translateY(-10px) scale(.98);} to { opacity:1; transform:none;} }
 
         /* MENU DESKTOP */
         nav ul { display: flex; list-style: none; gap: 15px; align-items: center; }
         nav ul li { position: relative; }
-        nav ul li a { text-decoration: none; color: var(--dark-gray); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; padding: 10px 0; display: block; }
-        
-        .dropdown-menu { 
-            position: absolute; top: 100%; left: 0; background: #fff; min-width: 220px; 
-            box-shadow: var(--shadow-lg); border-radius: 8px; display: none; 
-            list-style: none; padding: 10px 0; z-index: 1100; border: 1px solid #eee;
+        nav ul li a {
+            text-decoration: none; color: var(--dark-gray); font-weight: 700;
+            font-size: 0.75rem; text-transform: uppercase; padding: 10px 0;
+            display: block; position: relative; transition: color .3s;
         }
-        .dropdown-menu li a { padding: 8px 20px; font-size: 0.75rem; color: #555; text-transform: none; font-weight: 500; border-bottom: none; }
-        .dropdown-menu li a:hover { background: var(--light-bg); color: var(--primary); }
-        .dropdown:hover .dropdown-menu { display: block; }
+        nav ul li > a:not(.nav-hotline):not(.nav-zalo)::after {
+            content: ""; position: absolute; left: 0; bottom: 4px;
+            width: 100%; height: 2px; background: var(--grad-primary);
+            transform: scaleX(0); transform-origin: right;
+            transition: transform .4s var(--ease);
+            border-radius: 2px;
+        }
+        nav ul li > a:not(.nav-hotline):not(.nav-zalo):hover { color: var(--primary); }
+        nav ul li > a:not(.nav-hotline):not(.nav-zalo):hover::after { transform: scaleX(1); transform-origin: left; }
 
-        .nav-hotline { color: var(--price-red) !important; border: 1.5px solid var(--price-red); padding: 6px 15px !important; border-radius: 20px; display: flex !important; align-items: center; gap: 6px; font-size: 0.75rem; }
-        .nav-zalo { color: #0068ff !important; border: 1.5px solid #0068ff; padding: 6px 15px !important; border-radius: 20px; display: flex !important; align-items: center; gap: 6px; font-size: 0.75rem; }
-        .menu-toggle { display: none; font-size: 1.5rem; color: var(--primary); cursor: pointer; }
+        .dropdown-menu {
+            position: absolute; top: 100%; left: 0; background: #fff; min-width: 240px;
+            box-shadow: var(--shadow-lg); border-radius: 12px; display: none;
+            list-style: none; padding: 10px 0; z-index: 1100; border: 1px solid #eef2f7;
+            opacity: 0; transform: translateY(10px);
+            transition: opacity .3s var(--ease), transform .3s var(--ease);
+        }
+        .dropdown-menu li a { padding: 9px 22px; font-size: 0.78rem; color: #555; text-transform: none; font-weight: 500; transition: background .25s, color .25s, padding-left .25s; }
+        .dropdown-menu li a:hover { background: var(--light-bg); color: var(--primary); padding-left: 28px; }
+        .dropdown:hover .dropdown-menu { display: block; opacity: 1; transform: translateY(0); }
+
+        .nav-hotline, .nav-zalo {
+            padding: 7px 16px !important; border-radius: 20px;
+            display: flex !important; align-items: center; gap: 6px; font-size: 0.75rem;
+            transition: transform .3s var(--ease-snap), box-shadow .3s, background .3s, color .3s;
+        }
+        .nav-hotline { color: var(--price-red) !important; border: 1.5px solid var(--price-red); }
+        .nav-hotline:hover { background: var(--grad-red); color: #fff !important; transform: translateY(-2px); box-shadow: 0 8px 18px -6px rgba(217,32,39,.5); }
+        .nav-hotline i { animation: phoneRing 1.8s ease-in-out infinite; }
+        @keyframes phoneRing {
+            0%,60%,100% { transform: rotate(0); }
+            10% { transform: rotate(-18deg); } 20% { transform: rotate(15deg); }
+            30% { transform: rotate(-10deg); } 40% { transform: rotate(8deg); } 50% { transform: rotate(0); }
+        }
+        .nav-zalo { color: #0068ff !important; border: 1.5px solid #0068ff; }
+        .nav-zalo:hover { background: #0068ff; color: #fff !important; transform: translateY(-2px); box-shadow: 0 8px 18px -6px rgba(0,104,255,.5); }
+
+        .menu-toggle { display: none; font-size: 1.5rem; color: var(--primary); cursor: pointer; transition: transform .3s var(--ease-snap); }
+        .menu-toggle:hover { transform: rotate(90deg); }
 
         /* --- SLIDER --- */
-        .slider-container { width: 100%; height: 500px; margin-top: 70px; overflow: hidden; position: relative; background: #eee; }
-        .slider { display: flex; width: 100%; height: 100%; transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1); }
-        .slide { min-width: 100%; height: 100%; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; }
-        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.4); color: #fff; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; z-index: 10; backdrop-filter: blur(5px); }
-        .prev-btn { left: 20px; } .next-btn { right: 20px; }
-        .slider-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
-        .dot { width: 10px; height: 10px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; }
-        .dot.active { background: #fff; width: 25px; border-radius: 10px; }
-
-        /* --- PRODUCT SECTION --- */
-        section { padding: 60px 20px; max-width: 1300px; margin: auto; scroll-margin-top: 80px; }
-        .section-title h2 { font-size: 2.2rem; color: var(--primary); text-align: center; text-transform: uppercase; font-style: italic; }
-        .underline { width: 70px; height: 4px; background: var(--btn-orange); margin: 10px auto 30px; border-radius: 2px; }
-        
-        .filter-bar { 
-            background: var(--light-bg); padding: 20px; border-radius: var(--radius); 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-            gap: 20px; margin-bottom: 30px; box-shadow: var(--shadow-sm); border: 1px solid #edf2f7;
+        .slider-container {
+            width: 100%; height: 520px; margin-top: 70px; overflow: hidden;
+            position: relative; background: #0b1220;
         }
-        .filter-group label { font-size: 0.75rem; font-weight: 700; color: var(--light-gray); text-transform: uppercase; padding-left: 5px; margin-bottom: 5px; display: block; }
-        .filter-bar select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; outline: none; background: #fff; cursor: pointer; font-size: 0.85rem; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; background-size: 14px; }
+        .slider { display: flex; width: 100%; height: 100%; transition: transform 1.1s cubic-bezier(.77,0,.18,1); }
+        .slide { min-width: 100%; height: 100%; position: relative; overflow: hidden; }
+        .slide img {
+            width: 100%; height: 100%; object-fit: cover;
+            transform: scale(1.08); transition: transform 7s linear;
+            will-change: transform;
+        }
+        .slide.is-active img { transform: scale(1); }
+        .slider-container::after {
+            content:""; position:absolute; inset:0; pointer-events:none;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,.35) 100%);
+        }
+        .slider-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.18); color: #fff; border: none;
+            width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
+            z-index: 10; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+            display: grid; place-items: center; font-size: 1rem;
+            transition: background .3s, transform .3s var(--ease-snap), box-shadow .3s;
+            opacity: 0;
+        }
+        .slider-container:hover .slider-btn { opacity: 1; }
+        .slider-btn:hover { background: #fff; color: var(--primary); transform: translateY(-50%) scale(1.1); box-shadow: 0 10px 25px rgba(0,0,0,.35); }
+        .prev-btn { left: 20px; } .next-btn { right: 20px; }
+        .slider-dots { position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
+        .dot { width: 10px; height: 10px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; transition: width .4s var(--ease), background .3s; }
+        .dot.active { background: #fff; width: 28px; border-radius: 10px; box-shadow: 0 0 12px rgba(255,255,255,.6); }
 
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; min-height: 400px; }
-        .product-card { background: var(--white); border: 1px solid #f1f5f9; border-radius: var(--radius); padding: 15px; text-align: center; transition: 0.3s; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; cursor: pointer; }
-        .product-card img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 12px; }
-        .product-card h3 { font-size: 0.85rem; height: 40px; overflow: hidden; margin-bottom: 10px; font-weight: 700; }
-        .product-card .price { color: var(--price-red); font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; }
-        .btn-add-cart { background: var(--primary); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+        /* --- SECTIONS --- */
+        section { padding: 70px 20px; max-width: 1300px; margin: auto; scroll-margin-top: 80px; }
+        .section-title { position: relative; }
+        .section-title h2 {
+            font-size: 2.3rem; color: var(--primary); text-align: center;
+            text-transform: uppercase; font-style: italic; font-weight: 900;
+            background: var(--grad-primary); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: .5px;
+        }
+        .underline {
+            width: 70px; height: 4px; background: var(--grad-orange);
+            margin: 14px auto 36px; border-radius: 4px; position: relative; overflow: hidden;
+        }
+        .underline::after {
+            content:""; position:absolute; inset:0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.85), transparent);
+            animation: shimmer 2.4s linear infinite;
+        }
+        @keyframes shimmer { 0%{transform: translateX(-100%);} 100%{transform: translateX(100%);} }
 
-        .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
-        .page-btn { padding: 8px 15px; border: 1px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; font-weight: 700; }
-        .page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .filter-bar {
+            background: #fff; padding: 22px; border-radius: var(--radius);
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px; margin-bottom: 30px; box-shadow: var(--shadow-md);
+            border: 1px solid #edf2f7;
+        }
+        .filter-group label { font-size: 0.72rem; font-weight: 700; color: var(--light-gray); text-transform: uppercase; padding-left: 5px; margin-bottom: 6px; display: block; letter-spacing:.6px; }
+        .filter-bar select {
+            width: 100%; padding: 12px 14px; border-radius: 10px; border: 1.5px solid #e2e8f0;
+            outline: none; background: #fff; cursor: pointer; font-size: 0.85rem; appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230071ba' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;
+            transition: border-color .3s, box-shadow .3s, transform .3s;
+        }
+        .filter-bar select:hover { border-color: var(--primary); }
+        .filter-bar select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0,113,186,.12); }
+
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 22px; min-height: 400px; }
+        .product-card {
+            background: var(--white); border: 1px solid #f1f5f9; border-radius: var(--radius);
+            padding: 16px; text-align: center; box-shadow: var(--shadow-sm);
+            display: flex; flex-direction: column; cursor: pointer; position: relative;
+            transform-style: preserve-3d;
+            transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .3s;
+            will-change: transform;
+            animation: cardIn .5s var(--ease) both;
+        }
+        @keyframes cardIn { from { opacity:0; transform: translateY(20px);} to { opacity:1; transform:none;} }
+        .product-card::before {
+            content:""; position:absolute; inset:0; border-radius: inherit; padding:1.5px;
+            background: var(--grad-primary);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            opacity: 0; transition: opacity .4s;
+            pointer-events: none;
+        }
+        .product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-glow); border-color: transparent; }
+        .product-card:hover::before { opacity: 1; }
+        .product-card img {
+            width: 100%; height: 180px; object-fit: contain; margin-bottom: 12px;
+            transition: transform .6s var(--ease);
+        }
+        .product-card:hover img { transform: scale(1.08) rotate(-1deg); }
+        .product-card h3 { font-size: 0.88rem; height: 42px; overflow: hidden; margin-bottom: 10px; font-weight: 700; transition: color .3s; }
+        .product-card:hover h3 { color: var(--primary); }
+        .product-card .price {
+            color: var(--price-red); font-weight: 900; font-size: 1.15rem; margin-bottom: 15px;
+            background: var(--grad-red); -webkit-background-clip: text; background-clip:text; -webkit-text-fill-color: transparent;
+        }
+        .btn-add-cart {
+            background: var(--grad-primary); color: #fff; border: none; padding: 11px;
+            border-radius: 10px; font-weight: 700; cursor: pointer; position: relative; overflow: hidden;
+            transition: transform .3s var(--ease-snap), box-shadow .3s, filter .3s;
+            font-size: .82rem; letter-spacing:.3px;
+        }
+        .btn-add-cart::before {
+            content:""; position:absolute; inset:0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+            transform: translateX(-100%); transition: transform .6s var(--ease);
+        }
+        .btn-add-cart:hover { transform: translateY(-2px) scale(1.02); box-shadow: var(--shadow-glow); filter: brightness(1.05); }
+        .btn-add-cart:hover::before { transform: translateX(100%); }
+        .btn-add-cart:active { transform: translateY(0) scale(.98); }
+
+        .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; flex-wrap: wrap; }
+        .page-btn {
+            padding: 9px 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; background: #fff;
+            cursor: pointer; font-weight: 700; transition: all .3s var(--ease-snap);
+        }
+        .page-btn:hover { transform: translateY(-2px); border-color: var(--primary); color: var(--primary); }
+        .page-btn.active { background: var(--grad-primary); color: #fff; border-color: transparent; box-shadow: var(--shadow-glow); }
 
         /* --- INTRO & ACTIVITY --- */
         .intro-container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-        .intro-img-box { border-radius: var(--radius); overflow: hidden; height: 380px; box-shadow: var(--shadow-lg); }
-        .intro-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        .activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .activity-item { background: #fff; padding: 30px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow-sm); border-top: 4px solid var(--primary); }
+        .intro-img-box {
+            border-radius: var(--radius); overflow: hidden; height: 380px;
+            box-shadow: var(--shadow-lg); position: relative;
+        }
+        .intro-img-box img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 1.2s var(--ease);
+        }
+        .intro-img-box:hover img { transform: scale(1.08); }
+        .intro-img-box::after {
+            content:""; position:absolute; inset:0;
+            background: linear-gradient(135deg, rgba(0,113,186,.15), transparent 50%);
+            pointer-events:none;
+        }
+
+        .activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; }
+        .activity-item {
+            background: #fff; padding: 32px 24px; border-radius: var(--radius); text-align: center;
+            box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+            transition: transform .45s var(--ease), box-shadow .45s var(--ease);
+            border-top: 4px solid transparent;
+            background-clip: padding-box;
+        }
+        .activity-item::before {
+            content:""; position:absolute; top:0; left:0; right:0; height:4px;
+            background: var(--grad-primary);
+        }
+        .activity-item::after {
+            content:""; position: absolute; inset:auto -40% -60% auto; width:180px; height:180px;
+            border-radius: 50%; background: radial-gradient(circle, rgba(0,113,186,.12), transparent 70%);
+            transition: transform .6s var(--ease);
+        }
+        .activity-item:hover { transform: translateY(-8px); box-shadow: var(--shadow-glow); }
+        .activity-item:hover::after { transform: scale(1.6); }
+        .activity-icon {
+            width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 50%;
+            display: grid; place-items: center; font-size: 1.6rem; color: #fff;
+            background: var(--grad-primary); box-shadow: var(--shadow-glow);
+            transition: transform .5s var(--ease-snap);
+        }
+        .activity-item:hover .activity-icon { transform: rotate(-8deg) scale(1.1); }
+        .activity-item h4 { font-size: 1rem; margin-bottom: 8px; color: var(--dark-gray); }
 
         /* --- PROJECTS --- */
-        #projects { background: #0f172a; color: #fff; overflow: hidden; padding: 60px 0; }
-        .marquee { display: flex; width: max-content; animation: scroll 40s linear infinite; gap: 20px; }
-        .proj-card { width: 300px; border-radius: var(--radius); overflow: hidden; background: #1e293b; cursor: pointer; }
-        .proj-card img { width: 100%; height: 180px; object-fit: cover; }
+        #projects {
+            background: radial-gradient(1200px 600px at 10% 10%, rgba(56,189,248,.15), transparent 60%),
+                        radial-gradient(900px 500px at 90% 90%, rgba(255,138,34,.15), transparent 60%),
+                        #0f172a;
+            color: #fff; overflow: hidden; padding: 70px 0;
+        }
+        #projects .section-title h2 {
+            background: linear-gradient(135deg,#fff,#94a3b8); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color: transparent;
+        }
+        .marquee-wrap { mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+        .marquee { display: flex; width: max-content; animation: scroll 45s linear infinite; gap: 22px; padding: 10px 22px; }
+        .marquee:hover { animation-play-state: paused; }
+        .proj-card {
+            width: 310px; border-radius: var(--radius); overflow: hidden; background: #1e293b;
+            cursor: pointer; transition: transform .5s var(--ease), box-shadow .5s var(--ease);
+            position: relative;
+        }
+        .proj-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 18px 40px -10px rgba(56,189,248,.5); }
+        .proj-card img { width: 100%; height: 190px; object-fit: cover; transition: transform .8s var(--ease); }
+        .proj-card:hover img { transform: scale(1.1); }
+        .proj-card h4 { padding: 14px 16px; font-size: .95rem; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
         /* MODALS */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center; padding: 15px; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--white); width: 100%; max-width: 1000px; border-radius: 25px; display: grid; grid-template-columns: 45% 55%; position: relative; overflow: hidden; max-height: 90vh; }
-        .modal-left { padding: 30px; border-right: 1px solid #eee; overflow-y: auto; text-align: center; }
+        .modal {
+            display: none; position: fixed; inset: 0; background: rgba(8,12,28,0.78);
+            z-index: 2000; justify-content: center; align-items: center; padding: 15px;
+            -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+            animation: fadeIn .3s var(--ease);
+        }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        .modal-content {
+            background: var(--white); width: 100%; max-width: 1000px; border-radius: 22px;
+            display: grid; grid-template-columns: 45% 55%; position: relative; overflow: hidden;
+            max-height: 90vh; box-shadow: 0 40px 80px -20px rgba(0,0,0,.5);
+            animation: modalIn .45s var(--ease-snap);
+        }
+        @keyframes modalIn { from { opacity:0; transform: translateY(30px) scale(.96);} to { opacity:1; transform:none;} }
+        .modal-left { padding: 30px; border-right: 1px solid #eee; overflow-y: auto; text-align: center; background: linear-gradient(180deg,#fff,#f8fafc); }
         .modal-right { padding: 40px; overflow-y: auto; display: flex; flex-direction: column; }
         .specs-list { list-style: none; margin-top: 15px; }
-        .specs-list li { position: relative; padding-left: 25px; margin-bottom: 8px; font-size: 0.95rem; text-align: left; display: flex; align-items: flex-start; gap: 5px; }
-        .specs-list li::before { content: '✓'; color: #2ecc71; font-weight: 700; flex-shrink: 0; }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 35px; color: #999; cursor: pointer; z-index: 10; }
+        .specs-list li {
+            position: relative; padding-left: 28px; margin-bottom: 10px; font-size: 0.95rem;
+            text-align: left; line-height:1.55;
+            animation: specIn .45s var(--ease) both;
+        }
+        .specs-list li::before {
+            content: '✓'; position:absolute; left:0; top:2px;
+            width:20px; height:20px; border-radius:50%;
+            background: var(--grad-primary); color:#fff;
+            display:inline-grid; place-items:center; font-size:.7rem; font-weight:900;
+            box-shadow: 0 4px 10px rgba(0,113,186,.35);
+        }
+        @keyframes specIn { from{opacity:0; transform: translateX(-10px);} to{opacity:1; transform:none;} }
+        .specs-list li:nth-child(1){animation-delay:.05s} .specs-list li:nth-child(2){animation-delay:.1s}
+        .specs-list li:nth-child(3){animation-delay:.15s} .specs-list li:nth-child(4){animation-delay:.2s}
+        .specs-list li:nth-child(5){animation-delay:.25s} .specs-list li:nth-child(6){animation-delay:.3s}
 
-        .cart-icon { position: fixed; bottom: 25px; right: 25px; background: var(--btn-orange); color: var(--white); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 1001; }
-        .cart-count { position: absolute; top: -2px; right: -2px; background: var(--price-red); color: var(--white); border-radius: 50%; padding: 2px 7px; font-size: 11px; border: 2px solid var(--white); }
+        .close-btn {
+            position: absolute; top: 12px; right: 16px; font-size: 28px; color: #999;
+            cursor: pointer; z-index: 10; width: 38px; height: 38px; border-radius: 50%;
+            display: grid; place-items: center; transition: background .3s, color .3s, transform .3s var(--ease-snap);
+        }
+        .close-btn:hover { background: var(--price-red); color: #fff; transform: rotate(90deg); }
 
-        /* --- MOBILE REFINEMENT --- */
+        #thumb-box img { transition: transform .3s var(--ease-snap), border-color .3s; border-radius: 8px; }
+        #thumb-box img:hover { transform: scale(1.1); border-color: var(--primary) !important; }
+
+        /* Floating Buttons */
+        .cart-icon {
+            position: fixed; bottom: 25px; right: 25px;
+            background: var(--grad-orange); color: var(--white);
+            width: 62px; height: 62px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; cursor: pointer;
+            box-shadow: 0 14px 30px rgba(255,138,34,.45); z-index: 1001; font-size: 1.2rem;
+            transition: transform .35s var(--ease-snap), box-shadow .35s;
+        }
+        .cart-icon::after {
+            content:""; position:absolute; inset:-6px; border-radius:50%;
+            border: 2px solid rgba(255,138,34,.5); animation: pulseRing 2s ease-out infinite;
+        }
+        @keyframes pulseRing { 0%{transform:scale(.85); opacity:1;} 100%{transform:scale(1.5); opacity:0;} }
+        .cart-icon:hover { transform: scale(1.1) rotate(-8deg); }
+        .cart-icon.bump { animation: bump .5s var(--ease-snap); }
+        @keyframes bump { 0%{transform:scale(1);} 30%{transform:scale(1.3) rotate(-12deg);} 60%{transform:scale(.92);} 100%{transform:scale(1);} }
+        .cart-count {
+            position: absolute; top: -2px; right: -2px; background: var(--price-red);
+            color: var(--white); border-radius: 50%; padding: 2px 7px; font-size: 11px;
+            border: 2px solid var(--white); font-weight: 700;
+        }
+
+        .to-top {
+            position: fixed; bottom: 100px; right: 28px; width: 46px; height: 46px;
+            border-radius: 50%; background: rgba(255,255,255,.9);
+            color: var(--primary); border: 1.5px solid #e2e8f0;
+            display: grid; place-items: center; cursor: pointer; z-index: 1001;
+            box-shadow: var(--shadow-md); opacity: 0; pointer-events: none;
+            transform: translateY(20px);
+            transition: opacity .35s, transform .35s var(--ease-snap), background .3s, color .3s;
+        }
+        .to-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .to-top:hover { background: var(--primary); color: #fff; transform: translateY(-4px); }
+
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
             header { height: 65px; }
             .logo img { height: 35px; }
             .menu-toggle { display: block; order: 3; }
-            nav ul { 
-                position: fixed; top: 0; right: -100%; width: 75%; height: 100vh; 
-                background: #fff; flex-direction: column; padding: 80px 20px; 
-                transition: 0.4s; z-index: 1002; box-shadow: -10px 0 20px rgba(0,0,0,0.1); 
-                align-items: flex-start; 
+            nav ul {
+                position: fixed; top: 0; right: -100%; width: 78%; height: 100vh;
+                background: #fff; flex-direction: column; padding: 80px 22px;
+                transition: right .45s var(--ease); z-index: 1002;
+                box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+                align-items: flex-start; gap: 4px;
             }
             nav ul.active { right: 0; }
-            nav ul li { width: 100%; }
-            nav ul li a { font-size: 1rem; border-bottom: 1px solid #f1f5f9; width: 100%; padding: 12px 0; }
-            
-            .dropdown-menu { position: static; display: none; box-shadow: none; border: none; padding: 0 0 0 20px; width: 100%; }
+            nav ul li { width: 100%; opacity: 0; transform: translateX(20px); transition: opacity .4s var(--ease), transform .4s var(--ease); }
+            nav ul.active li { opacity: 1; transform: none; }
+            nav ul.active li:nth-child(1){transition-delay:.05s} nav ul.active li:nth-child(2){transition-delay:.1s}
+            nav ul.active li:nth-child(3){transition-delay:.15s} nav ul.active li:nth-child(4){transition-delay:.2s}
+            nav ul.active li:nth-child(5){transition-delay:.25s} nav ul.active li:nth-child(6){transition-delay:.3s}
+            nav ul.active li:nth-child(7){transition-delay:.35s}
+            nav ul li a { font-size: 1rem; border-bottom: 1px solid #f1f5f9; width: 100%; padding: 13px 0; }
+
+            .dropdown-menu { position: static; display: none; box-shadow: none; border: none; padding: 0 0 0 20px; width: 100%; opacity:1; transform:none; }
             .dropdown.open .dropdown-menu { display: block; }
             .dropdown-menu li a { border-bottom: none; font-weight: 400; color: #666; font-size: 0.9rem; padding: 8px 0; }
 
-            .slider-container { height: 200px; margin-top: 65px; }
+            .slider-container { height: 220px; margin-top: 65px; }
+            .slider-btn { opacity: 1; width: 40px; height: 40px; }
             .intro-container { grid-template-columns: 1fr; }
-            .modal-content { grid-template-columns: 1fr; overflow-y: auto; }
-            .modal-left { border-right: none; border-bottom: 1px solid #eee; }
+            .intro-img-box { height: 240px; }
+            .modal-content { grid-template-columns: 1fr; overflow-y: auto; max-height: 92vh; }
+            .modal-left { border-right: none; border-bottom: 1px solid #eee; padding: 22px; }
+            .modal-right { padding: 26px; }
+            .section-title h2 { font-size: 1.6rem; }
+            section { padding: 50px 16px; }
+            .to-top { right: 18px; bottom: 95px; }
+            .cart-icon { right: 18px; bottom: 22px; }
         }
+
+        /* Backdrop for mobile menu */
+        .menu-backdrop {
+            position: fixed; inset: 0; background: rgba(0,0,0,.4);
+            opacity: 0; pointer-events: none; transition: opacity .35s; z-index: 1001;
+            -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+        }
+        .menu-backdrop.show { opacity: 1; pointer-events: auto; }
 
         /* PRINT */
         #print-section { display: none; }
@@ -171,21 +507,48 @@
             .p-title-blue { color: #0071ba !important; font-size: 28px; font-weight: 800; text-align: center; margin: 15px 0; }
         }
 
-        footer { background: #0f172a; color: #94a3b8; padding: 60px 20px; }
+        footer {
+            background: linear-gradient(180deg,#0f172a,#0b1220); color: #94a3b8;
+            padding: 70px 20px 40px; position: relative; overflow: hidden;
+        }
+        footer::before {
+            content:""; position:absolute; top:-1px; left:0; right:0; height:1px;
+            background: linear-gradient(90deg, transparent, var(--primary-glow), transparent);
+        }
+        footer h4 { color: #fff; margin-bottom: 16px; font-size: 1rem; letter-spacing:.5px; position:relative; padding-bottom:10px; }
+        footer h4::after { content:""; position:absolute; left:0; bottom:0; width:36px; height:3px; background: var(--grad-orange); border-radius:3px; }
         .footer-grid { max-width: 1300px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
-        #loader { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .spinner { width: 45px; height: 45px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        .footer-col a { color: var(--primary-glow); transition: color .3s, padding-left .3s; }
+        .footer-col a:hover { color: #fff; padding-left: 4px; }
+
+        #loader {
+            position: fixed; inset: 0; background: #fff; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity .6s var(--ease), visibility .6s;
+        }
+        #loader.hide { opacity: 0; visibility: hidden; }
+        .spinner {
+            width: 54px; height: 54px;
+            border: 4px solid #e2e8f0; border-top: 4px solid var(--primary);
+            border-right: 4px solid var(--primary-glow);
+            border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        #loader p { margin-top: 16px; font-weight: 700; color: var(--primary); letter-spacing: 2px; animation: pulseText 1.4s ease-in-out infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulseText { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+        }
     </style>
 </head>
 <body>
 
-    <div id="loader"><div class="spinner"></div><p style="margin-top:10px">KGP TELECOM...</p></div>
+    <div id="loader"><div class="spinner"></div><p>KGP TELECOM</p></div>
 
-    <header class="no-print">
+    <header class="no-print" id="site-header">
         <nav>
             <div class="nav-left">
-                <!-- SEO: Logo wrap h1 -->
                 <h1 class="logo-wrap">
                     <a href="#" class="logo"><img src="https://khanggiaphuc.com/data/logo.jpg" alt="KGP Telecom - Thiết bị viễn thông"></a>
                 </h1>
@@ -212,12 +575,13 @@
             </ul>
         </nav>
     </header>
+    <div class="menu-backdrop no-print" onclick="closeMenu()"></div>
 
     <div class="slider-container no-print">
         <button class="slider-btn prev-btn" onclick="moveSlide(-1)" aria-label="Slide trước"><i class="fa-solid fa-chevron-left"></i></button>
         <button class="slider-btn next-btn" onclick="moveSlide(1)" aria-label="Slide sau"><i class="fa-solid fa-chevron-right"></i></button>
         <div class="slider" id="slider">
-            <div class="slide"><img src="https://khanggiaphuc.com/data/SL1.jpg" alt="Slide 1"></div>
+            <div class="slide is-active"><img src="https://khanggiaphuc.com/data/SL1.jpg" alt="Slide 1"></div>
             <div class="slide"><img src="https://khanggiaphuc.com/data/SL2.jpg" alt="Slide 2"></div>
             <div class="slide"><img src="https://khanggiaphuc.com/data/SL3.jpg" alt="Slide 3"></div>
             <div class="slide"><img src="https://khanggiaphuc.com/data/SL4.jpg" alt="Slide 4"></div>
@@ -228,8 +592,8 @@
     </div>
 
     <section id="products" class="no-print">
-        <div class="section-title"><h2>Sản phẩm tiêu biểu</h2><div class="underline"></div></div>
-        <div class="filter-bar">
+        <div class="section-title" data-reveal><h2>Sản phẩm tiêu biểu</h2><div class="underline"></div></div>
+        <div class="filter-bar" data-reveal="zoom">
             <div class="filter-group"><label>Danh mục</label><select id="filter-category" onchange="applyFilters()"><option value="TẤT CẢ">-- Tất cả danh mục --</option></select></div>
             <div class="filter-group"><label>Thương hiệu</label><select id="filter-brand" onchange="applyFilters()"><option value="TẤT CẢ">-- Tất cả thương hiệu --</option></select></div>
             <div class="filter-group"><label>Sắp xếp giá</label><select id="filter-price" onchange="applyFilters()"><option value="DEFAULT">-- Mặc định --</option><option value="LOW_HIGH">Giá thấp đến cao</option><option value="HIGH_LOW">Giá cao đến thấp</option></select></div>
@@ -239,31 +603,34 @@
     </section>
 
     <section id="intro" class="no-print">
-        <div class="section-title"><h2>Giới thiệu</h2><div class="underline"></div></div>
+        <div class="section-title" data-reveal><h2>Giới thiệu</h2><div class="underline"></div></div>
         <div class="intro-container">
-            <div class="intro-img-box"><img src="data/GioiThieu.jpg" alt="Giới thiệu KGP Telecom"></div>
-            <div id="intro-text"></div>
+            <div class="intro-img-box" data-reveal="left"><img src="data/GioiThieu.jpg" alt="Giới thiệu KGP Telecom"></div>
+            <div id="intro-text" data-reveal="right"></div>
         </div>
     </section>
 
     <section id="activity" class="no-print" style="background: var(--light-bg); max-width: 100%;">
         <div style="max-width: 1300px; margin: auto;">
-            <div class="section-title"><h2>Lĩnh vực hoạt động</h2><div class="underline"></div></div>
+            <div class="section-title" data-reveal><h2>Lĩnh vực hoạt động</h2><div class="underline"></div></div>
             <div class="activity-grid" id="activity-list"></div>
         </div>
     </section>
 
-    <section id="projects" class="no-print">
-        <div class="section-title"><h2 style="color: white;">Dự án đã triển khai</h2><div class="underline"></div></div>
-        <div class="marquee" id="project-list"></div>
+    <section id="projects" class="no-print" style="max-width:100%">
+        <div style="max-width:1300px;margin:auto">
+            <div class="section-title" data-reveal><h2 style="color: white;">Dự án đã triển khai</h2><div class="underline"></div></div>
+        </div>
+        <div class="marquee-wrap"><div class="marquee" id="project-list"></div></div>
     </section>
 
-    <div class="cart-icon no-print" onclick="openCart()" aria-label="Giỏ hàng"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count" id="cart-count">0</span></div>
+    <button class="to-top no-print" id="toTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Lên đầu trang"><i class="fa-solid fa-arrow-up"></i></button>
+    <div class="cart-icon no-print" id="cartIcon" onclick="openCart()" aria-label="Giỏ hàng"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count" id="cart-count">0</span></div>
 
     <!-- MODALS -->
-    <div id="pModal" class="modal no-print" onclick="if(event.target==this) closeModal()"><div class="modal-content"><span class="close-btn" onclick="closeModal()">&times;</span><div class="modal-left"><img id="main-preview" style="width:100%; height:300px; object-fit:contain" src="" alt="Sản phẩm"><div id="thumb-box" style="margin-top:15px; display:flex; gap:5px; justify-content:center; flex-wrap:wrap"></div></div><div class="modal-right"><div id="m-cat" style="color:var(--btn-orange); font-weight:700; font-size:0.8rem"></div><h2 id="m-title" style="margin:10px 0; line-height:1.3"></h2><div id="m-price" style="color:var(--price-red); font-size:2rem; font-weight:700"></div><div style="margin-top:20px; font-weight:700; border-bottom:2px solid #eee; padding-bottom:5px">⚙ THÔNG SỐ KỸ THUẬT</div><ul id="m-specs" class="specs-list"></ul><button onclick="addToCartModal()" style="background:var(--btn-orange); color:#fff; border:none; padding:18px; border-radius:12px; font-weight:700; cursor:pointer; margin-top:auto; position:sticky; bottom:0">🛒 THÊM VÀO GIỎ HÀNG</button></div></div></div>
+    <div id="pModal" class="modal no-print" onclick="if(event.target==this) closeModal()"><div class="modal-content"><span class="close-btn" onclick="closeModal()">&times;</span><div class="modal-left"><img id="main-preview" style="width:100%; height:300px; object-fit:contain" src="" alt="Sản phẩm"><div id="thumb-box" style="margin-top:15px; display:flex; gap:5px; justify-content:center; flex-wrap:wrap"></div></div><div class="modal-right"><div id="m-cat" style="color:var(--btn-orange); font-weight:700; font-size:0.8rem"></div><h2 id="m-title" style="margin:10px 0; line-height:1.3"></h2><div id="m-price" style="font-size:2rem; font-weight:900; background:var(--grad-red); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent"></div><div style="margin-top:20px; font-weight:700; border-bottom:2px solid #eee; padding-bottom:5px">⚙ THÔNG SỐ KỸ THUẬT</div><ul id="m-specs" class="specs-list"></ul><button onclick="addToCartModal()" class="btn-add-cart" style="padding:18px; font-size:.95rem; margin-top:auto; position:sticky; bottom:0">🛒 THÊM VÀO GIỎ HÀNG</button></div></div></div>
 
-    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:20px; width:100%; max-width:850px; position:relative;"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align:center; color:var(--primary); margin-bottom:20px">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height:400px; overflow-y:auto"><table style="width:100%; border-collapse:collapse"><thead><tr style="border-bottom:2px solid #eee; text-align:left"><th>Sản phẩm</th><th style="width:80px">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align:right; margin-top:20px"><h3>Tổng: <span id="cart-total-web" style="color:var(--price-red)">0đ</span></h3><div style="display:flex; flex-direction:column; gap:8px; margin-top:20px"><button onclick="shareCart()" style="background:#3498db; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">🔗 CHIA SẺ GIỎ HÀNG (ZALO/FB)</button><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px"><button onclick="preparePrint(true)" style="background:#e67e22; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">🏢 BÁO GIÁ CÔNG TY</button><button onclick="preparePrint(false)" style="background:#27ae60; color:#fff; padding:12px; border:none; border-radius:10px; font-weight:700; cursor:pointer">👤 BÁO GIÁ CÁ NHÂN</button></div></div></div></div></div>
+    <div id="cartModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div style="background:#fff; padding:30px; border-radius:22px; width:100%; max-width:850px; position:relative; animation: modalIn .45s var(--ease-snap);"><span class="close-btn" onclick="document.getElementById('cartModal').style.display='none'">&times;</span><h2 style="text-align:center; background:var(--grad-primary); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:20px">GIỎ HÀNG BÁO GIÁ</h2><div style="max-height:400px; overflow-y:auto"><table style="width:100%; border-collapse:collapse"><thead><tr style="border-bottom:2px solid #eee; text-align:left"><th>Sản phẩm</th><th style="width:80px">SL</th><th>Tiền</th><th>Xóa</th></tr></thead><tbody id="cart-items"></tbody></table></div><div style="text-align:right; margin-top:20px"><h3>Tổng: <span id="cart-total-web" style="color:var(--price-red)">0đ</span></h3><div style="display:flex; flex-direction:column; gap:8px; margin-top:20px"><button onclick="shareCart()" class="btn-add-cart" style="background:linear-gradient(135deg,#3498db,#5dade2); padding:13px">🔗 CHIA SẺ GIỎ HÀNG (ZALO/FB)</button><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px"><button onclick="preparePrint(true)" class="btn-add-cart" style="background:linear-gradient(135deg,#e67e22,#f39c12); padding:13px">🏢 BÁO GIÁ CÔNG TY</button><button onclick="preparePrint(false)" class="btn-add-cart" style="background:linear-gradient(135deg,#27ae60,#2ecc71); padding:13px">👤 BÁO GIÁ CÁ NHÂN</button></div></div></div></div></div>
 
     <div id="projModal" class="modal no-print" onclick="if(event.target==this) this.style.display='none'"><div class="modal-content"><span class="close-btn" onclick="document.getElementById('projModal').style.display='none'">&times;</span><div class="modal-left"><img id="pj-main-preview" style="width:100%; height:300px; object-fit:contain" src="" alt="Dự án"></div><div class="modal-right"><div id="pj-cat" style="color:var(--primary); font-weight:700; font-size:0.9rem"></div><h2 id="pj-title" style="margin:15px 0"></h2><div id="pj-content" style="white-space:pre-line; color:#555; line-height:1.7"></div></div></div></div>
 
@@ -303,11 +670,7 @@
       "telephone": "0844900099",
       "email": "info@khanggiaphuc.com",
       "url": "https://khanggiaphuc.com/",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Ho Chi Minh City",
-        "addressCountry": "VN"
-      }
+      "address": { "@type": "PostalAddress", "addressLocality": "Ho Chi Minh City", "addressCountry": "VN" }
     }
     </script>
 
@@ -317,6 +680,7 @@
             <div class="footer-col"><h4>THÔNG TIN LIÊN HỆ</h4><ul id="f2-contact" style="list-style:none; padding:0"></ul></div>
             <div class="footer-col"><h4>KẾT NỐI VỚI CHÚNG TÔI</h4><div id="f3-fb" style="background:#fff; border-radius:10px; overflow:hidden"></div></div>
         </div>
+        <div style="text-align:center; margin-top:40px; font-size:.8rem; color:#64748b">© 2026 KGP Telecom · Khang Gia Phúc · Công nghệ trong tầm tay</div>
     </footer>
 
     <script>
@@ -328,11 +692,9 @@
         let curSlide = 0, sliderInterval, itemsPerPage = 20, currentPage = 1, filteredProductsGlobal = [];
         const icons = ["fa-camera", "fa-network-wired", "fa-solar-panel", "fa-shield-halved", "fa-microchip", "fa-tools", "fa-wifi"];
 
-        // Hàm xóa dấu tiếng Việt và khoảng trắng để build URL
         function generateProductSlug(str) {
             if (!str) return "";
-            return str.normalize('NFD')
-                      .replace(/[\u0300-\u036f]/g, '')
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
                       .replace(/đ/g, 'd').replace(/Đ/g, 'D')
                       .replace(/[^a-zA-Z0-9]/g, '');
         }
@@ -354,16 +716,18 @@
             return data;
         }
 
-        function toggleMenu() { document.getElementById('nav-menu').classList.toggle('active'); }
-        function closeMenu() { document.getElementById('nav-menu').classList.remove('active'); document.getElementById('dropdown-li').classList.remove('open'); }
-
+        function toggleMenu() {
+            document.getElementById('nav-menu').classList.toggle('active');
+            document.querySelector('.menu-backdrop').classList.toggle('show');
+        }
+        function closeMenu() {
+            document.getElementById('nav-menu').classList.remove('active');
+            document.getElementById('dropdown-li').classList.remove('open');
+            document.querySelector('.menu-backdrop').classList.remove('show');
+        }
         function handleDropdownClick(el) {
-            if (window.innerWidth <= 768) {
-                el.parentElement.classList.toggle('open');
-            } else {
-                window.location.href = "#products";
-                closeMenu();
-            }
+            if (window.innerWidth <= 768) { el.parentElement.classList.toggle('open'); }
+            else { window.location.href = "#products"; closeMenu(); }
         }
 
         // --- SLIDER ---
@@ -382,113 +746,95 @@
         function goToSlide(idx) { curSlide = idx; updateSliderUI(); resetSliderTimer(); }
         function updateSliderUI() {
             document.getElementById('slider').style.transform = `translateX(-${curSlide * 100}%)`;
-            const dots = document.querySelectorAll('.dot');
-            dots.forEach((d, i) => d.classList.toggle('active', i === curSlide));
+            document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === curSlide));
+            document.querySelectorAll('.slide').forEach((s,i)=> s.classList.toggle('is-active', i===curSlide));
         }
-        function startSlider() { sliderInterval = setInterval(() => moveSlide(1), 5000); }
+        function startSlider() { sliderInterval = setInterval(() => moveSlide(1), 5500); }
         function resetSliderTimer() { clearInterval(sliderInterval); startSlider(); }
 
-        // --- PROCESS DATA ---
+        // Touch swipe slider
+        (function(){
+            const el = document.querySelector('.slider-container');
+            if(!el) return;
+            let startX = 0, dx = 0;
+            el.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; dx=0; }, {passive:true});
+            el.addEventListener('touchmove', e=>{ dx = e.touches[0].clientX - startX; }, {passive:true});
+            el.addEventListener('touchend', ()=>{ if(Math.abs(dx)>40) moveSlide(dx<0?1:-1); });
+        })();
+
+        // --- PROCESS DATA (unchanged) ---
         async function processInitialData(sheetName, data) {
             if (sheetName === 'Trang_Chu') {
                 document.getElementById('intro-text').innerHTML = data[2]?.c[1]?.v || "";
                 const actLines = (data[3]?.c[1]?.v || "").split('\n').filter(l => l.trim());
                 let actH = ""; actLines.forEach((l, i) => {
                     let p = l.split(':');
-                    actH += `<div class="activity-item"><div class="activity-icon"><i class="fa-solid ${icons[i % icons.length]}"></i></div><h4>${p[0].trim()}</h4><p style="font-size:0.8rem; color:#888">${p[1] ? p[1].trim() : ""}</p></div>`;
+                    actH += `<div class="activity-item" data-reveal="zoom" style="transition-delay:${i*60}ms"><div class="activity-icon"><i class="fa-solid ${icons[i % icons.length]}"></i></div><h4>${p[0].trim()}</h4><p style="font-size:0.85rem; color:#888">${p[1] ? p[1].trim() : ""}</p></div>`;
                 });
                 document.getElementById('activity-list').innerHTML = actH;
                 document.getElementById('f1').innerHTML = data[4]?.c[1]?.v || "";
                 const cLines = (data[5]?.c[1]?.v || "").split('\n').filter(l => l.trim());
-                let cH = ""; cLines.forEach(l => cH += `<li style="margin-bottom:12px; display:flex; gap:10px; color:inherit"><i class="fa-solid fa-check-circle" style="color:var(--primary); margin-top:4px"></i><span>${l}</span></li>`);
+                let cH = ""; cLines.forEach(l => cH += `<li style="margin-bottom:12px; display:flex; gap:10px; color:inherit"><i class="fa-solid fa-check-circle" style="color:var(--primary-glow); margin-top:4px"></i><span>${l}</span></li>`);
                 document.getElementById('f2-contact').innerHTML = cH;
                 const fb = data[6]?.c[1]?.v || "";
                 document.getElementById('f3-fb').innerHTML = `<iframe src="https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=340&height=250&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true" width="100%" height="250" style="border:none;overflow:hidden" scrolling="no" frameborder="0"></iframe>`;
+                observeReveals();
             }
-            
+
             if (sheetName === 'SanPham') {
                 products = data.map(r => {
                     const ma = r.c[0]?.v ? r.c[0].v.toString().trim() : "";
                     const ten = r.c[1]?.v || "";
-                    
                     const imgStr = r.c[2]?.v ? r.c[2].v.toString().trim() : "";
                     const images = imgStr ? imgStr.split(',').map(s => s.trim()).filter(s => s) : [];
-                    
                     const catStr = r.c[3]?.v ? r.c[3].v.toString().trim() : "TẤT CẢ";
                     const categories = catStr.split(',').map(s => s.trim()).filter(s => s);
-                    
                     const brand = r.c[4]?.v ? r.c[4].v.toString().trim().toUpperCase() : "KHÁC";
                     const gia = r.c[5]?.v || 0;
-                    
                     const descStr = r.c[6]?.v ? r.c[6].v.toString().trim() : "";
                     const descItems = descStr ? descStr.split(',').map(s => s.trim()).filter(s => s) : [];
-
-                    // Tạo URL Slug định danh không dấu không khoảng trắng từ tên
                     const slug = generateProductSlug(ten);
-
-                    return { 
-                        ma: ma, 
-                        ten: ten, 
-                        brand: brand, 
-                        cats: categories, 
-                        gia: gia, 
-                        motaArr: descItems,
-                        anhArr: images,
-                        slug: slug
-                    };
+                    return { ma, ten, brand, cats: categories, gia, motaArr: descItems, anhArr: images, slug };
                 }).filter(x => x.ma && x.ma.toLowerCase() !== "mã");
-                
+
                 const catsSet = new Set(), brandsSet = new Set();
                 catsSet.add('Nổi bật');
-                
-                products.forEach(p => { 
-                    p.cats.forEach(c => catsSet.add(c.trim())); 
-                    brandsSet.add(p.brand); 
-                });
-                
-                const catList = Array.from(catsSet), brandList = Array.from(brandsSet).sort();
-                
+                products.forEach(p => { p.cats.forEach(c => catsSet.add(c)); brandsSet.add(p.brand); });
+                const catList = Array.from(catsSet).sort(), brandList = Array.from(brandsSet).sort();
                 const submenu = document.getElementById('submenu-products'), selectCat = document.getElementById('filter-category');
                 submenu.innerHTML = ""; selectCat.innerHTML = '<option value="TẤT CẢ">-- Tất cả danh mục --</option>';
-                
                 catList.forEach(c => {
                     submenu.innerHTML += `<li><a href="#products" onclick="setFilter('cat', '${c}')">${c}</a></li>`;
                     selectCat.innerHTML += `<option value="${c}">${c}</option>`;
                 });
-                
                 const selectBrand = document.getElementById('filter-brand');
                 selectBrand.innerHTML = '<option value="TẤT CẢ">-- Tất cả thương hiệu --</option>';
                 brandList.forEach(b => { selectBrand.innerHTML += `<option value="${b}">${b}</option>`; });
                 applyFilters();
 
-                // Check URL Hash dạng Tên Sản Phẩm sau khi nạp xong dữ liệu
                 const hash = window.location.hash.substring(1);
-                if (hash && hash !== "products" && hash !== "intro" && hash !== "activity" && hash !== "projects") {
+                if (hash && !["products","intro","activity","projects"].includes(hash)) {
                     const matchedProduct = products.find(p => p.slug.toLowerCase() === hash.toLowerCase() || p.ma.toLowerCase() === hash.toLowerCase());
                     if (matchedProduct) setTimeout(() => openModal(matchedProduct.ma), 600);
                 }
             }
-            
+
             if (sheetName === 'Du_An') {
                 allProjects = data.slice(1).map(r => ({ ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", ten: r.c[1]?.v || "", hangmuc: r.c[2]?.v || "", noidung: r.c[3]?.v || "", nam: r.c[4]?.v || "" })).filter(x => x.ma);
-                let pjH = ""; allProjects.forEach(pj => pjH += `<div class="proj-card" onclick="openProjModal('${pj.ma}')"><img src="${imgBase}${pj.ma}.jpg" alt="${pj.ten}"><h4>${pj.ten}</h4></div>`);
+                let pjH = ""; allProjects.forEach(pj => pjH += `<div class="proj-card" onclick="openProjModal('${pj.ma}')"><img src="${imgBase}${pj.ma}.jpg" alt="${pj.ten}" loading="lazy"><h4>${pj.ten}</h4></div>`);
                 document.getElementById('project-list').innerHTML = pjH + pjH;
             }
         }
 
-        // --- INIT ---
         async function init() {
             try {
                 const homeData = await fetchData('Trang_Chu');
                 await processInitialData('Trang_Chu', homeData);
-
                 const prodData = await fetchData('SanPham');
                 await processInitialData('SanPham', prodData);
-
                 const projData = await fetchData('Du_An');
                 await processInitialData('Du_An', projData);
 
-                // Check Shared Quote Link
                 const urlParams = new URLSearchParams(window.location.search);
                 const sharedQuote = urlParams.get('quote');
                 if (sharedQuote) {
@@ -502,7 +848,6 @@
                     setTimeout(() => openCart(), 1000);
                 }
 
-                // Search logic
                 const searchInp = document.getElementById('product-search'), searchRes = document.getElementById('search-results');
                 searchInp.addEventListener('input', (e) => {
                     const k = e.target.value.toLowerCase().trim();
@@ -520,8 +865,10 @@
                 document.addEventListener('click', (e) => { if(!e.target.closest('.search-container')) searchRes.style.display='none'; });
 
                 initSlider();
-                document.getElementById('loader').style.display = 'none';
-            } catch (e) { console.error(e); }
+                document.getElementById('loader').classList.add('hide');
+                setTimeout(()=>document.getElementById('loader').style.display='none', 600);
+                observeReveals();
+            } catch (e) { console.error(e); document.getElementById('loader').classList.add('hide'); }
         }
 
         function setFilter(type, val) { if(type === 'cat') document.getElementById('filter-category').value = val; applyFilters(); closeMenu(); }
@@ -530,16 +877,14 @@
             const cat = document.getElementById('filter-category').value;
             const brand = document.getElementById('filter-brand').value;
             const sort = document.getElementById('filter-price').value;
-            
             let filtered = products.filter(p => {
-                const matchCat = (cat === 'TẤT CẢ' || p.cats.some(c => c.trim().toLowerCase() === cat.trim().toLowerCase()));
-                const matchBrand = (brand === 'TẤT CẢ' || p.brand.toLowerCase() === brand.toLowerCase());
+                const matchCat = (cat === 'TẤT CẢ' || p.cats.some(c => c.toLowerCase() === cat.trim().toLowerCase()));
+                const matchBrand = (brand === 'TẤT CẢ' || p.brand.toLowerCase() === brand.trim().toLowerCase());
                 return matchCat && matchBrand;
             });
-            
             if (cat === 'TẤT CẢ' && brand === 'TẤT CẢ' && sort === 'DEFAULT') {
-                const featured = filtered.filter(p => p.cats.some(c => c.trim().toLowerCase() === "nổi bật")).slice(0, 20);
-                const others = filtered.filter(p => !p.cats.some(c => c.trim().toLowerCase() === "nổi bật"));
+                const featured = filtered.filter(p => p.cats.some(c => c.toLowerCase() === "nổi bật")).slice(0, 20);
+                const others = filtered.filter(p => !p.cats.some(c => c.toLowerCase() === "nổi bật"));
                 filtered = [...featured, ...others];
             }
             if (sort === 'LOW_HIGH') filtered.sort((a, b) => a.gia - b.gia);
@@ -549,16 +894,31 @@
 
         function displayPaginatedItems() {
             const start = (currentPage - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            renderProducts(filteredProductsGlobal.slice(start, end));
+            renderProducts(filteredProductsGlobal.slice(start, start + itemsPerPage));
             renderPagination(filteredProductsGlobal.length);
         }
 
         function renderProducts(data) {
-            document.getElementById('product-grid').innerHTML = data.map(p => {
+            document.getElementById('product-grid').innerHTML = data.map((p, idx) => {
                 const displayImg = p.anhArr.length > 0 ? p.anhArr[0] : `${imgBase}${p.ma}.jpg`;
-                return `<div class="product-card"><img src="${displayImg}" loading="lazy" alt="${p.ten}" onclick="openModal('${p.ma}')" onerror="this.src='https://via.placeholder.com/200'"><h3 onclick="openModal('${p.ma}')">${p.ten}</h3><div class="price">${p.gia > 0 ? p.gia.toLocaleString() + 'đ' : 'Giá liên hệ'}</div><button class="btn-add-cart" onclick="addToCart('${p.ma}')">🛒 THÊM GIỎ HÀNG</button></div>`;
+                return `<div class="product-card" style="animation-delay:${Math.min(idx*40,400)}ms"><img src="${displayImg}" loading="lazy" alt="${p.ten}" onclick="openModal('${p.ma}')" onerror="this.src='https://via.placeholder.com/200'"><h3 onclick="openModal('${p.ma}')">${p.ten}</h3><div class="price">${p.gia > 0 ? p.gia.toLocaleString() + 'đ' : 'Giá liên hệ'}</div><button class="btn-add-cart" onclick="addToCart('${p.ma}')">🛒 THÊM GIỎ HÀNG</button></div>`;
             }).join('');
+            attachTilt();
+        }
+
+        // 3D tilt on product cards (desktop only)
+        function attachTilt() {
+            if (window.matchMedia('(hover: none)').matches) return;
+            document.querySelectorAll('.product-card').forEach(card => {
+                if (card._tilt) return; card._tilt = true;
+                card.addEventListener('mousemove', e => {
+                    const r = card.getBoundingClientRect();
+                    const x = (e.clientX - r.left) / r.width - .5;
+                    const y = (e.clientY - r.top) / r.height - .5;
+                    card.style.transform = `translateY(-8px) perspective(800px) rotateX(${(-y*6).toFixed(2)}deg) rotateY(${(x*8).toFixed(2)}deg)`;
+                });
+                card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+            });
         }
 
         function renderPagination(totalItems) {
@@ -586,28 +946,22 @@
         function openModal(ma) {
             const p = products.find(x => x.ma.toString().toLowerCase() === ma.toString().toLowerCase());
             if(!p) return;
-            
-            // Thay đổi URL Hash sang định dạng tên sản phẩm viết liền không dấu không khoảng trắng
-            window.location.hash = p.slug; 
+            window.location.hash = p.slug;
             currentProductMA = p.ma;
-            
             document.getElementById('m-title').innerText = p.ten;
             document.getElementById('m-price').innerText = p.gia > 0 ? p.gia.toLocaleString() + ' đ' : 'Giá liên hệ';
             document.getElementById('m-cat').innerText = p.cats.join(' | ');
-            
             const mainPreview = document.getElementById('main-preview');
             const defaultFallback = 'https://via.placeholder.com/200';
             const firstImg = p.anhArr.length > 0 ? p.anhArr[0] : `${imgBase}${p.ma}.jpg`;
             mainPreview.src = firstImg;
             mainPreview.onerror = function() { this.src = defaultFallback; };
             mainPreview.alt = p.ten;
-
             if (p.motaArr && p.motaArr.length > 0) {
                 document.getElementById('m-specs').innerHTML = p.motaArr.map(l => `<li>${l}</li>`).join('');
             } else {
                 document.getElementById('m-specs').innerHTML = '<li>Đang cập nhật thông số kỹ thuật.</li>';
             }
-            
             let th = "";
             if (p.anhArr && p.anhArr.length > 0) {
                 p.anhArr.forEach((imgUrl, idx) => {
@@ -629,6 +983,8 @@
             const ex = cart.find(x => x.ma.toString().toLowerCase() === ma.toString().toLowerCase());
             if (ex) ex.qty++; else cart.push({...p, qty: 1});
             updateCartUI();
+            const ci = document.getElementById('cartIcon');
+            ci.classList.remove('bump'); void ci.offsetWidth; ci.classList.add('bump');
         }
 
         function updateCartUI() {
@@ -637,7 +993,7 @@
             document.getElementById('cart-items').innerHTML = cart.map((item, i) => {
                 const sub = item.gia * item.qty; total += sub;
                 const subDisplay = item.gia > 0 ? sub.toLocaleString() + 'đ' : 'Liên hệ';
-                return `<tr style="border-bottom:1px solid #eee"><td style="padding:10px 0"><b style="color:var(--primary);cursor:pointer" onclick="openModal('${item.ma}')">${item.ten}</b></td><td><input type="number" value="${item.qty}" min="1" style="width:40px" onchange="cart[${i}].qty=parseInt(this.value);updateCartUI()"></td><td>${subDisplay}</td><td><button onclick="cart.splice(${i},1);updateCartUI()" style="border:none;background:none;color:red;cursor:pointer">❌</button></td></tr>`;
+                return `<tr style="border-bottom:1px solid #eee"><td style="padding:10px 0"><b style="color:var(--primary);cursor:pointer" onclick="openModal('${item.ma}')">${item.ten}</b></td><td><input type="number" value="${item.qty}" min="1" style="width:50px;padding:4px;border:1px solid #ddd;border-radius:6px" onchange="cart[${i}].qty=parseInt(this.value);updateCartUI()"></td><td>${subDisplay}</td><td><button onclick="cart.splice(${i},1);updateCartUI()" style="border:none;background:none;color:red;cursor:pointer;font-size:1.1rem">❌</button></td></tr>`;
             }).join('');
             document.getElementById('cart-total-web').innerText = total.toLocaleString() + 'đ';
         }
@@ -657,11 +1013,9 @@
             const n = new Date(); const qID = `${String(n.getDate()).padStart(2,'0')}${String(n.getMonth()+1).padStart(2,'0')}${String(n.getFullYear()).slice(-2)}/BG-KGP`;
             document.getElementById('print-no').innerText = qID; document.getElementById('print-no-footer').innerText = "Thanh toán cho báo giá số: " + qID;
             document.getElementById('print-date').innerText = n.toLocaleDateString('vi-VN');
-            
-            let sub = 0; // Đảm bảo khai báo từ đầu phạm vi để tránh treo script
-            
+            let sub = 0;
             document.getElementById('print-table-body').innerHTML = cart.map((item, i) => {
-                const t = item.gia * item.qty; 
+                const t = item.gia * item.qty;
                 if(item.gia > 0) sub += t;
                 const priceCell = item.gia > 0 ? item.gia.toLocaleString() : "Liên hệ";
                 const totalCell = item.gia > 0 ? t.toLocaleString() : "Liên hệ";
@@ -669,7 +1023,6 @@
                 const motaPrintStr = item.motaArr && item.motaArr.length > 0 ? item.motaArr.map(m => `• ${m}`).join('<br>') : '';
                 return `<tr><td align="center">${i+1}</td><td><b>${item.ten}</b><br><span style="font-size:10px; color:#555;">${motaPrintStr}</span></td><td align="center"><img src="${printImg}" style="width:50px" alt="img" onerror="this.src='https://via.placeholder.com/100'"></td><td align="center">Bộ</td><td align="center">${item.qty}</td><td align="right">${priceCell}</td><td align="right">${totalCell}</td></tr>`;
             }).join('');
-            
             const vat = isCompany ? Math.round(sub * 0.1) : 0; const gt = sub + vat;
             document.getElementById('p-subtotal').innerText = sub.toLocaleString(); document.getElementById('p-vat').innerText = vat.toLocaleString();
             document.getElementById('p-grandtotal').innerText = gt.toLocaleString(); document.getElementById('p-word').innerText = docSoTien(gt) + " đồng chẵn.";
@@ -701,8 +1054,8 @@
             function read3(n, isFirst) {
                 let r = ""; const h = Math.floor(n/100), t = Math.floor((n%100)/10), d = n%10;
                 if (h > 0 || !isFirst) r += digits[h] + " trăm ";
-                if (t > 1) { r += digits[t] + " mươi "; if (d === 1) r += "mốt"; else if (d === 5) r += "lăm"; else if (d > 0) r += digits[d]; } 
-                else if (t === 1) { r += "mười "; if (d === 5) r += "lăm"; else if (d > 0) r += digits[d]; } 
+                if (t > 1) { r += digits[t] + " mươi "; if (d === 1) r += "mốt"; else if (d === 5) r += "lăm"; else if (d > 0) r += digits[d]; }
+                else if (t === 1) { r += "mười "; if (d === 5) r += "lăm"; else if (d > 0) r += digits[d]; }
                 else if (t === 0 && d > 0) { if (h > 0 || !isFirst) r += "lẻ "; r += digits[d]; }
                 return r;
             }
@@ -714,6 +1067,43 @@
             }
             return res.trim().charAt(0).toUpperCase() + res.trim().slice(1);
         }
+
+        // --- SCROLL EFFECTS ---
+        const header = document.getElementById('site-header');
+        const toTop = document.getElementById('toTop');
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (ticking) return;
+            window.requestAnimationFrame(() => {
+                const y = window.scrollY;
+                header.classList.toggle('scrolled', y > 30);
+                toTop.classList.toggle('show', y > 500);
+                ticking = false;
+            });
+            ticking = true;
+        }, { passive: true });
+
+        // --- REVEAL OBSERVER ---
+        let revealObserver;
+        function observeReveals() {
+            if (!('IntersectionObserver' in window)) {
+                document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('in')); return;
+            }
+            if (!revealObserver) {
+                revealObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); revealObserver.unobserve(e.target); } });
+                }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            }
+            document.querySelectorAll('[data-reveal]:not(.in)').forEach(el => revealObserver.observe(el));
+        }
+
+        // ESC closes modals
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                ['pModal','cartModal','projModal'].forEach(id => { const m=document.getElementById(id); if(m && m.style.display==='flex') m.style.display='none'; });
+                closeMenu();
+            }
+        });
 
         init();
     </script>
