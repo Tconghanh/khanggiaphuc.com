@@ -308,7 +308,7 @@
         <div class="footer-grid">
             <div class="footer-col"><img src="https://khanggiaphuc.com/data/logo.jpg" style="height: 50px; margin-bottom: 20px;" alt="KGP Telecom Logo Footer"><div id="f1" style="font-size:0.9rem"></div></div>
             <div class="footer-col"><h4>THÔNG TIN LIÊN HỆ</h4><ul id="f2-contact" style="list-style:none; padding:0"></ul></div>
-            <div class="footer-col"><h4>KẾT NỐI WITH US</h4><div id="f3-fb" style="background:#fff; border-radius:10px; overflow:hidden"></div></div>
+            <div class="footer-col"><h4>KẾT NỐI VỚI CHÚNG TÔI</h4><div id="f3-fb" style="background:#fff; border-radius:10px; overflow:hidden"></div></div>
         </div>
     </footer>
 
@@ -391,24 +391,35 @@
                 document.getElementById('f3-fb').innerHTML = `<iframe src="https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(fb)}&tabs=timeline&width=340&height=250&small_header=true&adapt_container_width=true&hide_cover=false&show_facepile=true" width="100%" height="250" style="border:none;overflow:hidden" scrolling="no" frameborder="0"></iframe>`;
             }
             
-            // Xử lý dữ liệu sản phẩm từ tab 'SanPham'
+            // Xử lý dữ liệu sản phẩm mới (Tách dấu phẩy từ tab 'SanPham')
             if (sheetName === 'SanPham') {
                 products = data.map(r => {
+                    // Cột A (index 0): Mã sản phẩm (Chuyển chuỗi an toàn chống lỗi so sánh URL giỏ hàng)
+                    const ma = r.c[0]?.v ? r.c[0].v.toString().trim() : "";
+                    
+                    // Cột B (index 1): Tên sản phẩm
                     const ten = r.c[1]?.v || "";
+                    
+                    // Cột C (index 2): Link chứa ảnh sản phẩm cách nhau bằng dấu ","
                     const imgStr = r.c[2]?.v ? r.c[2].v.toString().trim() : "";
                     const images = imgStr ? imgStr.split(',').map(s => s.trim()).filter(s => s) : [];
                     
+                    // Cột D (index 3): Danh mục cách nhau bằng dấu ","
                     const catStr = r.c[3]?.v ? r.c[3].v.toString().trim() : "TẤT CẢ";
                     const categories = catStr.split(',').map(s => s.trim()).filter(s => s);
                     
+                    // Cột E (index 4): Thương hiệu
                     const brand = r.c[4]?.v ? r.c[4].v.toString().trim().toUpperCase() : "KHÁC";
+                    
+                    // Cột F (index 5): Giá sản phẩm
                     const gia = r.c[5]?.v || 0;
                     
+                    // Cột G (index 6): Mô tả sản phẩm cách nhau bằng dấu ","
                     const descStr = r.c[6]?.v ? r.c[6].v.toString().trim() : "";
                     const descItems = descStr ? descStr.split(',').map(s => s.trim()).filter(s => s) : [];
 
                     return { 
-                        ma: r.c[0]?.v ? r.c[0].v.toString().trim() : "", 
+                        ma: ma, 
                         ten: ten, 
                         brand: brand, 
                         cats: categories, 
@@ -419,14 +430,15 @@
                 }).filter(x => x.ma && x.ma.toLowerCase() !== "mã");
                 
                 const catsSet = new Set(), brandsSet = new Set();
-                catsSet.add('Nổi bật');
+                catsSet.add('Nổi bật'); // Ưu tiên hiển thị danh mục Nổi bật lên đầu
                 
                 products.forEach(p => { 
                     p.cats.forEach(c => catsSet.add(c.trim())); 
                     brandsSet.add(p.brand); 
                 });
                 
-                const catList = Array.from(catsSet).sort(), brandList = Array.from(brandsSet).sort();
+                const catList = Array.from(catsSet), brandList = Array.from(brandsSet).sort();
+                
                 const submenu = document.getElementById('submenu-products'), selectCat = document.getElementById('filter-category');
                 submenu.innerHTML = ""; selectCat.innerHTML = '<option value="TẤT CẢ">-- Tất cả danh mục --</option>';
                 
@@ -454,20 +466,21 @@
                 const homeData = await fetchData('Trang_Chu');
                 await processInitialData('Trang_Chu', homeData);
 
+                // Gọi tab mới đúng tên "SanPham"
                 const prodData = await fetchData('SanPham');
                 await processInitialData('SanPham', prodData);
 
                 const projData = await fetchData('Du_An');
                 await processInitialData('Du_An', projData);
 
-                // Check Shared Quote
+                // Check Shared Quote Link (Sửa lỗi ép kiểu so sánh mã sản phẩm)
                 const urlParams = new URLSearchParams(window.location.search);
                 const sharedQuote = urlParams.get('quote');
                 if (sharedQuote) {
                     const items = sharedQuote.split(',');
                     items.forEach(it => {
                         const [ma, qty] = it.split(':');
-                        const p = products.find(x => x.ma.toString() === ma.toString());
+                        const p = products.find(x => x.ma.toString().toLowerCase() === ma.toString().toLowerCase());
                         if (p) cart.push({ ...p, qty: parseInt(qty) || 1 });
                     });
                     updateCartUI();
@@ -500,13 +513,17 @@
 
         function setFilter(type, val) { if(type === 'cat') document.getElementById('filter-category').value = val; applyFilters(); closeMenu(); }
 
+        // Sửa lỗi lọc danh mục lệch chữ hoa/thường tiếng Việt có dấu
         function applyFilters() {
             const cat = document.getElementById('filter-category').value;
             const brand = document.getElementById('filter-brand').value;
             const sort = document.getElementById('filter-price').value;
             
-            // Fix: Sử dụng .toLowerCase() để không bỏ sót bất cứ sản phẩm nào khi so sánh chuỗi danh mục
-            let filtered = products.filter(p => (cat === 'TẤT CẢ' || p.cats.some(c => c.trim().toLowerCase() === cat.toLowerCase())) && (brand === 'TẤT CẢ' || p.brand === brand));
+            let filtered = products.filter(p => {
+                const matchCat = (cat === 'TẤT CẢ' || p.cats.some(c => c.trim().toLowerCase() === cat.trim().toLowerCase()));
+                const matchBrand = (brand === 'TẤT CẢ' || p.brand.toLowerCase() === brand.toLowerCase());
+                return matchCat && matchBrand;
+            });
             
             if (cat === 'TẤT CẢ' && brand === 'TẤT CẢ' && sort === 'DEFAULT') {
                 const featured = filtered.filter(p => p.cats.some(c => c.trim().toLowerCase() === "nổi bật")).slice(0, 20);
@@ -525,6 +542,7 @@
             renderPagination(filteredProductsGlobal.length);
         }
 
+        // Render sản phẩm ngoài danh sách lưới
         function renderProducts(data) {
             document.getElementById('product-grid').innerHTML = data.map(p => {
                 const displayImg = p.anhArr.length > 0 ? p.anhArr[0] : `${imgBase}${p.ma}.jpg`;
@@ -554,14 +572,16 @@
             window.location.href = "#products";
         }
 
+        // Mở Modal xem chi tiết thông số và album ảnh sản phẩm
         function openModal(ma) {
-            const p = products.find(x => x.ma.toString() === ma.toString());
+            const p = products.find(x => x.ma.toString().toLowerCase() === ma.toString().toLowerCase());
             if(!p) return;
             window.location.hash = ma; currentProductMA = p.ma;
             document.getElementById('m-title').innerText = p.ten;
             document.getElementById('m-price').innerText = p.gia > 0 ? p.gia.toLocaleString() + ' đ' : 'Giá liên hệ';
             document.getElementById('m-cat').innerText = p.cats.join(' | ');
             
+            // Xử lý ảnh chính đại diện
             const mainPreview = document.getElementById('main-preview');
             const defaultFallback = 'https://via.placeholder.com/200';
             const firstImg = p.anhArr.length > 0 ? p.anhArr[0] : `${imgBase}${p.ma}.jpg`;
@@ -569,12 +589,14 @@
             mainPreview.onerror = function() { this.src = defaultFallback; };
             mainPreview.alt = p.ten;
 
+            // Render mô tả xuống dòng có cấu trúc dấu tích xanh đầu dòng ✓
             if (p.motaArr && p.motaArr.length > 0) {
                 document.getElementById('m-specs').innerHTML = p.motaArr.map(l => `<li>${l}</li>`).join('');
             } else {
                 document.getElementById('m-specs').innerHTML = '<li>Đang cập nhật thông số kỹ thuật.</li>';
             }
             
+            // Tạo Album ảnh nhỏ thumbnails (Nếu link lỗi tự động ẩn không hiện text lỗi)
             let th = "";
             if (p.anhArr && p.anhArr.length > 0) {
                 p.anhArr.forEach((imgUrl, idx) => {
@@ -591,9 +613,9 @@
         function closeModal() { document.getElementById('pModal').style.display = 'none'; history.pushState("", document.title, window.location.pathname + window.location.search); }
 
         function addToCart(ma) {
-            const p = products.find(x => x.ma.toString() === ma.toString());
+            const p = products.find(x => x.ma.toString().toLowerCase() === ma.toString().toLowerCase());
             if(!p) return;
-            const ex = cart.find(x => x.ma.toString() === ma.toString());
+            const ex = cart.find(x => x.ma.toString().toLowerCase() === ma.toString().toLowerCase());
             if (ex) ex.qty++; else cart.push({...p, qty: 1});
             updateCartUI();
         }
@@ -619,15 +641,18 @@
             navigator.clipboard.writeText(shareUrl).then(() => alert("Đã sao chép link báo giá! Hãy gửi link này cho khách hàng qua Zalo/Facebook."));
         }
 
+        // Khắc phục triệt để lỗi ReferenceError của biến tính tổng tiền trong hàm in ấn
         function preparePrint(isCompany) {
             if (!cart.length) return alert("Giỏ hàng trống!");
             const n = new Date(); const qID = `${String(n.getDate()).padStart(2,'0')}${String(n.getMonth()+1).padStart(2,'0')}${String(n.getFullYear()).slice(-2)}/BG-KGP`;
             document.getElementById('print-no').innerText = qID; document.getElementById('print-no-footer').innerText = "Thanh toán cho báo giá số: " + qID;
             document.getElementById('print-date').innerText = n.toLocaleDateString('vi-VN');
             
-            let sub = 0; // Fix: Khai báo và đặt biến tính tổng tiền hàng ra bên ngoài trước vòng lặp map
+            let sub = 0; // Đưa khai báo tổng tiền hàng lên đầu phạm vi chạy của hàm
+            
             document.getElementById('print-table-body').innerHTML = cart.map((item, i) => {
-                const t = item.gia * item.qty; sub += t;
+                const t = item.gia * item.qty; 
+                if(item.gia > 0) sub += t;
                 const priceCell = item.gia > 0 ? item.gia.toLocaleString() : "Liên hệ";
                 const totalCell = item.gia > 0 ? t.toLocaleString() : "Liên hệ";
                 const printImg = item.anhArr.length > 0 ? item.anhArr[0] : `${imgBase}${item.ma}.jpg`;
