@@ -2,8 +2,12 @@
 #  WIN TOOLS - Bộ Công Cụ Tối Ưu Windows Chuyên Nghiệp
 #  Phát triển bởi: Mr Hạnh - 0938.608.602
 #  Website: https://khanggiaphuc.com/win
-#  Phiên bản: v26.6.30
+#  Phiên bản: v26.7.1 (đã nâng cấp)
 # =============================================================================
+
+#region --- PHIÊN BẢN  ---
+$Global:AppVersion = "v26.7.1"
+#endregion
 
 #region --- KHỞI TẠO & KIỂM TRA QUYỀN ---
 $OutputEncoding           = [System.Text.Encoding]::UTF8
@@ -25,7 +29,11 @@ Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 try {
     Add-Type -TypeDefinition @'
     using System; using System.Runtime.InteropServices;
-    public class WinApi { [DllImport("user32.dll")] public static extern bool SetProcessDPIAware(); }
+    public class WinApi {
+        [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
+        [DllImport("user32.dll")] public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
+        [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+    }
 '@
     [void][WinApi]::SetProcessDPIAware()
 } catch {}
@@ -70,12 +78,53 @@ $F = @{
 #endregion
 
 #region --- HÀM TIỆN ÍCH UI ---
+# [NÂNG CẤP GIAO DIỆN] Hàm điều chỉnh độ sáng/tối của màu để tạo hiệu ứng hover/press
+function Get-AdjustedColor {
+    param([System.Drawing.Color]$Color,[int]$Amount)
+    $r=[Math]::Min(255,[Math]::Max(0,$Color.R+$Amount))
+    $g=[Math]::Min(255,[Math]::Max(0,$Color.G+$Amount))
+    $b=[Math]::Min(255,[Math]::Max(0,$Color.B+$Amount))
+    return [System.Drawing.Color]::FromArgb($r,$g,$b)
+}
+# [NÂNG CẤP GIAO DIỆN] Tạo vùng bo tròn 4 góc dùng cho nút bấm
+function New-RoundedRegion {
+    param([int]$Width,[int]$Height,[int]$Radius=10)
+    $r=[Math]::Max(2,[Math]::Min($Radius,[Math]::Floor([Math]::Min($Width,$Height)/2)))
+    $d=$r*2
+    $path=New-Object System.Drawing.Drawing2D.GraphicsPath
+    $path.AddArc(0,0,$d,$d,180,90)
+    $path.AddArc($Width-$d,0,$d,$d,270,90)
+    $path.AddArc($Width-$d,$Height-$d,$d,$d,0,90)
+    $path.AddArc(0,$Height-$d,$d,$d,90,90)
+    $path.CloseFigure()
+    return New-Object System.Drawing.Region($path)
+}
+# [NÂNG CẤP GIAO DIỆN] Tạo path bo tròn 2 góc trên 
+function New-RoundedTopPath {
+    param([System.Drawing.Rectangle]$Rect,[int]$Radius=8)
+    $d=$Radius*2
+    $path=New-Object System.Drawing.Drawing2D.GraphicsPath
+    $path.AddArc($Rect.X,$Rect.Y,$d,$d,180,90)
+    $path.AddArc($Rect.Right-$d,$Rect.Y,$d,$d,270,90)
+    $path.AddLine($Rect.Right,($Rect.Y+$Radius),$Rect.Right,$Rect.Bottom)
+    $path.AddLine($Rect.Right,$Rect.Bottom,$Rect.X,$Rect.Bottom)
+    $path.AddLine($Rect.X,$Rect.Bottom,$Rect.X,($Rect.Y+$Radius))
+    $path.CloseFigure()
+    return $path
+}
 function New-StyledButton {
-    param($Text,$X,$Y,$W,$H,$BgColor,$FgColor=$C.White,$Font=$F.Btn)
+    param($Text,$X,$Y,$W,$H,$BgColor,$FgColor=$C.White,$Font=$F.Btn,[int]$Radius=10)
     $b = New-Object System.Windows.Forms.Button
     $b.Text=$Text; $b.Location=[System.Drawing.Point]::new($X,$Y); $b.Size=[System.Drawing.Size]::new($W,$H)
     $b.BackColor=$BgColor; $b.ForeColor=$FgColor; $b.Font=$Font
-    $b.FlatStyle="Flat"; $b.FlatAppearance.BorderSize=0; $b.Cursor="Hand"
+    $b.FlatStyle="Flat"; $b.Cursor="Hand"
+    # [NÂNG CẤP] Viền mảnh sáng hơn nền + hiệu ứng hover sáng lên / nhấn tối đi -> nút "nổi bật" rõ ràng hơn
+    $b.FlatAppearance.BorderSize = 1
+    $b.FlatAppearance.BorderColor = Get-AdjustedColor $BgColor 50
+    $b.FlatAppearance.MouseOverBackColor = Get-AdjustedColor $BgColor 30
+    $b.FlatAppearance.MouseDownBackColor = Get-AdjustedColor $BgColor -35
+    # [NÂNG CẤP] Bo tròn 4 góc cho đẹp mắt, hiện đại hơn kiểu vuông cạnh cũ
+    $b.Region = New-RoundedRegion -Width $W -Height $H -Radius $Radius
     return $b
 }
 function New-GroupCard {
@@ -110,7 +159,7 @@ $global:LogLines = [System.Collections.Generic.List[string]]::new()
 
 #region --- FORM CHÍNH (Độ phân giải thấp 1024x768) ---
 $form               = New-Object System.Windows.Forms.Form
-$form.Text          = "WIN TOOLS Pro v26.6.27 - Ultimate Edition"
+$form.Text          = "WIN TOOLS Pro $($Global:AppVersion) - Ultimate Edition"
 $form.Size          = [System.Drawing.Size]::new(1010,730)
 $form.StartPosition = "CenterScreen"
 $form.BackColor     = $C.Bg; $form.ForeColor=$C.Text; $form.Font=$F.Body
@@ -123,7 +172,7 @@ $pnlHeader.Location=[System.Drawing.Point]::new(0,0); $pnlHeader.Size=[System.Dr
 $pnlHeader.BackColor=$C.BgPanel; $form.Controls.Add($pnlHeader)
 $pnlHeader.Controls.Add((New-Label "WIN TOOLS PRO" 15 5 400 40 $C.Accent $F.Title "MiddleLeft"))
 $pnlHeader.Controls.Add((New-Label "Phát triển bởi Mr Hạnh | 0938.608.602 | www.khanggiaphuc.com/win" 420 5 400 40 $C.TextDim $F.Body "MiddleCenter"))
-$pnlHeader.Controls.Add((New-Label "v26.6.27 Pro" 875 5 110 40 $C.Orange $F.Header "MiddleRight"))
+$pnlHeader.Controls.Add((New-Label "$($Global:AppVersion) Pro" 875 5 110 40 $C.Orange $F.Header "MiddleRight"))
 #endregion
 
 #region --- SYSINFO BAR ---
@@ -138,15 +187,26 @@ $pnlSys.Controls.Add($lblSys)
 $tabCtrl = New-Object System.Windows.Forms.TabControl
 $tabCtrl.Location=[System.Drawing.Point]::new(8,93); $tabCtrl.Size=[System.Drawing.Size]::new(980,480)
 $tabCtrl.BackColor=$C.Bg; $tabCtrl.Font=$F.Header; $tabCtrl.DrawMode="OwnerDrawFixed"
-$tabCtrl.ItemSize=[System.Drawing.Size]::new(158,28); $tabCtrl.SizeMode="Fixed"; $tabCtrl.Appearance="FlatButtons"
+# [NÂNG CẤP GIAO DIỆN] Thu nhỏ khoảng cách giữa các tab (158 -> 128) để hàng menu gọn gàng hơn, đủ chỗ cho 7 mục kể cả "Thoát"
+$tabCtrl.ItemSize=[System.Drawing.Size]::new(128,32); $tabCtrl.SizeMode="Fixed"; $tabCtrl.Appearance="FlatButtons"
 $form.Controls.Add($tabCtrl)
 $tabCtrl.Add_DrawItem({
     param($s,$e)
-    $g=$e.Graphics; $tab=$s.TabPages[$e.Index]; $sel=($e.Index -eq $s.SelectedIndex)
-    $bg=if($sel){$C.Accent}else{$C.BgCard}; $fg=if($sel){$C.Bg}else{$C.TextDim}
-    $g.FillRectangle([System.Drawing.SolidBrush]::new($bg),$e.Bounds)
+    $g=$e.Graphics; $g.SmoothingMode=[System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+    $tab=$s.TabPages[$e.Index]; $sel=($e.Index -eq $s.SelectedIndex)
+    $isExit = ($tab.Text -eq "Thoát")
+    $bg = if ($isExit) { $C.BgCard } elseif ($sel) { $C.Accent } else { $C.BgCard }
+    $fg = if ($isExit) { $C.Red } elseif ($sel) { $C.Bg } else { $C.TextDim }
+    # [NÂNG CẤP GIAO DIỆN] Bo tròn 2 góc trên mỗi tab kiểu "viên thuốc" thay vì vuông cạnh cứng nhắc
+    $rect = $e.Bounds; $rect.Inflate(-2,-3)
+    $path = New-RoundedTopPath -Rect $rect -Radius 8
+    $g.FillPath([System.Drawing.SolidBrush]::new($bg),$path)
+    if ($isExit) {
+        $pen = New-Object System.Drawing.Pen($C.Red,1)
+        $g.DrawPath($pen,$path)
+    }
     $sf=[System.Drawing.StringFormat]::new(); $sf.Alignment="Center"; $sf.LineAlignment="Center"
-    $g.DrawString($tab.Text,$F.Header,[System.Drawing.SolidBrush]::new($fg),[System.Drawing.RectangleF]$e.Bounds,$sf)
+    $g.DrawString($tab.Text,$F.Header,[System.Drawing.SolidBrush]::new($fg),[System.Drawing.RectangleF]$rect,$sf)
 })
 function New-Tab { param($Text) $t=New-Object System.Windows.Forms.TabPage; $t.Text=$Text; $t.BackColor=$C.Bg; $t.BorderStyle="None"; return $t }
 $tabTweaks  = New-Tab "Tùy Chỉnh"
@@ -155,7 +215,21 @@ $tabRemove  = New-Tab "Gỡ Bỏ"
 $tabBackup  = New-Tab "Sao Lưu"
 $tabLicense = New-Tab "Bản Quyền"
 $tabAbout   = New-Tab "Thông Tin"
-foreach ($tab in @($tabTweaks,$tabInstall,$tabRemove,$tabBackup,$tabLicense,$tabAbout)) { $tabCtrl.TabPages.Add($tab) }
+$tabExit    = New-Tab "Thoát"
+foreach ($tab in @($tabTweaks,$tabInstall,$tabRemove,$tabBackup,$tabLicense,$tabAbout,$tabExit)) { $tabCtrl.TabPages.Add($tab) }
+
+# [TÍNH NĂNG MỚI] Tab "Thoát" hoạt động như một nút bấm ngay trong hàng menu: bấm vào sẽ hỏi xác nhận rồi đóng ứng dụng,
+# thay vì hiển thị 1 trang trống. Nếu người dùng chọn Không, tự động quay về tab đang xem trước đó.
+$global:LastTabIndex = 0
+$tabCtrl.Add_SelectedIndexChanged({
+    if ($tabCtrl.SelectedTab -eq $tabExit) {
+        $tabCtrl.SelectedIndex = $global:LastTabIndex
+        $r = [System.Windows.Forms.MessageBox]::Show("Bạn có chắc chắn muốn thoát chương trình?","Xác nhận",[System.Windows.Forms.MessageBoxButtons]::YesNo,[System.Windows.Forms.MessageBoxIcon]::Question)
+        if ($r -eq [System.Windows.Forms.DialogResult]::Yes) { $form.Close() }
+    } else {
+        $global:LastTabIndex = $tabCtrl.SelectedIndex
+    }
+})
 #endregion
 
 #region --- LOG & PROGRESS ---
@@ -196,21 +270,68 @@ function Reset-Progress { $progressBar.Value=0; $lblPct.Text="0%"; [System.Windo
 # ==============================================================
 #  TAB 1 - TÙY CHỈNH HỆ THỐNG
 # ==============================================================
-#region --- TAB TWEAKS  ---
+#region --- TAB TWEAKS & SEARCH BAR ---
 $gbTwL = New-GroupCard "TUỲ CHỈNH HỆ THỐNG WINDOWS" 5 5 440 435 $C.Accent
 $tabTweaks.Controls.Add($gbTwL)
-$listTw = New-CheckListBox 10 25 420 350
+
+# [NÂNG CẤP 4] Bổ sung Bộ lọc Tìm kiếm nhanh (Search/Filter Bar)
+$lblSearch = New-Label "Tìm kiếm nhanh:" 10 25 100 20 $C.TextDim $F.Small
+$gbTwL.Controls.Add($lblSearch)
+
+$txtSearch = New-Object System.Windows.Forms.TextBox
+$txtSearch.Location = [System.Drawing.Point]::new(110, 23)
+$txtSearch.Size = [System.Drawing.Size]::new(320, 22)
+$txtSearch.BackColor = $C.BgInput
+$txtSearch.ForeColor = $C.Accent
+$txtSearch.BorderStyle = "FixedSingle"
+$txtSearch.Font = $F.Body
+$gbTwL.Controls.Add($txtSearch)
+
+# Di chuyển ListBox xuống dưới để nhường chỗ cho Search Bar
+$listTw = New-CheckListBox 10 52 420 305
 $gbTwL.Controls.Add($listTw)
 
+$chkRestorePoint = New-Object System.Windows.Forms.CheckBox
+$chkRestorePoint.Text = "Tạo Điểm Khôi Phục (Restore Point) trước khi chạy - khuyến nghị"
+$chkRestorePoint.Location = [System.Drawing.Point]::new(10,359)
+$chkRestorePoint.Size = [System.Drawing.Size]::new(420,18)
+$chkRestorePoint.ForeColor = $C.TextDim; $chkRestorePoint.Font = $F.Small; $chkRestorePoint.Checked = $true
+$gbTwL.Controls.Add($chkRestorePoint)
+
+# Cơ sở dữ liệu Tweak nguyên bản - Đã tối ưu hóa lệnh [NÂNG CẤP 3]
 $tweakDatabase = [ordered]@{
     "01 - Gỡ ứng dụng rác (Bloatware)" = @{
-        Desc = "Loại bỏ các ứng dụng cài sẵn không cần thiết của Windows như Xbox, Clipchamp, Cortana, Maps, News, Teams... giúp hệ thống gọn gàng hơn, giảm tiến trình chạy nền, tiết kiệm RAM, giải phóng dung lượng và cải thiện tốc độ khởi động. Chỉ gỡ các ứng dụng an toàn, không ảnh hưởng đến Windows Update."
-        Cmd  = { Get-AppxPackage -AllUsers | Where-Object { $_.Name -notmatch "WindowsStore|Calculator|Photos|Paint|Notepad" } | Remove-AppxPackage -AllUsers }
-        Undo = { Write-Log "Ứng dụng rác cần khôi phục qua Microsoft Store." "WARN" }
+        Desc = "Loại bỏ các ứng dụng cài sẵn không cần thiết của Windows như Xbox, Clipchamp, Cortana, Maps, News, Teams, 3D Viewer, Get Help... giúp hệ thống gọn gàng hơn, giảm tiến trình chạy nền, tiết kiệm RAM, giải phóng dung lượng và cải thiện tốc độ khởi động. [BẢN VÁ AN TOÀN] Chỉ gỡ đúng danh sách các gói đã xác định là rác (whitelist), KHÔNG còn xoá theo kiểu loại trừ nữa để tránh xoá nhầm Windows Security, Terminal, Store hay các app hệ thống quan trọng khác."
+        Cmd  = {
+            $bloatList = @(
+                "Microsoft.XboxApp","Microsoft.XboxGamingOverlay","Microsoft.XboxGameOverlay",
+                "Microsoft.XboxIdentityProvider","Microsoft.XboxSpeechToTextOverlay","Microsoft.Xbox.TCUI",
+                "Microsoft.GamingApp","Microsoft.549981C3F5F10","Microsoft.Clipchamp",
+                "Microsoft.BingNews","Microsoft.BingWeather","Microsoft.BingFinance",
+                "Microsoft.WindowsMaps","Microsoft.MicrosoftTeams","Microsoft.Teams",
+                "Microsoft.YourPhone","Microsoft.People","Microsoft.MixedReality.Portal",
+                "Microsoft.GetHelp","Microsoft.Getstarted","Microsoft.Microsoft3DViewer",
+                "Microsoft.MicrosoftSolitaireCollection","Microsoft.MicrosoftOfficeHub",
+                "Microsoft.WindowsFeedbackHub","Microsoft.WindowsSoundRecorder","Microsoft.ZuneMusic",
+                "Microsoft.ZuneVideo","Microsoft.SkypeApp","Microsoft.PowerAutomateDesktop",
+                "Microsoft.Todos","Microsoft.WindowsAlarms","Microsoft.MSPaint.WinAppSDK.Bloat"
+            )
+            foreach ($b in $bloatList) {
+                Get-AppxPackage -AllUsers -Name $b -ErrorAction SilentlyContinue | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+                Get-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue | Where-Object { $_.PackageName -like "$b*" } | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue | Out-Null
+            }
+        }
+        Undo = { Write-Log "Ứng dụng rác cần khôi phục qua Microsoft Store (tìm theo tên gói đã gỡ)." "WARN" }
     }
     "02 - Dọn dẹp ổ đĩa hệ thống (Disk Cleanup)" = @{
         Desc = "Xóa file tạm, bộ nhớ đệm, Windows Update Cache, Thumbnail Cache, Error Log, Memory Dump, Recycle Bin và thực hiện Component Cleanup. Giúp giải phóng dung lượng, tăng hiệu suất hệ thống và giữ Windows luôn sạch sẽ mà không làm mất dữ liệu cá nhân.."
-        Cmd  = { Remove-Item "$env:TEMP\*" -Force -Recurse; Start-Process "dism.exe" -ArgumentList "/Online /Cleanup-Image /StartComponentCleanup" -WindowStyle Hidden -Wait }
+        # [TỐI ƯU CÂU LỆNH 3]: Thêm dọn dẹp thư mục C:\Windows\Temp và CrashDumps hệ thống
+        Cmd  = { 
+            Remove-Item "$env:TEMP\*" -Force -Recurse -ErrorAction SilentlyContinue
+            Remove-Item "C:\Windows\Temp\*" -Force -Recurse -ErrorAction SilentlyContinue
+            Remove-Item "$env:LOCALAPPDATA\CrashDumps\*" -Force -Recurse -ErrorAction SilentlyContinue
+            Start-Process "dism.exe" -ArgumentList "/Online /Cleanup-Image /StartComponentCleanup" -WindowStyle Hidden -Wait 
+        }
         Undo = { Write-Log "Không cần hoàn tác dọn dẹp bộ nhớ tạm." "INFO" }
     }
     "03 - Dọn Prefetch và SuperFetch" = @{
@@ -265,13 +386,33 @@ $tweakDatabase = [ordered]@{
     }
     "13 - Tắt Search Indexing (WSearch)" = @{
         Desc = "Dừng dịch vụ index dữ liệu để giảm 100% nghẽn Disk."
-        Cmd  = { Stop-Service "WSearch" -Force; Set-Service "WSearch" -StartupType Disabled }
+        Cmd = { Stop-Service "WSearch" -Force; Set-Service "WSearch" -StartupType Disabled }
         Undo = { Set-Service "WSearch" -StartupType Automatic; Start-Service "WSearch" }
     }
     "14 - Vô hiệu hóa Windows Update" = @{
-        Desc = "Chặn tự động cập nhật hệ điều hành ngoài ý muốn."
-        Cmd  = {Stop-Service wuauserv,bits,dosvc -EA 0;Set-Service wuauserv -StartupType Disabled -EA 0;Set-Service bits -StartupType Disabled -EA 0;Set-Service dosvc -StartupType Disabled -EA 0;ni 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' -Force|Out-Null;sp 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' NoAutoUpdate 1 -Type DWord;ni 'HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore' -Force|Out-Null;sp 'HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore' AutoDownload 2 -Type DWord}
-        Undo = {Set-Service wuauserv -StartupType Manual -EA 0;Set-Service bits -StartupType Automatic -EA 0;Set-Service dosvc -StartupType Automatic -EA 0;Start-Service bits,dosvc,wuauserv -EA 0;ri 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate' -Recurse -Force -EA 0;ri 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsStore' -Recurse -Force -EA 0;gpupdate /force|Out-Null}
+        Desc = "Chặn tự động cập nhật hệ điều hành ngoài ý muốn một cách triệt để."
+        # [TỐI ƯU CÂU LỆNH 3]: Khóa thêm Service điều phối dịch vụ UsoSvc của Win 10/11 tránh tự bật lại
+        Cmd  = {
+            Stop-Service wuauserv,bits,dosvc,UsoSvc -EA 0
+            Set-Service wuauserv -StartupType Disabled -EA 0
+            Set-Service bits -StartupType Disabled -EA 0
+            Set-Service dosvc -StartupType Disabled -EA 0
+            Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\UsoSvc" "Start" 4 -Force -EA 0
+            ni 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' -Force|Out-Null
+            sp 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' NoAutoUpdate 1 -Type DWord
+            ni 'HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore' -Force|Out-Null
+            sp 'HKLM:\SOFTWARE\Policies\Microsoft\WindowsStore' AutoDownload 2 -Type DWord
+        }
+        Undo = {
+            Set-Service wuauserv -StartupType Manual -EA 0
+            Set-Service bits -StartupType Automatic -EA 0
+            Set-Service dosvc -StartupType Automatic -EA 0
+            Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\UsoSvc" "Start" 2 -Force -EA 0
+            Start-Service bits,dosvc,wuauserv,UsoSvc -EA 0
+            ri 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate' -Recurse -Force -EA 0
+            ri 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsStore' -Recurse -Force -EA 0
+            gpupdate /force|Out-Null
+        }
     }
     "15 - Tắt BitLocker mã hóa" = @{
         Desc = "Giải mã ổ đĩa hệ thống tránh khóa mất dữ liệu."
@@ -313,178 +454,358 @@ $tweakDatabase = [ordered]@{
         Cmd  = { Get-Volume | Where-Object { $_.DriveType -eq "Fixed" } | Optimize-Volume -ReTrim }
         Undo = { Write-Log "TRIM là tiến trình phần cứng, không cần khôi phục." "INFO" }
     }
-    "23 - Giảm độ trễ hiển thị Menu" = @{
-        Desc = "Rút ngắn thời gian hover phản hồi của thanh Menu."
-        Cmd  = { Set-ItemProperty "HKCU:\Control Panel\Desktop" "MenuShowDelay" "20" -Force }
-        Undo = { Set-ItemProperty "HKCU:\Control Panel\Desktop" "MenuShowDelay" "400" -Force }
+    "23 - Reset mạng TCP/IP & Xóa DNS Cache" = @{
+        Desc = "Khắc phục lỗi mất mạng, web load chậm hoặc xung đột IP bằng cách reset Winsock, TCP/IP stack và xoá bộ nhớ đệm DNS. Nên khởi động lại máy sau khi chạy."
+        Cmd  = {
+            Start-Process "netsh" -ArgumentList "winsock reset" -WindowStyle Hidden -Wait
+            Start-Process "netsh" -ArgumentList "int ip reset" -WindowStyle Hidden -Wait
+            Start-Process "ipconfig" -ArgumentList "/flushdns" -WindowStyle Hidden -Wait
+            Start-Process "ipconfig" -ArgumentList "/release" -WindowStyle Hidden -Wait
+            Start-Process "ipconfig" -ArgumentList "/renew" -WindowStyle Hidden -Wait
+        }
+        Undo = { Write-Log "Đây là thao tác reset, không có chiều hoàn tác." "INFO" }
     }
-    "24 - Tắt chế độ ngủ đông Hibernate" = @{
-        Desc = "Xóa tệp hiberfil.sys, giải phóng ngay lập tức vài GB bộ nhớ ổ C."
+    "24 - Tắt Hibernate (Giải phóng dung lượng ổ C)" = @{
+        Desc = "Tắt chế độ Ngủ đông (Hibernate) và xoá file hiberfil.sys, giúp giải phóng dung lượng ổ C tương đương với dung lượng RAM đang lắp trên máy. Không ảnh hưởng chế độ Sleep thông thường."
         Cmd  = { Start-Process "powercfg" -ArgumentList "/hibernate off" -WindowStyle Hidden -Wait }
         Undo = { Start-Process "powercfg" -ArgumentList "/hibernate on" -WindowStyle Hidden -Wait }
     }
-    "25 - Đồng bộ múi giờ Việt Nam (GMT+7)" = @{
-        Desc = "Cấu hình múi giờ chuẩn tự động theo khu vực Asia/Ho_Chi_Minh."
-        Cmd  = { Set-TimeZone -Id "SE Asia Standard Time" -Confirm:$false }
-        Undo = { Write-Log "Thay đổi lại múi giờ mong muốn trong Windows Settings." "INFO" }
-    }
-    "26 - SFC - Sửa lỗi File hệ thống hỏng" = @{
-        Desc = "Quét toàn diện tính vẹn toàn cấu trúc file gốc của hệ điều hành."
-        Cmd  = { Start-Process "cmd.exe" -ArgumentList "/k sfc /scannow" -Verb RunAs }
-        Undo = { Write-Log "Công cụ quét sửa lỗi, không có trạng thái hoàn tác." "INFO" }
-    }
-    "27 - DISM - Khôi phục Image Windows" = @{
-        Desc = "Sử dụng nguồn mạng Microsoft để tải bản vá phục hồi lõi Image OS."
-        Cmd  = { Start-Process "cmd.exe" -ArgumentList "/k dism /Online /Cleanup-Image /RestoreHealth" -Verb RunAs }
-        Undo = { Write-Log "Tác vụ sửa lỗi, không cần hoàn tác." "INFO" }
-    }
-    "28 - CHKDSK - Quét lỗi ổ cứng C:" = @{
-        Desc = "Kiểm tra và sửa các cung từ lỗi (Bad Sector) trên ổ đĩa."
-        Cmd  = { Start-Process "cmd.exe" -ArgumentList "/k chkdsk C: /f /r /x" -Verb RunAs }
-        Undo = { Write-Log "Tác vụ quét ổ đĩa phần cứng." "INFO" }
-    }
-    "29 - Khởi động lại dịch vụ In (Spooler)" = @{
-        Desc = "Dọn sạch hàng đợi lệnh in đang bị treo đơ máy in."
-        Cmd  = { Stop-Service Spooler -Force; Remove-Item "C:\Windows\System32\spool\PRINTERS\*" -Force -Recurse; Start-Service Spooler }
-        Undo = { Write-Log "Đã khởi động lại tiến trình Spooler thành công." "OK" }
-    }
-    "30 - Reset TCP/IP & Giao thức Winsock" = @{
-        Desc = "Làm mới ngăn xếp mạng để xử lý lỗi chấm than vàng rớt mạng."
-        Cmd  = { Start-Process "cmd.exe" -ArgumentList "/k netsh int ip reset && netsh winsock reset" -Verb RunAs }
-        Undo = { Write-Log "Mạng internet đã được đưa về cấu hình gốc." "INFO" }
-    }
-    "31 - Clear Cache DNS hệ thống" = @{
-        Desc = "Xóa bộ nhớ đệm phân giải tên miền để sửa lỗi không truy cập được web."
-        Cmd  = { Start-Process "cmd.exe" -ArgumentList "/k ipconfig /flushdns" -Verb RunAs }
-        Undo = { Write-Log "Bộ nhớ đệm DNS sẽ tự động tích lũy lại." "INFO" }
-    }
-    "32 - Đổi sang Google DNS (8.8.8.8)" = @{
-        Desc = "Cấu hình DNS Google giúp tăng tốc và vượt chặn website."
-        Cmd  = { $adp=Get-NetAdapter|Where-Object{$_.Status -eq "Up"}|Select-Object -First 1; Set-DnsClientServerAddress -InterfaceIndex $adp.InterfaceIndex -ServerAddresses "8.8.8.8","8.8.4.4" }
-        Undo = { $adp=Get-NetAdapter|Where-Object{$_.Status -eq "Up"}|Select-Object -First 1; Set-DnsClientServerAddress -InterfaceIndex $adp.InterfaceIndex -ResetServerAddresses }
-    }
-    "33 - Gỡ Microsoft Store" = @{
-        Desc = "Gỡ Microsoft Store khỏi hệ thống khi không còn nhu cầu sử dụng và có thể khôi phục khi cần."
-        Cmd  = { Get-AppxPackage -AllUsers Microsoft.WindowsStore|Remove-AppxPackage -EA 0 }
-        Undo = { Get-AppxPackage -AllUsers Microsoft.WindowsStore|%{Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppxManifest.xml" -EA 0}}
+    "25 - Dọn WinSxS nâng cao (Giảm dung lượng Windows)" = @{
+        Desc = "Chạy DISM để dọn sạch các gói Windows Update cũ không thể gỡ (superseded) trong thư mục WinSxS. Có thể giải phóng vài GB nhưng sẽ KHÔNG THỂ gỡ cài đặt các bản Update trước đó sau khi chạy lệnh này."
+        Cmd  = { Start-Process "dism.exe" -ArgumentList "/Online /Cleanup-Image /StartComponentCleanup /ResetBase" -WindowStyle Hidden -Wait }
+        Undo = { Write-Log "Thao tác ResetBase không thể hoàn tác - đây là hành vi mong muốn của DISM." "WARN" }
     }
 }
 
-$global:TweakKeys = [System.Collections.Generic.List[string]]::new()
-foreach ($k in $tweakDatabase.Keys) { [void]$listTw.Items.Add($k,$true); $global:TweakKeys.Add($k) }
+# Lưu trữ danh sách trạng thái Check để đồng bộ khi lọc Tìm kiếm
+$global:CheckedItemsState = @{}
+foreach ($k in $tweakDatabase.Keys) { 
+    [void]$listTw.Items.Add($k)
+    $global:CheckedItemsState[$k] = $false 
+}
 
-$btnSelAll  = New-StyledButton "Chọn Hết"    10 388 130 34 $C.AccentDark
-$btnSelNone = New-StyledButton "Bỏ Chọn"   145 388 130 34 $C.BgInput $C.TextDim
-$btnRunTw   = New-StyledButton "CHẠY TÙY CHỈNH" 280 388 150 34 $C.Accent $C.Bg
-$gbTwL.Controls.AddRange(@($btnSelAll,$btnSelNone,$btnRunTw))
-$btnSelAll.Add_Click({ for($i=0;$i -lt $listTw.Items.Count;$i++){$listTw.SetItemChecked($i,$true)} })
-$btnSelNone.Add_Click({ for($i=0;$i -lt $listTw.Items.Count;$i++){$listTw.SetItemChecked($i,$false)} })
+# Logic đồng bộ trạng thái khi người dùng nhấn chọn trực tiếp trên CheckListBox
+$listTw.Add_ItemCheck({
+    param($s, $e)
+    $itemText = $listTw.Items[$e.Index].ToString()
+    $global:CheckedItemsState[$itemText] = ($e.NewValue -eq "Checked")
+})
 
-# CĂN CHỈNH CHIỀU CAO RICHBOX LÊN 355 ĐỂ CHỪA KHÔNG GIAN CHO NÚT BẤM KHÔI PHỤC BÊN DƯỚI
-$gbTwR = New-GroupCard "BẢNG ĐIỀU KHIỂN CHI TIẾT TỪNG MỤC" 450 5 520 435 $C.Blue
-$tabTweaks.Controls.Add($gbTwR)
-
-$txtTwDesc = New-Object System.Windows.Forms.RichTextBox
-$txtTwDesc.Location=[System.Drawing.Point]::new(10,25); $txtTwDesc.Size=[System.Drawing.Size]::new(500,355)
-$txtTwDesc.BackColor=$C.BgInput; $txtTwDesc.ForeColor=$C.Text; $txtTwDesc.Font=$F.Mono; $txtTwDesc.ReadOnly=$true; $txtTwDesc.BorderStyle="None"
-$gbTwR.Controls.Add($txtTwDesc)
-
-$btnUndoTweak = New-StyledButton "KHÔI PHỤC MẶC ĐỊNH MỤC NÀY" 10 390 500 34 $C.OrangeDark $C.White
-$btnUndoTweak.Visible = $false
-$gbTwR.Controls.Add($btnUndoTweak)
-
-$listTw.Add_SelectedIndexChanged({
-    $idx=$listTw.SelectedIndex
-    if ($idx -ge 0 -and $idx -lt $global:TweakKeys.Count) {
-        $k=$global:TweakKeys[$idx]
-        $db=$tweakDatabase[$k]
-        if ($db) {
-            $txtTwDesc.Clear()
-            $btnUndoTweak.Visible = $true
-            
-            $cmdText = $db.Cmd.ToString()
-            $undoText = $db.Undo.ToString()
-            
-            $txtTwDesc.SelectionColor = $C.Accent
-            $txtTwDesc.AppendText("TÊN MỤC: ${k}`n`n")
-            $txtTwDesc.SelectionColor = $C.Text
-            $txtTwDesc.AppendText("CHỨC NĂNG: `n$($db.Desc)`n`n")
-            $txtTwDesc.SelectionColor = $C.LogCyan
-            $txtTwDesc.AppendText("LỆNH POWERSHELL THỰC THI: `n$cmdText`n`n")
-            $txtTwDesc.SelectionColor = $C.Orange
-            $txtTwDesc.AppendText("LỆNH HOÀN TÁC (RESTORE): `n$undoText")
+# Logic xử lý bộ lọc Tìm Kiếm nhanh (Search Text Changed)
+$txtSearch.Add_TextChanged({
+    $searchText = $txtSearch.Text.Trim()
+    $prevSelected = if ($listTw.SelectedItem) { $listTw.SelectedItem.ToString() } else { $null }
+    $listTw.Items.Clear()
+    foreach ($key in $tweakDatabase.Keys) {
+        if ($key -like "*$searchText*" -or $tweakDatabase[$key].Desc -like "*$searchText*") {
+            $idx = $listTw.Items.Add($key)
+            if ($global:CheckedItemsState[$key]) {
+                $listTw.SetItemChecked($idx, $true)
+            }
+            if ($key -eq $prevSelected) { $listTw.SetSelected($idx, $true) }
         }
     }
 })
 
-$btnUndoTweak.Add_Click({
-    $idx=$listTw.SelectedIndex
-    if ($idx -ge 0 -and $idx -lt $global:TweakKeys.Count) {
-        $k=$global:TweakKeys[$idx]
-        $db=$tweakDatabase[$k]
-        if ($db.Undo) {
-            Write-Log "Đang chạy lệnh khôi phục mặc định: ${k}" "WARN"
-            try {
-                & $db.Undo
-                Write-Log "Đã khôi phục hoàn tất trạng thái mục: ${k}" "OK"
-                [System.Windows.Forms.MessageBox]::Show("Khôi phục thành công trạng thái mặc định cho mục:`n[${k}]","WinTools","OK","Information") | Out-Null
-            } catch {
-                Write-Log "Lỗi khôi phục mục ${k}: $($_.Exception.Message)" "ERR"
+# Khung chi tiết hiển thị mô tả Tweak khi Click chọn dòng
+$gbTwR = New-GroupCard "MÔ TẢ CHI TIẾT TÙY CHỈNH" 455 5 510 435 $C.Accent
+$tabTweaks.Controls.Add($gbTwR)
+$txtTwDesc = New-Object System.Windows.Forms.RichTextBox
+$txtTwDesc.Location=[System.Drawing.Point]::new(15,25); $txtTwDesc.Size=[System.Drawing.Size]::new(480,320)
+$txtTwDesc.BackColor=$C.BgCard; $txtTwDesc.ForeColor=$C.Text; $txtTwDesc.Font=$F.Mono
+$txtTwDesc.BorderStyle="None"; $txtTwDesc.ReadOnly=$true
+$gbTwR.Controls.Add($txtTwDesc)
+
+# [TÍNH NĂNG MỚI] Lưu / Tải cấu hình các tweak đã chọn ra file JSON - tiện khi cài hàng loạt máy
+$pnlProfile = New-Object System.Windows.Forms.Panel
+$pnlProfile.Location=[System.Drawing.Point]::new(15,349); $pnlProfile.Size=[System.Drawing.Size]::new(480,26)
+$pnlProfile.BackColor=[System.Drawing.Color]::Transparent; $gbTwR.Controls.Add($pnlProfile)
+$btnSaveProfile = New-StyledButton "Lưu Cấu Hình" 0 0 235 24 $C.BgCard $C.TextDim $F.Small
+$btnLoadProfile = New-StyledButton "Tải Cấu Hình" 245 0 235 24 $C.BgCard $C.TextDim $F.Small
+$pnlProfile.Controls.AddRange(@($btnSaveProfile,$btnLoadProfile))
+$btnSaveProfile.Add_Click({
+    $sfd = New-Object System.Windows.Forms.SaveFileDialog
+    $sfd.Filter = "WinTools Profile (*.json)|*.json"; $sfd.FileName = "WinTools_Profile.json"
+    if ($sfd.ShowDialog() -eq "OK") {
+        try {
+            $selected = @($tweakDatabase.Keys | Where-Object { $global:CheckedItemsState[$_] -eq $true })
+            # [SỬA LỖI PS 5.1] Dùng toán tử phẩy để ép ConvertTo-Json luôn xuất mảng, kể cả khi chỉ có 1 phần tử
+            (,$selected) | ConvertTo-Json | Out-File $sfd.FileName -Encoding UTF8
+            Write-Log "Đã lưu cấu hình $($selected.Count) tùy chỉnh -> $($sfd.FileName)" "OK"
+        } catch { Write-Log "Lỗi lưu cấu hình: $($_.Exception.Message)" "ERR" }
+    }
+})
+$btnLoadProfile.Add_Click({
+    $ofd = New-Object System.Windows.Forms.OpenFileDialog
+    $ofd.Filter = "WinTools Profile (*.json)|*.json"
+    if ($ofd.ShowDialog() -eq "OK") {
+        try {
+            # [SỬA LỖI PS 5.1] Ép @() vì ConvertFrom-Json cũng bung mảng 1 phần tử thành giá trị đơn (string), làm sai -contains
+            $loaded = @(Get-Content $ofd.FileName -Raw | ConvertFrom-Json)
+            foreach ($key in $tweakDatabase.Keys) { $global:CheckedItemsState[$key] = ($loaded -contains $key) }
+            $txtSearch.Text = ""
+            for ($i=0; $i -lt $listTw.Items.Count; $i++) {
+                $listTw.SetItemChecked($i, ($global:CheckedItemsState[$listTw.Items[$i].ToString()] -eq $true))
+            }
+            Write-Log "Đã tải cấu hình từ: $($ofd.FileName)" "OK"
+        } catch { Write-Log "Lỗi tải cấu hình (file không hợp lệ?): $($_.Exception.Message)" "ERR" }
+    }
+})
+
+$listTw.Add_SelectedIndexChanged({
+    if($listTw.SelectedItem -ne $null){
+        $k = $listTw.SelectedItem.ToString()
+        $entry = $tweakDatabase[$k]
+        # [NÂNG CẤP] Hiển thị đầy đủ: Thông tin, Lệnh thực thi (Cmd) và Lệnh hoàn tác (Undo) dạng mã nguồn thật
+        $cmdText  = $entry.Cmd.ToString().Trim()
+        $undoText = $entry.Undo.ToString().Trim()
+        $txtTwDesc.ForeColor = $C.LogCyan
+        $txtTwDesc.Text = "TÙY CHỈNH: $k`n`nTHÔNG TIN:`n$($entry.Desc)`n`n--------------------------------------------------`nLỆNH THỰC THI (Cmd):`n$cmdText`n`n--------------------------------------------------`nLỆNH HOÀN TÁC (Undo):`n$undoText"
+    }
+})
+
+# Thêm Panel chứa các nút thực thi phía dưới
+$pnlTwBtns = New-Object System.Windows.Forms.Panel
+$pnlTwBtns.Location=[System.Drawing.Point]::new(10,380); $pnlTwBtns.Size=[System.Drawing.Size]::new(420,45)
+$pnlTwBtns.BackColor=[System.Drawing.Color]::Transparent; $gbTwL.Controls.Add($pnlTwBtns)
+
+$btnAllTw    = New-StyledButton "Chọn Hết" 0 5 70 35 $C.BgCard $C.Accent
+$btnNoneTw   = New-StyledButton "Bỏ Chọn" 75 5 70 35 $C.BgCard $C.TextDim
+$btnRunTw    = New-StyledButton "CHẠY TÙY CHỈNH" 150 5 165 35 $C.Accent $C.Bg
+$btnCancelTw = New-StyledButton "HỦY" 320 5 100 35 $C.RedDark $C.White
+$btnCancelTw.Enabled = $false
+
+$pnlTwBtns.Controls.AddRange(@($btnAllTw,$btnNoneTw,$btnRunTw,$btnCancelTw))
+
+# [NÂNG CẤP GIAO DIỆN] Tùy chỉnh riêng màu hover cho từng nút đặc thù (nền mặc định đã có hiệu ứng sáng/tối chung)
+$btnRunTw.FlatAppearance.MouseOverBackColor = $C.AccentDark
+$btnAllTw.FlatAppearance.MouseOverBackColor = $C.Border
+$btnNoneTw.FlatAppearance.MouseOverBackColor = $C.Border
+$btnCancelTw.FlatAppearance.MouseOverBackColor = $C.Red
+
+$btnAllTw.Add_Click({
+    for($i=0;$i -lt $listTw.Items.Count;$i++){ 
+        $listTw.SetItemChecked($i,$true)
+        $global:CheckedItemsState[$listTw.Items[$i].ToString()] = $true
+    }
+})
+$btnNoneTw.Add_Click({
+    for($i=0;$i -lt $listTw.Items.Count;$i++){ 
+        $listTw.SetItemChecked($i,$false)
+        $global:CheckedItemsState[$listTw.Items[$i].ToString()] = $false
+    }
+})
+
+# Panel chứa nút Hoàn tác bên Tab Mô tả
+$pnlUndoBtns = New-Object System.Windows.Forms.Panel
+$pnlUndoBtns.Location=[System.Drawing.Point]::new(15,380); $pnlUndoBtns.Size=[System.Drawing.Size]::new(480,45)
+$pnlUndoBtns.BackColor=[System.Drawing.Color]::Transparent; $gbTwR.Controls.Add($pnlUndoBtns)
+
+$btnUndoSel = New-StyledButton "HOÀN TÁC MỤC ĐANG CHỌN" 0 5 230 35 $C.BgCard $C.Orange
+$btnUndoAll = New-StyledButton "HOÀN TÁC TẤT CẢ" 245 5 235 35 $C.BgCard $C.Red
+
+$pnlUndoBtns.Controls.AddRange(@($btnUndoSel,$btnUndoAll))
+$btnUndoSel.FlatAppearance.MouseOverBackColor = $C.OrangeDark
+$btnUndoAll.FlatAppearance.MouseOverBackColor = $C.RedDark
+
+# --- HÀM HỖ TRỢ CHẠY BẤT ĐỒNG BỘ QUA TIMER (CHỐNG FREEZE UI) ---
+# [NÂNG CẤP 1] Sử dụng bộ lập lịch tuần tự thông qua cơ chế Windows Forms Timer và Jobs
+$global:QueueJobs = [System.Collections.Generic.Queue[string]]::new()
+$global:CurrentTaskName = ""
+$global:TotalTasks = 0
+$global:CompletedTasks = 0
+$global:ActiveJob = $null
+$global:IsUndoMode = $false
+$global:JobStartTime = $null
+$global:JobTimeoutSec = 120   # [NÂNG CẤP] Chống treo: hủy job nếu chạy quá 120 giây
+$global:CancelRequested = $false
+
+function Set-TweakButtonsEnabled {
+    param([bool]$Running)
+    $btnRunTw.Enabled    = -not $Running
+    $btnUndoSel.Enabled  = -not $Running
+    $btnUndoAll.Enabled  = -not $Running
+    $btnCancelTw.Enabled = $Running
+}
+
+function New-SystemRestorePointSafe {
+    try {
+        Write-Log "Đang tạo Điểm Khôi Phục Hệ Thống (Restore Point)..." "INFO"
+        Enable-ComputerRestore -Drive "$env:SystemDrive\" -ErrorAction SilentlyContinue
+        Checkpoint-Computer -Description "WinTools Pro $($Global:AppVersion) - Trước khi chỉnh sửa" -RestorePointType "MODIFY_SETTINGS" -ErrorAction Stop
+        Write-Log "Đã tạo Restore Point thành công. Có thể khôi phục qua rstrui.exe nếu cần." "OK"
+    } catch {
+        Write-Log "Không thể tạo Restore Point (có thể do máy tắt sẵn tính năng System Protection): $($_.Exception.Message)" "WARN"
+    }
+}
+
+$asyncTimer = New-Object System.Windows.Forms.Timer
+$asyncTimer.Interval = 200 # Kiểm tra trạng thái Job mỗi 200ms
+
+$asyncTimer.Add_Tick({
+    if ($global:CancelRequested) {
+        if ($global:ActiveJob) { Stop-Job -Job $global:ActiveJob -ErrorAction SilentlyContinue; Remove-Job -Job $global:ActiveJob -Force -ErrorAction SilentlyContinue; $global:ActiveJob = $null }
+        $global:QueueJobs.Clear()
+        $asyncTimer.Stop(); Reset-Progress
+        Write-Log "Đã HỦY tiến trình theo yêu cầu người dùng." "WARN"
+        Set-TweakButtonsEnabled -Running $false
+        $global:CancelRequested = $false
+        return
+    }
+    if ($global:ActiveJob -eq $null) {
+        # Nếu không có Job nào đang chạy, lấy tác vụ tiếp theo từ hàng đợi (Queue)
+        if ($global:QueueJobs.Count -gt 0) {
+            $global:CurrentTaskName = $global:QueueJobs.Dequeue()
+            Write-Log "Bắt đầu xử lý: $($global:CurrentTaskName)..." "INFO"
+            
+            # Lấy khối Script mã nguồn tương ứng (Cmd hoặc Undo)
+            $taskBlock = if ($global:IsUndoMode) { $tweakDatabase[$global:CurrentTaskName].Undo } else { $tweakDatabase[$global:CurrentTaskName].Cmd }
+            
+            # [BẤT ĐỒNG BỘ]: Khởi chạy tiến trình chạy nền không khóa UI Thread
+            $global:ActiveJob = Start-Job -ScriptBlock $taskBlock
+            $global:JobStartTime = Get-Date
+        } else {
+            # Hàng đợi trống -> Hoàn thành toàn bộ tiến trình
+            $asyncTimer.Stop()
+            Reset-Progress
+            $statusText = if ($global:IsUndoMode) { "Hoàn thành toàn bộ tiến trình Hoàn tác!" } else { "Tối ưu hóa hệ thống hoàn tất!" }
+            Write-Log $statusText "OK"
+            [System.Windows.Forms.MessageBox]::Show($statusText, "Thông báo", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+            Set-TweakButtonsEnabled -Running $false
+        }
+    } else {
+        # Nếu có Job đang chạy, kiểm tra xem nó đã xong chưa
+        $jobStatus = Get-Job -Id $global:ActiveJob.Id
+        $elapsed = (Get-Date) - $global:JobStartTime
+        if ($jobStatus.State -eq "Running" -and $elapsed.TotalSeconds -gt $global:JobTimeoutSec) {
+            # [NÂNG CẤP] Chống treo: hủy tác vụ quá thời gian cho phép
+            Write-Log "CẢNH BÁO: '$($global:CurrentTaskName)' chạy quá $($global:JobTimeoutSec)s, đang buộc dừng..." "ERR"
+            Stop-Job -Job $global:ActiveJob -ErrorAction SilentlyContinue
+            Remove-Job -Job $global:ActiveJob -Force -ErrorAction SilentlyContinue
+            $global:ActiveJob = $null
+            $global:CompletedTasks++
+            Set-Progress $global:CompletedTasks $global:TotalTasks
+            return
+        }
+        if ($jobStatus.State -ne "Running") {
+            # [SỬA LỖI] Trước đây lỗi bên trong Job bị Out-Null nuốt mất, không ai biết tweak thất bại vì sao
+            $jobErrors = $global:ActiveJob.ChildJobs[0].Error
+            Receive-Job -Job $global:ActiveJob -ErrorAction SilentlyContinue | Out-Null
+            Remove-Job -Job $global:ActiveJob -Force
+            $global:ActiveJob = $null
+            
+            # Cập nhật thanh tiến trình tăng dần mượt mà
+            $global:CompletedTasks++
+            Set-Progress $global:CompletedTasks $global:TotalTasks
+            if ($jobErrors -and $jobErrors.Count -gt 0) {
+                Write-Log "Hoàn tất với cảnh báo: $($global:CurrentTaskName) - $($jobErrors[0].ToString())" "WARN"
+            } else {
+                Write-Log "Đã xong: $($global:CurrentTaskName)" "OK"
             }
         }
     }
 })
 
+# Sự kiện nút bấm CHẠY TÙY CHỈNH
 $btnRunTw.Add_Click({
-    $sel=$listTw.CheckedItems
-    if ($sel.Count -eq 0) { Write-Log "Chưa chọn mục nào." "WARN"; return }
-    Reset-Progress; Write-Log "BẮT ĐẦU THỰC THI TÙY CHỈNH HỆ THỐNG" "TITLE"
-    $c=0; $needExplorer=$false
-    foreach ($item in $sel) {
-        $c++; Set-Progress $c $sel.Count
-        $db=$tweakDatabase[$item]
-        if ($db.Cmd) {
-            Write-Log "Đang xử lý: ${item}" "INFO"
-            try {
-                & $db.Cmd
-                Write-Log "Thành công: ${item}" "OK"
-                if ($item -match "Taskbar|Explorer|Menu|OneDrive") { $needExplorer=$true }
-            } catch { Write-Log "Lỗi xử lý ${item}: $($_.Exception.Message)" "ERR" }
+    $global:QueueJobs.Clear()
+    # Duyệt qua các phần tử thực tế đang được tích chọn (Ủy thác từ trạng thái đồng bộ toàn cục)
+    foreach ($key in $tweakDatabase.Keys) {
+        if ($global:CheckedItemsState[$key] -eq $true) {
+            $global:QueueJobs.Enqueue($key)
         }
     }
-    if ($needExplorer) {
-        Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue
-        Start-Sleep -Milliseconds 500; Start-Process explorer
+
+    if ($global:QueueJobs.Count -eq 0) {
+        [System.Windows.Forms.MessageBox]::Show("Vui lòng tích chọn ít nhất một tùy chỉnh trước khi chạy!", "Thông báo", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+        return
     }
-    Set-Progress 100; Write-Log "HOÀN TẤT QUÁ TRÌNH THỰC THI." "TITLE"
+
+    if ($chkRestorePoint.Checked) { New-SystemRestorePointSafe }
+
+    # Cấu hình biến môi trường chạy bất đồng bộ
+    $global:IsUndoMode = $false
+    $global:TotalTasks = $global:QueueJobs.Count
+    $global:CompletedTasks = 0
+    $global:CancelRequested = $false
+    
+    Set-TweakButtonsEnabled -Running $true
+    
+    Write-Log "Khởi động tiến trình tối ưu hóa đa luồng (Async)..." "TITLE"
+    $asyncTimer.Start()
+})
+
+$btnCancelTw.Add_Click({
+    Write-Log "Đang yêu cầu hủy tiến trình, vui lòng chờ tác vụ hiện tại kết thúc..." "WARN"
+    $global:CancelRequested = $true
+})
+
+# Sự kiện nút bấm HOÀN TÁC MỤC ĐANG CHỌN
+$btnUndoSel.Add_Click({
+    if ($listTw.SelectedItem -eq $null) {
+        [System.Windows.Forms.MessageBox]::Show("Vui lòng chọn một dòng tùy chỉnh cụ thể bên danh sách để hoàn tác!", "Thông báo", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+        return
+    }
+    $global:QueueJobs.Clear()
+    $global:QueueJobs.Enqueue($listTw.SelectedItem.ToString())
+    
+    $global:IsUndoMode = $true
+    $global:TotalTasks = 1
+    $global:CompletedTasks = 0
+    $global:CancelRequested = $false
+    
+    Set-TweakButtonsEnabled -Running $true
+    
+    Write-Log "Khởi động tiến trình hoàn tác mục được chọn..." "TITLE"
+    $asyncTimer.Start()
+})
+
+# Sự kiện nút bấm HOÀN TÁC TẤT CẢ
+$btnUndoAll.Add_Click({
+    $confirm = [System.Windows.Forms.MessageBox]::Show("Bạn có chắc chắn muốn hoàn tác lại toàn bộ các cấu hình tweaks về mặc định không?", "Xác nhận", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Question)
+    if ($confirm -eq [System.Windows.Forms.DialogResult]::No) { return }
+
+    $global:QueueJobs.Clear()
+    foreach ($key in $tweakDatabase.Keys) {
+        $global:QueueJobs.Enqueue($key)
+    }
+    
+    $global:IsUndoMode = $true
+    $global:TotalTasks = $global:QueueJobs.Count
+    $global:CompletedTasks = 0
+    $global:CancelRequested = $false
+    
+    Set-TweakButtonsEnabled -Running $true
+    
+    Write-Log "Khởi động tiến trình hoàn tác toàn bộ hệ thống..." "TITLE"
+    $asyncTimer.Start()
 })
 #endregion
-
 # ==============================================================
 #  TAB 2 - CÀI ĐẶT ỨNG DỤNG (ĐÃ SỬA KHUNG HIỂN THỊ THÔNG TIN CHUẨN)
 # ==============================================================
 #region --- TAB INSTALL ---
 $global:SwMap = [ordered]@{
-    "Chrome"             = @{ ID="Google.Chrome";           Desc="Trình duyệt web phổ biến nhất thế giới của Google, tốc độ cao và kho tiện ích khổng lồ." }
-    "Firefox"            = @{ ID="Mozilla.Firefox";          Desc="Trình duyệt mã nguồn mở bảo mật cao, tôn trọng quyền riêng tư của người dùng." }
-    "Edge"               = @{ ID="Microsoft.Edge";           Desc="Trình duyệt lõi Chromium mặc định của Windows, tối ưu pin và RAM cực tốt." }
-    "Coc Coc"            = @{ ID="CocCoc.CocCoc";            Desc="Trình duyệt tối ưu cho người Việt, hỗ trợ tải video và sửa lỗi chính tả." }
-    "Brave Browser"      = @{ ID="Brave.Brave";              Desc="Trình duyệt siêu bảo mật, tự động chặn toàn bộ quảng cáo độc hại và tracker." }
-    "Microsoft Office"   = @{ ID="Microsoft.Office";         Desc="Bộ ứng dụng văn phòng cao cấp chuẩn doanh nghiệp (Word, Excel, PowerPoint)." }
-    "Foxit PDF Reader"   = @{ ID="Foxit.FoxitReader";        Desc="Phần mềm đọc và quản lý tệp tin tài liệu định dạng PDF nhẹ và mượt mà." }
-    "Notepad++"          = @{ ID="Notepad++.Notepad++";      Desc="Trình soạn thảo văn bản code chuyên nghiệp gọn nhẹ, hỗ trợ nhiều ngôn ngữ." }
-    "Google Drive"       = @{ ID="Google.GoogleDrive";       Desc="Ứng dụng đồng bộ dữ liệu đám mây Google Drive trực tiếp vào ổ đĩa máy tính." }
-    "AnyDesk"            = @{ ID="AnyDesk.AnyDesk";          Desc="Phần mềm điều khiển máy tính từ xa tốc độ cao kết nối ổn định." }
-    "UltraViewer"        = @{ ID="UltraViewer.UltraViewer";  Desc="Công cụ hỗ trợ kỹ thuật và điều khiển máy từ xa phổ biến hàng đầu tại Việt Nam." }
-    "7-Zip"              = @{ ID="7zip.7zip";                Desc="Trình nén và giải nén dữ liệu mã nguồn mở hoàn toàn miễn phí, siêu nhẹ." }
-    "WinRAR"             = @{ ID="RARLab.WinRAR";            Desc="Phần mềm nén và giải nén file định dạng .RAR mạnh mẽ bậc nhất hiện nay." }
-    "UniKey"             = @{ ID="Unikey.Unikey";            Desc="Bộ gõ Tiếng Việt huyền thoại, gọn nhẹ và tương thích tuyệt đối mọi phiên bản OS." }
-    "EVKey"              = @{ ID="EVKey.EVKey";              Desc="Bộ gõ Tiếng Việt thế hệ mới, sửa lỗi dấu từ trên trình duyệt và game cực tốt." }
-    "VLC Media Player"   = @{ ID="VideoLAN.VLC";             Desc="Trình phát nhạc và video đa định dạng, chạy mượt toàn bộ codec phổ thông." }
-    "Zalo PC"            = @{ ID="VNGCorp.Zalo";             Desc="Ứng dụng nhắn tin, gọi điện và truyền file làm việc số một tại Việt Nam." }
-    "Zoom"               = @{ ID="Zoom.Zoom";                Desc="Nền tảng hội họp trực tuyến và học tập từ xa chất lượng âm thanh hình ảnh cao." }
-    "C++ x64 2022"       = @{ ID="Microsoft.VCRedist.2015+.x64"; Desc="Thư viện Microsoft Visual C++ Redistributable x64 cần thiết để chạy game và app." }
-    ".NET Runtime 8"     = @{ ID="Microsoft.DotNet.Runtime.8";   Desc="Nền tảng thực thi cho các phần mềm viết trên ngôn ngữ hệ sinh thái .NET mới nhất." }
+    "Chrome"             = @{ ID="Google.Chrome";           Desc="Trình duyệt web phổ biến nhất thế giới của Google, tốc độ cao và kho tiện ích khổng lồ."; Url="https://www.google.com/chrome/" }
+    "Firefox"            = @{ ID="Mozilla.Firefox";          Desc="Trình duyệt mã nguồn mở bảo mật cao, tôn trọng quyền riêng tư của người dùng."; Url="https://www.mozilla.org/firefox/" }
+    "Edge"               = @{ ID="Microsoft.Edge";           Desc="Trình duyệt lõi Chromium mặc định của Windows, tối ưu pin và RAM cực tốt."; Url="https://www.microsoft.com/edge" }
+    "Coc Coc"            = @{ ID="CocCoc.CocCoc";            Desc="Trình duyệt tối ưu cho người Việt, hỗ trợ tải video và sửa lỗi chính tả."; Url="https://coccoc.com/download" }
+    "Brave Browser"      = @{ ID="Brave.Brave";              Desc="Trình duyệt siêu bảo mật, tự động chặn toàn bộ quảng cáo độc hại và tracker."; Url="https://brave.com/download/" }
+    "Microsoft Office"   = @{ ID="Microsoft.Office";         Desc="Bộ ứng dụng văn phòng cao cấp chuẩn doanh nghiệp (Word, Excel, PowerPoint)."; Url="https://www.microsoft.com/microsoft-365" }
+    "Foxit PDF Reader"   = @{ ID="Foxit.FoxitReader";        Desc="Phần mềm đọc và quản lý tệp tin tài liệu định dạng PDF nhẹ và mượt mà."; Url="https://www.foxit.com/pdf-reader/" }
+    "Notepad++"          = @{ ID="Notepad++.Notepad++";      Desc="Trình soạn thảo văn bản code chuyên nghiệp gọn nhẹ, hỗ trợ nhiều ngôn ngữ."; Url="https://notepad-plus-plus.org/downloads/" }
+    "Google Drive"       = @{ ID="Google.GoogleDrive";       Desc="Ứng dụng đồng bộ dữ liệu đám mây Google Drive trực tiếp vào ổ đĩa máy tính."; Url="https://www.google.com/drive/download/" }
+    "AnyDesk"            = @{ ID="AnyDesk.AnyDesk";          Desc="Phần mềm điều khiển máy tính từ xa tốc độ cao kết nối ổn định."; Url="https://anydesk.com/downloads" }
+    "UltraViewer"        = @{ ID="UltraViewer.UltraViewer";  Desc="Công cụ hỗ trợ kỹ thuật và điều khiển máy từ xa phổ biến hàng đầu tại Việt Nam."; Url="https://ultraviewer.net/vi/download" }
+    "7-Zip"              = @{ ID="7zip.7zip";                Desc="Trình nén và giải nén dữ liệu mã nguồn mở hoàn toàn miễn phí, siêu nhẹ."; Url="https://www.7-zip.org/download.html" }
+    "WinRAR"             = @{ ID="RARLab.WinRAR";            Desc="Phần mềm nén và giải nén file định dạng .RAR mạnh mẽ bậc nhất hiện nay."; Url="https://www.win-rar.com/download.html" }
+    "UniKey"             = @{ ID="Unikey.Unikey";            Desc="Bộ gõ Tiếng Việt huyền thoại, gọn nhẹ và tương thích tuyệt đối mọi phiên bản OS."; Url="https://www.unikey.org/#download" }
+    "EVKey"              = @{ ID="EVKey.EVKey";              Desc="Bộ gõ Tiếng Việt thế hệ mới, sửa lỗi dấu từ trên trình duyệt và game cực tốt."; Url="https://evkeyvn.com/" }
+    "VLC Media Player"   = @{ ID="VideoLAN.VLC";             Desc="Trình phát nhạc và video đa định dạng, chạy mượt toàn bộ codec phổ thông."; Url="https://www.videolan.org/vlc/" }
+    "Zalo PC"            = @{ ID="VNGCorp.Zalo";             Desc="Ứng dụng nhắn tin, gọi điện và truyền file làm việc số một tại Việt Nam."; Url="https://zalo.me/pc" }
+    "Zoom"               = @{ ID="Zoom.Zoom";                Desc="Nền tảng hội họp trực tuyến và học tập từ xa chất lượng âm thanh hình ảnh cao."; Url="https://zoom.us/download" }
+    "C++ x64 2022"       = @{ ID="Microsoft.VCRedist.2015+.x64"; Desc="Thư viện Microsoft Visual C++ Redistributable x64 cần thiết để chạy game và app."; Url="https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist" }
+    ".NET Runtime 8"     = @{ ID="Microsoft.DotNet.Runtime.8";   Desc="Nền tảng thực thi cho các phần mềm viết trên ngôn ngữ hệ sinh thái .NET mới nhất."; Url="https://dotnet.microsoft.com/download/dotnet/8.0" }
 }
 
 $gbInL = New-GroupCard "PHẦN MỀM CÀI ĐẶT" 5 5 440 435 $C.Blue
@@ -506,8 +827,11 @@ $tabInstall.Controls.Add($gbInR)
 $txtSwDescInfo = New-Object System.Windows.Forms.RichTextBox
 $txtSwDescInfo.Location=[System.Drawing.Point]::new(10,25); $txtSwDescInfo.Size=[System.Drawing.Size]::new(500,360)
 $txtSwDescInfo.BackColor=$C.BgInput; $txtSwDescInfo.ForeColor=$C.Text; $txtSwDescInfo.Font=$F.Mono; $txtSwDescInfo.ReadOnly=$true; $txtSwDescInfo.BorderStyle="None"
+$txtSwDescInfo.DetectUrls = $true
 $txtSwDescInfo.Text = "Chọn một phần mềm bên trái để xem thông tin chi tiết gói cài đặt winget..."
 $gbInR.Controls.Add($txtSwDescInfo)
+# [NÂNG CẤP] Cho phép click trực tiếp vào link tải trong khung mô tả để mở trình duyệt
+$txtSwDescInfo.Add_LinkClicked({ param($s,$e) Start-Process $e.LinkText })
 
 $lblWingetCheck = New-Label "Đang kiểm tra Winget..." 10 392 500 25 $C.TextDim $F.Body "MiddleLeft"
 $gbInR.Controls.Add($lblWingetCheck)
@@ -516,8 +840,10 @@ $listSw.Add_SelectedIndexChanged({
     $n=$listSw.SelectedItem
     if ($n -and $global:SwMap.ContainsKey($n)) {
         $appInfo = $global:SwMap[$n]
+        $installCmd   = "winget install --id $($appInfo.ID) --silent --force --accept-package-agreements --accept-source-agreements"
+        $uninstallCmd = "winget uninstall --id $($appInfo.ID) --silent"
         $txtSwDescInfo.ForeColor = $C.LogCyan
-        $txtSwDescInfo.Text = "Tên Phần Mềm  : $n`nWinget ID     : $($appInfo.ID)`n`nMÔ TẢ TÍNH NĂNG:`n$($appInfo.Desc)`n`nTrạng thái: Sẵn sàng tải xuống và cài đặt ngầm (Silent Install) thông qua Microsoft Winget Package Manager."
+        $txtSwDescInfo.Text = "TÊN PHẦN MỀM  : $n`nWINGET ID     : $($appInfo.ID)`n`nMÔ TẢ TÍNH NĂNG:`n$($appInfo.Desc)`n`n--------------------------------------------------`nLỆNH THỰC THI (Cài đặt):`n$installCmd`n`nLỆNH GỠ BỎ:`n$uninstallCmd`n`n--------------------------------------------------`nLINK TẢI CHÍNH CHỦ (dự phòng nếu Winget lỗi):`n$($appInfo.Url)`n`nTrạng thái: Sẵn sàng tải xuống và cài đặt ngầm (Silent Install) thông qua Microsoft Winget Package Manager."
     }
 })
 
@@ -572,8 +898,19 @@ $tabRemove.Controls.Add($gbUnR)
 $txtUnInfo = New-Object System.Windows.Forms.RichTextBox
 $txtUnInfo.Location=[System.Drawing.Point]::new(10,25); $txtUnInfo.Size=[System.Drawing.Size]::new(500,400)
 $txtUnInfo.BackColor=$C.BgInput; $txtUnInfo.ForeColor=$C.Text; $txtUnInfo.Font=$F.Mono; $txtUnInfo.ReadOnly=$true; $txtUnInfo.BorderStyle="None"
+$txtUnInfo.DetectUrls = $true
 $txtUnInfo.Text="Chọn ứng dụng để xem thông tin chi tiết."
 $gbUnR.Controls.Add($txtUnInfo)
+$txtUnInfo.Add_LinkClicked({ param($s,$e) Start-Process $e.LinkText })
+
+# [NÂNG CẤP] Dò link tải chính chủ bằng cách đối chiếu tên ứng dụng đã cài với danh mục SwMap (khớp gần đúng)
+function Find-DownloadUrl {
+    param([string]$AppName)
+    foreach ($k in $global:SwMap.Keys) {
+        if ($AppName -like "*$k*" -or $k -like "*$AppName*") { return $global:SwMap[$k].Url }
+    }
+    return $null
+}
 
 function Scan-Apps {
     Write-Log "Đang quét danh sách ứng dụng đã cài..." "INFO"
@@ -618,8 +955,10 @@ $listUn.Add_SelectedIndexChanged({
     if ($n -and $global:UnTable.ContainsKey($n)) {
         $d=$global:UnTable[$n]
         $szMB=if($d.Size){[math]::Round([int]$d.Size/1024,1)}else{"N/A"}
+        $url = Find-DownloadUrl -AppName $n
+        $urlText = if ($url) { $url } else { "https://www.google.com/search?q=download+$([uri]::EscapeDataString($n))" }
         $txtUnInfo.ForeColor=$C.LogCyan
-        $txtUnInfo.Text="Tên ứng dụng: $n`nNhà phát hành: $($d.Publisher)`nPhiên bản: $($d.Version)`nNgày cài: $($d.Date)`nDung lượng: $szMB MB`nLệnh gỡ: $($d.Un)"
+        $txtUnInfo.Text="TÊN ỨNG DỤNG : $n`nNHÀ PHÁT HÀNH: $($d.Publisher)`nPHIÊN BẢN    : $($d.Version)`nNGÀY CÀI     : $($d.Date)`nDUNG LƯỢNG   : $szMB MB`n`n--------------------------------------------------`nLỆNH GỠ BỎ:`n$($d.Un)`n`n--------------------------------------------------`nLINK TẢI VỀ (nếu cần cài lại):`n$urlText"
     }
 })
 $btnRescan.Add_Click({ Scan-Apps })
@@ -659,7 +998,10 @@ $btnGo.Add_Click({
 $gbBkDest=New-GroupCard "THƯ MỤC SAO LƯU" 5 5 965 65 $C.Orange
 $tabBackup.Controls.Add($gbBkDest)
 $txtBkPath=New-Object System.Windows.Forms.TextBox
-$txtBkPath.Text="D:\Backup"; $txtBkPath.Location=[System.Drawing.Point]::new(10,25); $txtBkPath.Size=[System.Drawing.Size]::new(650,25)
+# [SỬA LỖI] Trước đây hardcode "D:\Backup" - lỗi nếu máy không có ổ D. Tự dò ổ ngoài ổ hệ thống, fallback về ổ C.
+$defaultBackupDrive = (Get-Volume -ErrorAction SilentlyContinue | Where-Object { $_.DriveLetter -and $_.DriveType -eq 'Fixed' -and "$($_.DriveLetter):" -ne $env:SystemDrive } | Sort-Object SizeRemaining -Descending | Select-Object -First 1).DriveLetter
+$defaultBackupPath = if ($defaultBackupDrive) { "$($defaultBackupDrive):\Backup" } else { "$env:SystemDrive\Backup" }
+$txtBkPath.Text=$defaultBackupPath; $txtBkPath.Location=[System.Drawing.Point]::new(10,25); $txtBkPath.Size=[System.Drawing.Size]::new(650,25)
 $txtBkPath.BackColor=$C.BgInput; $txtBkPath.ForeColor=$C.Text; $txtBkPath.Font=$F.Body; $txtBkPath.BorderStyle="FixedSingle"
 $gbBkDest.Controls.Add($txtBkPath)
 $btnBkBrowse=New-StyledButton "Chọn Thư Mục" 670 21 140 28 $C.OrangeDark
@@ -667,6 +1009,18 @@ $btnBkOpen  =New-StyledButton "Mở Thư Mục"   815 21 140 28 $C.BgCard
 $gbBkDest.Controls.AddRange(@($btnBkBrowse,$btnBkOpen))
 $btnBkBrowse.Add_Click({ $d=New-Object System.Windows.Forms.FolderBrowserDialog; if($d.ShowDialog()-eq"OK"){$txtBkPath.Text=$d.SelectedPath} })
 $btnBkOpen.Add_Click({ if(Test-Path $txtBkPath.Text){Start-Process explorer $txtBkPath.Text} })
+
+# [SỬA LỖI] Kiểm tra ổ đĩa đích tồn tại trước khi backup, tránh lỗi âm thầm (do $ErrorActionPreference SilentlyContinue) khiến người dùng tưởng đã backup xong nhưng thực ra không có gì được ghi
+function Test-BackupPathReady {
+    param([string]$Path)
+    $driveRoot = [System.IO.Path]::GetPathRoot($Path)
+    if (-not $driveRoot -or -not (Test-Path $driveRoot)) {
+        Write-Log "Ổ đĩa đích '$driveRoot' không tồn tại! Vui lòng chọn lại thư mục sao lưu." "ERR"
+        [System.Windows.Forms.MessageBox]::Show("Ổ đĩa đích không tồn tại: $driveRoot`nVui lòng bấm 'Chọn Thư Mục' để chọn lại nơi lưu.","Lỗi Đường Dẫn","OK","Error") | Out-Null
+        return $false
+    }
+    return $true
+}
 
 $bkDefs=@(
     @{Text="SAO LƯU DỮ LIỆU NGƯỜI DÙNG`n(Desktop, Documents, Music, Pictures, Videos)"; X=5;   Y=80;  W=475;H=110;Color=$C.Blue}
@@ -682,6 +1036,7 @@ foreach ($a in $bkDefs) {
     $btn.TextAlign="MiddleCenter"; $tabBackup.Controls.Add($btn); $bkBtns+=$btn
 }
 $bkBtns[0].Add_Click({
+    if (-not (Test-BackupPathReady $txtBkPath.Text)) { return }
     $root=Join-Path $txtBkPath.Text "User.$(Get-Date -f 'yyyy.MM.dd')"
     New-Item $root -ItemType Directory -Force | Out-Null
     $map=@{Desktop="Desktop";Documents="MyDocuments";Music="MyMusic";Pictures="MyPictures";Videos="MyVideos"}
@@ -699,6 +1054,7 @@ $bkBtns[0].Add_Click({
     [System.Windows.Forms.MessageBox]::Show("Sao lưu hoàn tất!`n$root","Hoàn Tất","OK","Information") | Out-Null
 })
 $bkBtns[1].Add_Click({
+    if (-not (Test-BackupPathReady $txtBkPath.Text)) { return }
     $dst=Join-Path $txtBkPath.Text "Drivers.$(Get-Date -f 'yyyy.MM.dd')"
     New-Item $dst -ItemType Directory -Force | Out-Null
     Reset-Progress; Write-Log "Đang xuất Driver hệ thống..." "INFO"
@@ -706,6 +1062,7 @@ $bkBtns[1].Add_Click({
     catch { Write-Log "Lỗi xuất Driver: $($_.Exception.Message)" "ERR" }
 })
 $bkBtns[2].Add_Click({
+    if (-not (Test-BackupPathReady $txtBkPath.Text)) { return }
     $dst=Join-Path $txtBkPath.Text "Registry.$(Get-Date -f 'yyyy.MM.dd')"; New-Item $dst -ItemType Directory -Force | Out-Null
     Reset-Progress; Write-Log "Đang xuất Registry..." "INFO"; $c=0
     foreach ($h in @(@{K="HKCU";V="HKCU"},@{K="HKLM";V="HKLM"})) {
@@ -717,12 +1074,14 @@ $bkBtns[2].Add_Click({
     Set-Progress 100; Write-Log "Backup Registry hoàn tất." "TITLE"
 })
 $bkBtns[3].Add_Click({
+    if (-not (Test-BackupPathReady $txtBkPath.Text)) { return }
     $out=Join-Path $txtBkPath.Text "AppList.$(Get-Date -f 'yyyy.MM.dd').txt"
     Reset-Progress; Write-Log "Đang tạo danh sách phần mềm..." "INFO"
     winget list 2>$null | Out-File $out -Encoding UTF8
     Set-Progress 100; Write-Log "Danh sách phần mềm -> $out" "OK"
 })
 $bkBtns[4].Add_Click({
+    if (-not (Test-BackupPathReady $txtBkPath.Text)) { return }
     $dst=Join-Path $txtBkPath.Text "WiFi.$(Get-Date -f 'yyyy.MM.dd')"; New-Item $dst -ItemType Directory -Force | Out-Null
     Reset-Progress; Write-Log "Đang xuất Wi-Fi profiles..." "INFO"
     Start-Process "netsh" -ArgumentList "wlan export profile folder=`"$dst`" key=clear" -Wait -WindowStyle Hidden
@@ -944,12 +1303,22 @@ $tabAbout.Controls.Add($gbAbout)
 $txtAbout=New-Object System.Windows.Forms.RichTextBox
 $txtAbout.Location=[System.Drawing.Point]::new(10,25); $txtAbout.Size=[System.Drawing.Size]::new(945,350)
 $txtAbout.BackColor=$C.BgInput; $txtAbout.ForeColor=$C.Text; $txtAbout.Font=$F.Mono; $txtAbout.ReadOnly=$true; $txtAbout.BorderStyle="None"
-$txtAbout.Text="  ================================================================================`n        WIN TOOLS PRO - BỘ CÔNG CỤ TỐI ƯU WINDOWS CHUYÊN NGHIỆP`n  ================================================================================`n`n  Phát triển bởi : Mr Hạnh`n  Điện thoại     : 0938.608.602`n  Website        : https://khanggiaphuc.com/win`n  Phiên bản      : v26.6.27 Pro Edition`n`n  ================================================================================`n  TÍNH NĂNG CHÍNH`n  ================================================================================`n`n  [1] Tùy Chỉnh & Sửa Chữa    - Tối ưu hóa toàn diện hệ thống & mạng & repair lỗi`n  [2] Cài Đặt (30 phần mềm)   - Cài ngầm qua Winget, bảng thông tin real-time`n  [3] Gỡ Bỏ                   - Quét ứng dụng Win32, tìm kiếm và thông tin chi tiết`n  [4] Sao Lưu (6 loại)        - Backup User/Driver/Registry/WiFi/AppList/All-in-One`n  [5] Bản Quyền               - Genuine Detector chuyên sâu Windows & Office, quản lý Key"
+$txtAbout.Text="  ================================================================================`n        WIN TOOLS PRO - BỘ CÔNG CỤ TỐI ƯU WINDOWS CHUYÊN NGHIỆP`n  ================================================================================`n`n  Phát triển bởi : Mr Hạnh`n  Điện thoại     : 0938.608.602`n  Website        : https://khanggiaphuc.com/win`n  Phiên bản      : $($Global:AppVersion) Pro Edition`n`n  ================================================================================`n  TÍNH NĂNG CHÍNH`n  ================================================================================`n`n  [1] Tùy Chỉnh & Sửa Chữa    - 25 tweak, Restore Point an toàn, Lưu/Tải cấu hình`n  [2] Cài Đặt (20 phần mềm)   - Cài ngầm qua Winget, bảng thông tin real-time`n  [3] Gỡ Bỏ                   - Quét ứng dụng Win32, tìm kiếm và thông tin chi tiết`n  [4] Sao Lưu (6 loại)        - Backup User/Driver/Registry/WiFi/AppList/All-in-One`n  [5] Bản Quyền               - Genuine Detector chuyên sâu Windows & Office, quản lý Key`n  [6] Nâng cấp $($Global:AppVersion) - Restore Point, Cancel job, chống treo, sửa lỗi bloatware,`n                        Reset mạng, Tắt Hibernate, Dọn WinSxS, Xuất Log ra file"
 $gbAbout.Controls.Add($txtAbout)
 $btnWebsite=New-StyledButton "Mở Website" 10 388 200 34 $C.BlueDark
 $btnCopyLog=New-StyledButton "Sao Chép Log" 220 388 200 34 $C.BgCard $C.TextDim
-$gbAbout.Controls.AddRange(@($btnWebsite,$btnCopyLog))
+$btnExportLog=New-StyledButton "Xuất Log Ra File" 430 388 200 34 $C.BgCard $C.TextDim
+$gbAbout.Controls.AddRange(@($btnWebsite,$btnCopyLog,$btnExportLog))
 $btnWebsite.Add_Click({ Start-Process "https://khanggiaphuc.com/win" })
+$btnExportLog.Add_Click({
+    if ($global:LogLines.Count -eq 0) { Write-Log "Chưa có log để xuất." "WARN"; return }
+    $sfd = New-Object System.Windows.Forms.SaveFileDialog
+    $sfd.Filter = "Text File (*.txt)|*.txt"; $sfd.FileName = "WinTools_Log_$(Get-Date -f 'yyyyMMdd_HHmmss').txt"
+    if ($sfd.ShowDialog() -eq "OK") {
+        $global:LogLines -join "`r`n" | Out-File $sfd.FileName -Encoding UTF8
+        Write-Log "Đã xuất log ra: $($sfd.FileName)" "OK"
+    }
+})
 $btnCopyLog.Add_Click({
     if ($global:LogLines.Count -gt 0) {
         [System.Windows.Forms.Clipboard]::SetText($global:LogLines -join "`r`n")
@@ -963,6 +1332,12 @@ $btnCopyLog.Add_Click({
 # ==============================================================
 $form.Add_Shown({
     $form.Refresh()
+    # [NÂNG CẤP GIAO DIỆN] Chủ động ẩn nút cuộn trái-phải (Up-Down control) mà WinForms tự sinh
+    # khi các tab bị tràn khung, để hàng menu luôn gọn gàng không có nút điều hướng thừa
+    try {
+        $updown = [WinApi]::FindWindowEx($tabCtrl.Handle, [IntPtr]::Zero, "msctls_updown32", $null)
+        if ($updown -ne [IntPtr]::Zero) { [void][WinApi]::ShowWindow($updown, 0) }
+    } catch {}
         function Get-SystemSummary {
         try {
         $os  = Get-CimInstance Win32_OperatingSystem
@@ -989,7 +1364,7 @@ $form.Add_Shown({
     catch {return "Không lấy được thông tin hệ thống."}}
 $lblSys.Text = Get-SystemSummary
     Scan-Apps
-    Write-Log "WIN TOOLS Pro v26.6.30 khởi động thành công" "TITLE"
+    Write-Log "WIN TOOLS Pro $($Global:AppVersion) khởi động thành công" "TITLE"
     if (Get-Command winget -ErrorAction SilentlyContinue) {
         $wv=(winget --version 2>$null)
         $lblWingetCheck.Text="Winget $wv sẵn sàng."
@@ -997,6 +1372,15 @@ $lblSys.Text = Get-SystemSummary
     } else {
         $lblWingetCheck.Text="Winget chưa cài! Vào Microsoft Store cài App Installer."
         $lblWingetCheck.ForeColor=$C.LogRed
+    }
+})
+
+$form.Add_FormClosing({
+    param($s,$e)
+    if ($global:ActiveJob -or $asyncTimer.Enabled) {
+        $r = [System.Windows.Forms.MessageBox]::Show("Đang có tiến trình tùy chỉnh chạy dở! Thoát ngay có thể khiến hệ thống ở trạng thái không nhất quán. Bạn có chắc muốn thoát?","Cảnh báo",[System.Windows.Forms.MessageBoxButtons]::YesNo,[System.Windows.Forms.MessageBoxIcon]::Warning)
+        if ($r -eq [System.Windows.Forms.DialogResult]::No) { $e.Cancel = $true; return }
+        if ($global:ActiveJob) { Stop-Job -Job $global:ActiveJob -ErrorAction SilentlyContinue; Remove-Job -Job $global:ActiveJob -Force -ErrorAction SilentlyContinue }
     }
 })
 
