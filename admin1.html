@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khang Gia Phúc - Hệ thống Quản trị Cao cấp</title>
+    <style>
+        :root {
+            --bg-main: #090b11;
+            --bg-sidebar: #12141c;
+            --bg-card: #161923;
+            --bg-card-hover: #1f2331;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #222938;
+            --success: #10b981;
+            --danger: #ef4444;
+            --sidebar-width: 260px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
+        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; overflow: hidden; }
+        .hidden { display: none !important; }
+
+        /* ==================== Auth Screen ==================== */
+        #auth-screen {
+            position: fixed; inset: 0; background: var(--bg-main);
+            display: flex; align-items: center; justify-content: center; z-index: 9999;
+        }
+        .auth-card {
+            background: var(--bg-card); border: 1px solid var(--border); padding: 2.5rem;
+            border-radius: 16px; width: 100%; max-width: 420px; text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+        }
+        .auth-card h2 { margin-bottom: 0.5rem; font-size: 1.75rem; font-weight: 700; }
+        .auth-card p { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem; }
+        .btn-google {
+            width: 100%; padding: 0.75rem 1rem; background: #fff; color: #1e293b;
+            border: none; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-google:hover { background: #f8fafc; transform: translateY(-1px); }
+
+        /* ==================== Main Layout ==================== */
+        #main-dashboard { display: flex; width: 100%; height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width); background: var(--bg-sidebar);
+            border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 1.5rem 1rem;
+        }
+        .brand { font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 2rem; padding-left: 0.75rem; letter-spacing: 0.5px; }
+        .sidebar a {
+            color: var(--text-muted); text-decoration: none; padding: 0.75rem 1rem;
+            border-radius: 8px; font-size: 0.95rem; font-weight: 500; display: block;
+            margin-bottom: 0.5rem; transition: all 0.2s;
+        }
+        .sidebar a:hover, .sidebar a.active { color: #fff; background: var(--bg-card); }
+        .sidebar a.active { border-left: 4px solid var(--accent); padding-left: calc(1rem - 4px); }
+        .user-panel { margin-top: auto; padding: 1rem 0.75rem; border-top: 1px solid var(--border); }
+        .user-info { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .btn-logout {
+            width: 100%; padding: 0.5rem; background: transparent; border: 1px solid var(--border);
+            color: var(--danger); border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
+        }
+        .btn-logout:hover { background: rgba(239, 68, 68, 0.1); }
+
+        /* Main Content Workspace */
+        .content { flex: 1; padding: 2.5rem; overflow-y: auto; background: var(--bg-main); }
+        .tab-content h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .tab-content .sub-title { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+
+        /* ==================== Upload UI Components ==================== */
+        .upload-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; }
+        
+        .dropzone {
+            border: 2px dashed var(--border); border-radius: 10px; padding: 3rem 2rem;
+            text-align: center; cursor: pointer; transition: all 0.2s ease-in-out; background: rgba(255,255,255,0.01);
+        }
+        .dropzone:hover, .dropzone.dragover { border-color: var(--accent); background: rgba(59, 130, 246, 0.04); }
+        .dropzone p { color: var(--text-muted); margin-top: 0.7rem; font-size: 0.95rem; }
+        .dropzone b { color: var(--accent); }
+
+        /* Progress Bar */
+        .progress-container { margin: 1.5rem 0; background: var(--border); height: 8px; border-radius: 99px; overflow: hidden; display: none; }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), #60a5fa); transition: width 0.3s ease; }
+
+        /* Actions */
+        .action-group { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .btn {
+            padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
+            cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-secondary { background: var(--border); color: var(--text-main); }
+        .btn-secondary:hover { background: var(--bg-card-hover); }
+
+        /* Image Preview Gallery Grid */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .gallery-item {
+            background: var(--bg-sidebar); border: 1px solid var(--border); border-radius: 8px;
+            overflow: hidden; display: flex; flex-direction: column; position: relative; transition: transform 0.2s;
+        }
+        .gallery-item:hover { transform: translateY(-2px); }
+        .gallery-item img { width: 100%; height: 120px; object-fit: cover; background: #000; }
+        .gallery-item .info { padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        .gallery-item .name { font-size: 0.8rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .gallery-item .btn-copy-single {
+            width: 100%; padding: 0.4rem; background: var(--border); border: none; color: var(--text-muted);
+            font-size: 0.75rem; border-radius: 4px; cursor: pointer; transition: all 0.2s;
+        }
+        .gallery-item .btn-copy-single:hover { background: var(--accent); color: #fff; }
+        .gallery-item .status-badge {
+            position: absolute; top: 8px; right: 8px; padding: 2px 6px; border-radius: 4px;
+            font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+        }
+        .status-success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    </style>
+</head>
+<body>
+
+    <div id="auth-screen">
+        <div class="auth-card">
+            <h2>Hệ thống Quản trị</h2>
+            <p>Vui lòng đăng nhập tài khoản Google được ủy quyền để tiếp tục.</p>
+            <button class="btn-google" id="btn-login">
+                <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.63-.06-1.25-.16-1.84H9v3.47h4.84c-.21 1.12-.84 2.07-1.8 2.72v2.26h2.92c1.71-1.57 2.68-3.89 2.68-6.61z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.81.54-1.85.87-3.04.87-2.34 0-4.33-1.57-5.03-3.68H.92v2.33C2.4 16.03 5.48 18 9 18z"/><path fill="#FBBC05" d="M3.97 10.75c-.18-.54-.28-1.11-.28-1.7s.1-1.16.28-1.7V5.02H.92C.33 6.18 0 7.55 0 9s.33 2.82.92 3.98l3.05-2.23z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35L15 2.3C13.46.96 11.42 0 9 0 5.48 0 2.4 1.97.92 4.97l3.05 2.33c.7-2.11 2.69-3.68 5.03-3.68z"/></svg>
+                Đăng nhập bằng Google
+            </button>
+        </div>
+    </div>
+
+    <div id="main-dashboard" class="hidden">
+        <div class="sidebar">
+            <div class="brand">Khang Gia Phúc</div>
+            <a href="#" class="active" onclick="switchTab('tab-tintuc')">Ảnh Tin Tức</a>
+            <a href="#" onclick="switchTab('tab-duan')">Ảnh Dự Án</a>
+            
+            <div class="user-panel">
+                <div class="user-info" id="user-display">Chưa đăng nhập</div>
+                <button class="btn-logout" id="btn-logout">Đăng xuất</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="tab-tintuc" class="tab-content">
+                <h2>Quản lý Ảnh Tin Tức</h2>
+                <p class="sub-title">Hình ảnh tự động tối ưu hóa WebP trước khi đồng bộ lên hệ thống Cloudflare R2 Storage.</p>
+                
+                <div class="upload-container">
+                    <div class="dropzone" id="dropzone-tintuc">
+                        <svg width="40" height="40" fill="none" stroke="var(--text-muted)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 002-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <p>Kéo thả hình ảnh vào đây hoặc <b>nhấp để chọn file</b></p>
+                        <input type="file" id="file-tintuc" multiple accept="image/*" class="hidden">
+                    </div>
+
+                    <div class="progress-container" id="progress-container-tintuc">
+                        <div class="progress-bar" id="progress-bar-tintuc"></div>
+                    </div>
+
+                    <div class="action-group">
+                        <button class="btn btn-primary" id="btn-upload-tintuc">Bắt đầu tải lên</button>
+                        <button class="btn btn-secondary" id="btn-copy-tintuc">Sao chép tất cả liên kết</button>
+                    </div>
+                </div>
+
+                <div class="gallery-grid" id="gallery-tintuc"></div>
+            </div>
+
+            <div id="tab-duan" class="tab-content hidden">
+                <h2>Quản lý Ảnh Dự Án</h2>
+                <p class="sub-title">Tải lên dữ liệu thiết kế và thực tế thi công công trình.</p>
+                
+                <div class="upload-container">
+                    <div class="dropzone" id="dropzone-duan">
+                        <svg width="40" height="40" fill="none" stroke="var(--text-muted)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 002-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <p>Kéo thả hình ảnh vào đây hoặc <b>nhấp để chọn file</b></p>
+                        <input type="file" id="file-duan" multiple accept="image/*" class="hidden">
+                    </div>
+
+                    <div class="progress-container" id="progress-container-duan">
+                        <div class="progress-bar" id="progress-bar-duan"></div>
+                    </div>
+
+                    <div class="action-group">
+                        <button class="btn btn-primary" id="btn-upload-duan">Bắt đầu tải lên</button>
+                        <button class="btn btn-secondary" id="btn-copy-duan">Sao chép tất cả liên kết</button>
+                    </div>
+                </div>
+
+                <div class="gallery-grid" id="gallery-duan"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAs760Wb...", // Giữ nguyên thông tin cấu hình cũ của bạn tại đây
+            authDomain: "khanggiaphuc-auth.firebaseapp.com",
+            projectId: "khanggiaphuc-auth",
+            storageBucket: "khanggiaphuc-auth.appspot.com",
+            messagingSenderId: "567...",
+            appId: "1:567..."
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        const WORKER_URL = "https://upload.tconghanh.workers.dev/";
+
+        // Auth Event Handlers
+        document.getElementById("btn-login").onclick = () => signInWithPopup(auth, provider).catch(err => alert("Lỗi đăng nhập: " + err.message));
+        document.getElementById("btn-logout").onclick = () => signOut(auth);
+
+        onAuthStateChanged(auth, (user) => {
+            const authScreen = document.getElementById("auth-screen");
+            const mainDashboard = document.getElementById("main-dashboard");
+            const userDisplay = document.getElementById("user-display");
+
+            if (user) {
+                authScreen.classList.add("hidden");
+                mainDashboard.classList.remove("hidden");
+                userDisplay.innerText = `${user.displayName} (${user.email})`;
+            } else {
+                authScreen.classList.remove("hidden");
+                mainDashboard.classList.add("hidden");
+                userDisplay.innerText = "Chưa đăng nhập";
+            }
+        });
+
+        // Khởi tạo Module Logic cho các khu vực Upload vùng Tab
+        initUploadZone({
+            dropzoneId: "dropzone-tintuc", fileInputId: "file-tintuc", galleryId: "gallery-tintuc",
+            btnUploadId: "btn-upload-tintuc", btnCopyId: "btn-copy-tintuc", progressBarId: "progress-bar-tintuc", progressContainerId: "progress-container-tintuc"
+        });
+
+        initUploadZone({
+            dropzoneId: "dropzone-duan", fileInputId: "file-duan", galleryId: "gallery-duan",
+            btnUploadId: "btn-upload-duan", btnCopyId: "btn-copy-duan", progressBarId: "progress-bar-duan", progressContainerId: "progress-container-duan"
+        });
+
+        function initUploadZone(config) {
+            let localFiles = [];
+            let localUploadedUrls = [];
+            const dropzone = document.getElementById(config.dropzoneId);
+            const fileInput = document.getElementById(config.fileInputId);
+            const gallery = document.getElementById(config.galleryId);
+            const bar = document.getElementById(config.progressBarId);
+            const barContainer = document.getElementById(config.progressContainerId);
+
+            dropzone.onclick = () => fileInput.click();
+            
+            // Drag and drop mechanics
+            ['dragenter', 'dragover'].forEach(n => dropzone.addEventListener(n, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); }, false));
+            ['dragleave', 'drop'].forEach(n => dropzone.addEventListener(n, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); }, false));
+            
+            dropzone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                handleFiles(dt.files);
+            });
+
+            fileInput.onchange = (e) => handleFiles(e.target.files);
+
+            function handleFiles(files) {
+                localFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+                localUploadedUrls = [];
+                gallery.innerHTML = "";
+                barContainer.style.display = "none";
+                bar.style.width = "0%";
+
+                localFiles.forEach((file, index) => {
+                    const item = document.createElement("div");
+                    item.className = "gallery-item";
+                    item.innerHTML = `
+                        <img src="${URL.createObjectURL(file)}" alt="Preview">
+                        <div class="info">
+                            <div class="name">${file.name}</div>
+                            <div class="status-badge status-pending" id="${config.galleryId}-status-${index}">Chờ tải</div>
+                            <div class="name" id="${config.galleryId}-url-${index}">---</div>
+                        </div>
+                    `;
+                    gallery.appendChild(item);
+                });
+            }
+
+            document.getElementById(config.btnUploadId).onclick = async () => {
+                if (!localFiles.length) return alert("Vui lòng chọn ảnh trước!");
+                
+                // BẢO MẬT: Lấy ID Token trực tiếp từ Firebase để xác thực với Worker
+                let idToken = "";
+                try {
+                    if (auth.currentUser) {
+                        idToken = await auth.currentUser.getIdToken(true);
+                    } else {
+                        return alert("Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.");
+                    }
+                } catch(e) {
+                    return alert("Không thể xác thực danh tính người dùng.");
+                }
+
+                barContainer.style.display = "block";
+                bar.style.width = "10%";
+
+                for (let i = 0; i < localFiles.length; i++) {
+                    const statusBadge = document.getElementById(`${config.galleryId}-status-${i}`);
+                    const urlDiv = document.getElementById(`${config.galleryId}-url-${i}`);
+                    
+                    try {
+                        const webp = await convertToWebP(localFiles[i]);
+                        const fd = new FormData();
+                        const lastDot = localFiles[i].name.lastIndexOf('.');
+                        const originalName = lastDot !== -1 ? localFiles[i].name.substring(0, lastDot) : localFiles[i].name;
+                        fd.append("file", webp, `${originalName}.webp`);
+
+                        // Gửi HTTP POST đính kèm mã Authorization Token bảo mật
+                        const res = await fetch(WORKER_URL, { 
+                            method: "POST", 
+                            body: fd,
+                            headers: {
+                                "Authorization": `Bearer ${idToken}`
+                            }
+                        });
+
+                        if (!res.ok) throw new Error("Worker từ chối xử lý");
+
+                        const json = await res.json();
+                        localUploadedUrls.push(json.url);
+                        
+                        statusBadge.innerText = "Thành công";
+                        statusBadge.className = "status-badge status-success";
+                        urlDiv.innerHTML = `<button class="btn-copy-single" onclick="navigator.clipboard.writeText('${json.url}'); alert('Đã copy link thành công!')">Copy Link</button>`;
+                    } catch (err) {
+                        statusBadge.innerText = "Lỗi";
+                        statusBadge.className = "status-badge";
+                        statusBadge.style.background = "rgba(239, 68, 68, 0.2)";
+                        statusBadge.style.color = "var(--danger)";
+                    }
+                    bar.style.width = `${Math.round(((i + 1) / localFiles.length) * 100)}%`;
+                }
+            };
+
+            document.getElementById(config.btnCopyId).onclick = async () => {
+                if (!localUploadedUrls.length) return alert("Chưa có URL nào được tải lên thành công!");
+                await navigator.clipboard.writeText(localUploadedUrls.join("\n"));
+                alert("Đã sao chép toàn bộ liên kết hình ảnh vào Clipboard!");
+            };
+        }
+
+        // Engine nén ảnh Client-side sang WebP
+        function convertToWebP(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement("canvas");
+                        let w = img.width, h = img.height;
+                        if (w > 1600) { h = Math.round((h * 1600) / w); w = 1600; }
+                        canvas.width = w; canvas.height = h;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0, w, h);
+                        canvas.toBlob((blob) => resolve(blob), "image/webp", 0.82);
+                    };
+                };
+            });
+        }
+    </script>
+
+    <script>
+        // Điều hướng cơ bản giữa các Tab Menu
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            document.querySelectorAll('.sidebar a').forEach(i => i.classList.remove('active'));
+            document.getElementById(tabId).classList.remove('hidden');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
