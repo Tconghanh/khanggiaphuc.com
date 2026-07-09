@@ -3,32 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Quản Lý Tập Tin - R2 Explorer Pro</title>
+    <title>Hệ Thống Quản Lý Tập Tin - R2 Explorer Ultimate</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* ĐỊNH NGHĨA CÁC BỘ THEME GIAO DIỆN */
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
+            --primary: #2563eb; --primary-hover: #1d4ed8;
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --panel-bg: rgba(30, 41, 59, 0.7);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --success: #22c55e;
-            --danger: #ef4444;
-            --warning: #f59e0b;
+            --panel-bg: rgba(30, 41, 59, 0.7); --border-color: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc; --text-muted: #94a3b8; --success: #22c55e; --danger: #ef4444; --warning: #f59e0b;
+        }
+        [data-theme="light"] {
+            --primary: #2563eb; --primary-hover: #1d4ed8;
+            --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --panel-bg: rgba(255, 255, 255, 0.8); --border-color: rgba(0, 0, 0, 0.1);
+            --text-main: #0f172a; --text-muted: #64748b; --success: #16a34a; --danger: #dc2626; --warning: #d97706;
+        }
+        [data-theme="cyberpunk"] {
+            --primary: #ff0055; --primary-hover: #cc0044;
+            --bg-gradient: linear-gradient(135deg, #000411 0%, #001242 100%);
+            --panel-bg: rgba(0, 4, 17, 0.85); --border-color: #00ffcc;
+            --text-main: #00ffcc; --text-muted: #9d00ff; --success: #00ff66; --danger: #ff0055; --warning: #ffcc00;
+        }
+        [data-theme="classic"] {
+            --primary: #047857; --primary-hover: #065f46;
+            --bg-gradient: linear-gradient(135deg, #14532d 0%, #052e16 100%);
+            --panel-bg: rgba(20, 83, 45, 0.7); --border-color: rgba(255, 255, 255, 0.15);
+            --text-main: #f0fdf4; --text-muted: #a7f3d0; --success: #4ade80; --danger: #f87171; --warning: #fbbf24;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg-gradient); min-height: 100vh; color: var(--text-main); display: flex; flex-direction: column; }
-        header { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .brand { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 700; background: linear-gradient(to right, #38bdf8, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .server-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; background: rgba(34, 197, 94, 0.1); color: #4ade80; padding: 0.35rem 0.75rem; border-radius: 9999px; border: 1px solid rgba(34, 197, 94, 0.2); }
+        body { background: var(--bg-gradient); min-height: 100vh; color: var(--text-main); display: flex; flex-direction: column; transition: all 0.3s ease; }
+        header { background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .brand { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 700; }
+        
+        .header-right { display: flex; align-items: center; gap: 1rem; }
+        /* Thả chọn giao diện (Theme Selector) */
+        .theme-select { background: rgba(0, 0, 0, 0.2); color: var(--text-main); border: 1px solid var(--border-color); padding: 0.35rem 0.75rem; border-radius: 6px; outline: none; font-size: 0.85rem; cursor: pointer; }
+        .theme-select option { background: #0f172a; color: #fff; }
+        
+        .server-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; background: rgba(34, 197, 94, 0.1); color: var(--success); padding: 0.35rem 0.75rem; border-radius: 9999px; border: 1px solid var(--border-color); }
         .container { flex: 1; max-width: 1400px; width: 100%; margin: 2rem auto; padding: 0 1.5rem; }
         .explorer-panel { background: var(--panel-bg); backdrop-filter: blur(16px); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); }
-        .toolbar { padding: 1.25rem; background: rgba(15, 23, 42, 0.4); border-bottom: 1px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; }
+        .toolbar { padding: 1.25rem; background: rgba(15, 23, 42, 0.2); border-bottom: 1px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; }
         
         .path-navigation { display: flex; align-items: center; gap: 0.5rem; background: rgba(0, 0, 0, 0.2); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); flex: 1; min-width: 250px; overflow-x: auto; }
         .path-item { color: var(--text-muted); cursor: pointer; transition: color 0.2s; white-space: nowrap; }
@@ -42,15 +61,20 @@
         .btn-primary { background: var(--primary); border: none; }
         .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
         
+        /* Cột thao tác rộng hơn */
         .btn-action { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.25rem 0.5rem; font-size: 1rem; transition: color 0.2s; }
+        .btn-action.btn-copy:hover { color: var(--primary); }
         .btn-action.btn-rename:hover { color: var(--warning); }
         .btn-action.btn-delete:hover { color: var(--danger); }
+
+        /* Vùng điều khiển của Admin (Ẩn mặc định nếu là Guest) */
+        .admin-control { display: none; }
 
         .progress-container { width: 100%; background: rgba(0, 0, 0, 0.3); height: 6px; display: none; position: relative; }
         .progress-bar { height: 100%; background: linear-gradient(to right, #38bdf8, #22c55e); width: 0%; transition: width 0.1s ease; }
         .file-table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { background: rgba(15, 23, 42, 0.2); padding: 1rem 1.25rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-weight: 600; }
+        th { background: rgba(15, 23, 42, 0.1); padding: 1rem 1.25rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-weight: 600; }
         td { padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 0.95rem; white-space: nowrap; }
         tr:hover td { background: rgba(255, 255, 255, 0.02); }
         .file-name-container { display: flex; align-items: center; gap: 1rem; }
@@ -58,19 +82,26 @@
         .icon-folder { color: #eab308; }
         .icon-image { color: #ec4899; }
         .icon-code { color: #38bdf8; }
-        .icon-file { color: #94a3b8; }
+        .icon-file { color: var(--text-muted); }
         .file-link { color: var(--text-main); text-decoration: none; font-weight: 500; cursor: pointer; transition: color 0.2s; }
-        .file-link:hover { color: #38bdf8; text-decoration: underline; }
+        .file-link:hover { color: var(--primary); text-decoration: underline; }
         .file-size, .file-date { color: var(--text-muted); }
         .empty-state { padding: 4rem 2rem; text-align: center; color: var(--text-muted); display: none; }
-        .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand"><i class="fa-solid fa-folder-tree"></i> <span>R2 EXPLORER SECURE</span></div>
-        <div class="server-status"><i class="fa-solid fa-shield-halved"></i> <span id="statusTxt">Bảo mật tối đa</span></div>
+        <div class="brand"><i class="fa-solid fa-folder-tree"></i> &nbsp;<span>R2 EXPLORER ULTIMATE</span></div>
+        <div class="header-right">
+            <select class="theme-select" id="themeSelect" onchange="changeTheme(this.value)">
+                <option value="dark">🌙 Giao diện Tối</option>
+                <option value="light">☀️ Giao diện Sáng</option>
+                <option value="cyberpunk">⚡ Giao diện Cyberpunk</option>
+                <option value="classic">🌲 Giao diện Cổ điển</option>
+            </select>
+            <div class="server-status"><i class="fa-solid fa-user-shield"></i> &nbsp;<span id="roleTxt">Đang kiểm tra...</span></div>
+        </div>
     </header>
 
     <div class="container">
@@ -78,10 +109,11 @@
             <div class="toolbar">
                 <div class="path-navigation" id="pathNav"></div>
                 <div class="actions">
-                    <button class="btn" onclick="logoutSystem()" title="Đổi mật khẩu"><i class="fa-solid fa-key"></i> Đăng xuất</button>
+                    <button class="btn admin-control" onclick="createNewFolder()"><i class="fa-solid fa-folder-plus" style="color:#eab308;"></i> Tạo thư mục</button>
+                    <button class="btn" onclick="logoutSystem()"><i class="fa-solid fa-key"></i> Đăng xuất</button>
                     <button class="btn" onclick="refreshDirectory()"><i class="fa-solid fa-arrow-rotate-right"></i> Làm mới</button>
                     <input type="file" id="fileChooser" style="display: none;" onchange="uploadLargeFile(this.files)">
-                    <button class="btn btn-primary" id="uploadBtn" onclick="document.getElementById('fileChooser').click()">
+                    <button class="btn btn-primary admin-control" id="uploadBtn" onclick="document.getElementById('fileChooser').click()">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Tải lên tại đây
                     </button>
                 </div>
@@ -93,10 +125,10 @@
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 45%;">Tên</th>
+                            <th style="width: 40%;">Tên</th>
                             <th style="width: 15%;">Kích thước</th>
                             <th style="width: 25%;">Ngày cập nhật</th>
-                            <th style="width: 15%; text-align: center;">Thao tác</th>
+                            <th style="width: 20%; text-align: center;">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody id="fileList"></tbody>
@@ -104,7 +136,7 @@
             </div>
 
             <div class="empty-state" id="emptyState">
-                <i class="fa-regular fa-folder-open"></i>
+                <i class="fa-regular fa-folder-open" style="font-size:3rem; opacity:0.5; margin-bottom:1rem; display:block;"></i>
                 <p id="emptyStateText">Thư mục trống.</p>
             </div>
         </div>
@@ -113,12 +145,24 @@
     <script>
         const WORKER_API_URL = 'https://upload.tconghanh.workers.dev'; 
         let currentPath = ''; 
+        let userRole = 'user'; // Quyền mặc định
 
-        // Hàm lấy Token từ bộ nhớ, nếu chưa có sẽ chủ động hỏi người dùng
+        // Khởi động đọc theme đã lưu
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('r2_theme') || 'dark';
+            document.getElementById('themeSelect').value = savedTheme;
+            changeTheme(savedTheme);
+        });
+
+        function changeTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+            localStorage.setItem('r2_theme', themeName);
+        }
+
         function getAuthToken() {
             let token = localStorage.getItem('r2_access_token');
             if (!token) {
-                token = prompt("Mời anh nhập Mật khẩu bảo mật hệ thống R2:");
+                token = prompt("Mời nhập Mật khẩu truy cập hệ thống R2 (Mật khẩu quyết định quyền Admin/User):");
                 if (token && token.trim() !== "") {
                     localStorage.setItem('r2_access_token', token.trim());
                     return token.trim();
@@ -135,7 +179,7 @@
         function getIcon(name, isDir) {
             if (isDir) return '<i class="fa-solid fa-folder icon-folder"></i>';
             const ext = name.split('.').pop().toLowerCase();
-            if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(ext)) return '<i class="fa-solid fa-file-image icon-image"></i>';
+            if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'png', 'ico'].includes(ext)) return '<i class="fa-solid fa-file-image icon-image"></i>';
             if (['html', 'css', 'js', 'json', 'py', 'php'].includes(ext)) return '<i class="fa-solid fa-file-code icon-code"></i>';
             return '<i class="fa-solid fa-file-lines icon-file"></i>';
         }
@@ -143,7 +187,6 @@
         function renderBreadcrumbs() {
             const nav = document.getElementById('pathNav');
             let html = `<span class="path-item" onclick="navigateToPath('')"><i class="fa-solid fa-house"></i> Root</span>`;
-            
             if (currentPath) {
                 const parts = currentPath.split('/').filter(p => p);
                 let buildPath = '';
@@ -165,20 +208,19 @@
             refreshDirectory();
         }
 
-        // ĐỌC DANH SÁCH FILE VÀ FOLDER
+        // ĐỌC DANH SÁCH FILE VÀ PHÂN QUYỀN GIAO DIỆN
         async function refreshDirectory() {
             const token = getAuthToken();
             if (!token) {
-                document.getElementById('fileList').innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--danger); padding:2rem;">Yêu cầu nhập mật khẩu bảo mật để xem dữ liệu. Trình duyệt sẽ tự động tải lại...</td></tr>`;
-                setTimeout(() => location.reload(), 1500);
+                document.getElementById('fileList').innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--danger); padding:2rem;">Yêu cầu mật khẩu đăng nhập...</td></tr>`;
+                setTimeout(() => location.reload(), 1000);
                 return;
             }
 
             renderBreadcrumbs();
             const tbody = document.getElementById('fileList');
             const emptyState = document.getElementById('emptyState');
-            
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 2rem;"><i class="fa-solid fa-spinner fa-spin"></i> Đang đọc dữ liệu mã hóa R2...</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 2rem;"><i class="fa-solid fa-spinner fa-spin"></i> Đang đọc dữ liệu...</td></tr>`;
             emptyState.style.display = 'none';
 
             try {
@@ -188,69 +230,60 @@
                 
                 if (response.status === 401) {
                     localStorage.removeItem('r2_access_token');
-                    alert("Mật khẩu không chính xác! Vui lòng nhập lại.");
-                    location.reload();
-                    return;
+                    alert("Mật khẩu không chính xác!");
+                    location.reload(); return;
                 }
 
-                if (!response.ok) throw new Error("Kết nối gặp sự cố");
+                let data = await response.json();
+                userRole = data.role;
                 
-                let items = await response.json();
+                // Cập nhật giao diện theo quyền nhận diện
+                document.getElementById('roleTxt').innerText = userRole === 'admin' ? 'Quyền: Quản trị viên' : 'Quyền: Khách (Chỉ đọc)';
+                const adminElements = document.querySelectorAll('.admin-control');
+                adminElements.forEach(el => el.style.display = userRole === 'admin' ? 'flex' : 'none');
+
                 tbody.innerHTML = '';
 
                 if (currentPath !== '') {
                     const parentRow = document.createElement('tr');
-                    parentRow.innerHTML = `
-                        <td colspan="4">
-                            <div class="file-name-container" style="cursor: pointer;" onclick="goUpToParent()">
-                                <i class="fa-solid fa-arrow-turn-up" style="transform: rotate(-90deg); color: #38bdf8;"></i>
-                                <span class="file-link">[ Thư mục cha .. ]</span>
-                            </div>
-                        </td>
-                    `;
+                    parentRow.innerHTML = `<td colspan="4"><div class="file-name-container" style="cursor: pointer;" onclick="goUpToParent()"><i class="fa-solid fa-arrow-turn-up" style="transform: rotate(-90deg); color: var(--primary);"></i><span class="file-link">[ Thư mục cha .. ]</span></div></td>`;
                     tbody.appendChild(parentRow);
                 }
 
-                if (!items || items.length === 0) {
+                if (!data.items || data.items.length === 0) {
                     if (currentPath === '') emptyState.style.display = 'block';
                     return;
                 }
 
-                items.forEach(item => {
+                data.items.forEach(item => {
                     const row = document.createElement('tr');
                     let displayName = item.name.replace(currentPath, '');
                     if (item.isDir && displayName.endsWith('/')) displayName = displayName.slice(0, -1);
 
+                    // Thiết lập cột nút thao tác theo quyền
+                    let actionHtml = ``;
                     if (item.isDir) {
                         row.innerHTML = `
-                            <td>
-                                <div class="file-name-container" onclick="navigateToPath('${item.name}')">
-                                    ${getIcon(item.name, true)}
-                                    <span class="file-link" style="color: #eab308; font-weight:600;">${displayName}</span>
-                                </div>
-                            </td>
-                            <td class="file-size">--</td>
-                            <td class="file-date">--</td>
-                            <td style="text-align:center;">--</td>
+                            <td><div class="file-name-container" onclick="navigateToPath('${item.name}')">${getIcon(item.name, true)}<span class="file-link" style="color: #eab308; font-weight:600;">${displayName}</span></div></td>
+                            <td class="file-size">--</td><td class="file-date">--</td><td style="text-align:center;">--</td>
                         `;
                     } else {
-                        // Link download cần gửi kèm Token thông qua API của Worker để tránh rò rỉ link gốc
-                        const downloadUrl = `${WORKER_API_URL}/${encodeURIComponent(item.name)}`;
-                        row.innerHTML = `
-                            <td>
-                                <div class="file-name-container">
-                                    ${getIcon(item.name, false)}
-                                    <span class="file-link" onclick="downloadSecureFile('${item.name}', '${displayName}')">
-                                        ${displayName}
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="file-size">${item.size}</td>
-                            <td class="file-date">${item.date}</td>
-                            <td style="text-align: center;">
+                        const fileDownloadUrl = `${WORKER_API_URL}/${encodeURIComponent(item.name)}`;
+                        
+                        // Copy link tải bảo mật gián tiếp qua mã khóa
+                        actionHtml = `<button class="btn-action btn-copy" onclick="copyLinkToClipboard('${fileDownloadUrl}')" title="Sao chép liên kết tải xuống"><i class="fa-solid fa-copy"></i></button>`;
+                        
+                        if (userRole === 'admin') {
+                            actionHtml += `
                                 <button class="btn-action btn-rename" onclick="renameFile('${item.name}', '${displayName}')" title="Đổi tên"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button class="btn-action btn-delete" onclick="deleteFile('${item.name}')" title="Xóa tập tin"><i class="fa-solid fa-trash"></i></button>
-                            </td>
+                                <button class="btn-action btn-delete" onclick="deleteFile('${item.name}')" title="Xóa tệp tệp"><i class="fa-solid fa-trash"></i></button>
+                            `;
+                        }
+
+                        row.innerHTML = `
+                            <td><div class="file-name-container">${getIcon(item.name, false)}<span class="file-link" onclick="downloadSecureFile('${item.name}', '${displayName}')">${displayName}</span></div></td>
+                            <td class="file-size">${item.size}</td><td class="file-date">${item.date}</td>
+                            <td style="text-align: center;">${actionHtml}</td>
                         `;
                     }
                     tbody.appendChild(row);
@@ -258,7 +291,6 @@
 
             } catch (error) {
                 tbody.innerHTML = '';
-                document.getElementById('emptyStateText').innerHTML = `<span style="color: var(--danger);">Lỗi kết nối bảo mật!</span>`;
                 emptyState.style.display = 'block';
             }
         }
@@ -270,145 +302,115 @@
             refreshDirectory();
         }
 
-        // TẢI XUỐNG FILE BẢO MẬT (CÓ GỬI KÈM TOKEN ĐĂNG NHẬP Ở HEADER)
+        // TÍNH NĂNG MỚI: TẠO THƯ MỤC TRỰC TIẾP
+        async function createNewFolder() {
+            const token = getAuthToken();
+            const folderName = prompt("Nhập tên thư mục mới muốn tạo:");
+            if (!folderName || folderName.trim() === "") return;
+
+            // Quy chuẩn đường dẫn thư mục kết thúc bằng dấu gạch chéo /
+            const folderPath = currentPath + folderName.trim() + "/";
+
+            try {
+                let response = await fetch(`${WORKER_API_URL}/create-folder`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': token },
+                    body: JSON.stringify({ folderPath: folderPath })
+                });
+                if (response.ok) {
+                    alert("Tạo thư mục thành công!");
+                    refreshDirectory();
+                } else {
+                    alert("Lỗi không thể tạo thư mục.");
+                }
+            } catch (e) { alert("Lỗi kết nối."); }
+        }
+
+        // TÍNH NĂNG MỚI: SAO CHÉP ĐƯỜNG DẪN DOWNLOAD (COPY LINK)
+        function copyLinkToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Đã sao chép liên kết tải xuống an toàn vào bộ nhớ tạm!");
+            }).catch(err => {
+                // Phương án dự phòng cho trình duyệt cũ
+                const el = document.createElement('textarea');
+                el.value = text; document.body.appendChild(el);
+                el.select(); document.execCommand('copy');
+                document.body.removeChild(el);
+                alert("Đã sao chép liên kết tải xuống!");
+            });
+        }
+
         async function downloadSecureFile(fileKey, fileName) {
             const token = getAuthToken();
             try {
-                let response = await fetch(`${WORKER_API_URL}/${encodeURIComponent(fileKey)}`, {
-                    headers: { 'Authorization': token }
-                });
-                if (!response.ok) { alert("Không thể tải tập tin."); return; }
-                
+                let response = await fetch(`${WORKER_API_URL}/${encodeURIComponent(fileKey)}`, { headers: { 'Authorization': token } });
+                if (!response.ok) { alert("Tải xuống thất bại."); return; }
                 const blob = await response.blob();
                 const dlUrl = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = dlUrl;
-                a.download = fileName;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-            } catch (e) {
-                alert("Lỗi tải xuống: " + e.message);
-            }
+                const a = document.createElement('a'); a.href = dlUrl; a.download = fileName;
+                document.body.appendChild(a); a.click(); a.remove();
+            } catch (e) { alert("Lỗi tải: " + e.message); }
         }
 
-        // THAO TÁC XÓA FILE
         async function deleteFile(fileKey) {
             const token = getAuthToken();
-            const fileNameOnly = fileKey.split('/').pop();
-            if (!confirm(`Anh có chắc chắn muốn xóa tập tin "${fileNameOnly}" này khỏi hệ thống R2 không?`)) return;
-
+            if (!confirm(`Xóa tập tin này?`)) return;
             try {
-                let response = await fetch(`${WORKER_API_URL}/${encodeURIComponent(fileKey)}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': token }
-                });
-                
-                if (response.ok) {
-                    alert("Đã xóa tập tin thành công!");
-                    refreshDirectory();
-                } else {
-                    let err = await response.json();
-                    alert("Lỗi: " + (err.error || "Không thể xóa"));
-                }
-            } catch (error) {
-                alert("Lỗi kết nối mạng: " + error.message);
-            }
+                let response = await fetch(`${WORKER_API_URL}/${encodeURIComponent(fileKey)}`, { method: 'DELETE', headers: { 'Authorization': token } });
+                if (response.ok) { alert("Đã xóa!"); refreshDirectory(); } else { alert("Lỗi xóa."); }
+            } catch (e) { alert("Lỗi kết nối."); }
         }
 
-        // THAO TÁC ĐỔI TÊN FILE
         async function renameFile(oldKey, currentName) {
             const token = getAuthToken();
-            const newName = prompt("Mời anh nhập tên mới cho tập tin này:", currentName);
+            const newName = prompt("Nhập tên mới:", currentName);
             if (!newName || newName.trim() === "" || newName === currentName) return;
-
             const newKey = currentPath + newName.trim();
-
             try {
                 let response = await fetch(`${WORKER_API_URL}/rename`, {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': token
-                    },
-                    body: JSON.stringify({ oldKey: oldKey, newKey: newKey })
+                    headers: { 'Content-Type': 'application/json', 'Authorization': token },
+                    body: JSON.stringify({ oldKey, newKey })
                 });
-
-                if (response.ok) {
-                    alert("Đổi tên tập tin thành công!");
-                    refreshDirectory();
-                } else {
-                    let err = await response.json();
-                    alert("Lỗi: " + (err.error || "Không thể đổi tên"));
-                }
-            } catch (error) {
-                alert("Lỗi kết nối: " + error.message);
-            }
+                if (response.ok) { alert("Đã đổi tên!"); refreshDirectory(); } else { alert("Thao tác thất bại."); }
+            } catch (e) { alert("Lỗi."); }
         }
 
-        // TẢI FILE LÊN ĐÚNG VỊ TRÍ THƯ MỤC THÀNH CÔNG VỚI TOKEN
         async function uploadLargeFile(files) {
             if (files.length === 0) return;
-            const token = getAuthToken();
-            const file = files[0];
+            const token = getAuthToken(); const file = files[0];
             const uploadBtn = document.getElementById('uploadBtn');
             const progressContainer = document.getElementById('progressContainer');
             const progressBar = document.getElementById('progressBar');
             const fullTargetName = currentPath + file.name;
 
             const originalText = uploadBtn.innerHTML;
-            uploadBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Khởi tạo...`;
-            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Chờ...`; uploadBtn.disabled = true;
 
             try {
                 let tokenResponse = await fetch(`${WORKER_API_URL}/get-upload-url`, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': token
-                    },
+                    method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': token },
                     body: JSON.stringify({ fileName: fullTargetName })
                 });
-
-                if (!tokenResponse.ok) throw new Error("Worker từ chối");
+                if (!tokenResponse.ok) throw new Error("Từ chối");
                 let tokenResult = await tokenResponse.json();
-                const uploadUrl = tokenResult.uploadUrl;
 
                 progressContainer.style.display = 'block';
-                uploadBtn.innerHTML = `<i class="fa-solid fa-arrow-up-from-bracket"></i> Đang truyền...`;
-
                 const xhr = new XMLHttpRequest();
-                xhr.open('PUT', uploadUrl, true);
+                xhr.open('PUT', tokenResult.uploadUrl, true);
                 xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
-
-                xhr.upload.onprogress = function(e) {
-                    if (e.lengthComputable) {
-                        const percentComplete = (e.loaded / e.total) * 100;
-                        progressBar.style.width = percentComplete + '%';
-                    }
-                };
-
-                xhr.onload = function() {
-                    if (xhr.status === 200 || xhr.status === 201) {
-                        alert(`Tải lên thành công!`);
-                        refreshDirectory();
-                    } else {
-                        alert('Lỗi lưu trữ!');
-                    }
+                xhr.upload.onprogress = e => { if (e.lengthComputable) progressBar.style.width = (e.loaded / e.total) * 100 + '%'; };
+                xhr.onload = () => {
+                    if (xhr.status === 200 || xhr.status === 201) { alert(`Tải lên thành công!`); refreshDirectory(); }
+                    else { alert('Lỗi tải.'); }
                     resetUploadStatus(uploadBtn, originalText, progressContainer, progressBar);
                 };
-
                 xhr.send(file);
-            } catch (error) {
-                alert("Lỗi: " + error.message);
-                resetUploadStatus(uploadBtn, originalText, progressContainer, progressBar);
-            }
+            } catch (e) { alert("Lỗi: " + e.message); resetUploadStatus(uploadBtn, originalText, progressContainer, progressBar); }
         }
 
         function resetUploadStatus(btn, text, container, bar) {
-            btn.innerHTML = text; btn.disabled = false;
-            container.style.display = 'none'; bar.style.width = '0%';
-            document.getElementById('fileChooser').value = '';
+            btn.innerHTML = text; btn.disabled = false; container.style.display = 'none'; bar.style.width = '0%'; document.getElementById('fileChooser').value = '';
         }
 
         window.onload = refreshDirectory;
