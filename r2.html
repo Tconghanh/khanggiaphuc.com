@@ -143,7 +143,7 @@
     </div>
 
     <script>
-        const WORKER_API_URL = 'https://r2.khanggiaphuc.com'; 
+        const WORKER_API_URL = 'https://db.khanggiaphuc.com'; 
         let currentPath = ''; 
         let userRole = 'user'; // Quyền mặc định
 
@@ -268,7 +268,7 @@
                             <td class="file-size">--</td><td class="file-date">--</td><td style="text-align:center;">--</td>
                         `;
                     } else {
-                        const fileDownloadUrl = `${WORKER_API_URL}/${encodeURIComponent(item.name)}`;
+                        const fileDownloadUrl = `${WORKER_API_URL}/${item.name.split('/').map(part => encodeURIComponent(part)).join('/')}`;
                         
                         // Copy link tải bảo mật gián tiếp qua mã khóa
                         actionHtml = `<button class="btn-action btn-copy" onclick="copyLinkToClipboard('${fileDownloadUrl}')" title="Sao chép liên kết tải xuống"><i class="fa-solid fa-copy"></i></button>`;
