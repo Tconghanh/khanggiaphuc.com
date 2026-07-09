@@ -398,6 +398,7 @@
                 progressContainer.style.display = 'block';
                 const xhr = new XMLHttpRequest();
                 xhr.open('PUT', tokenResult.uploadUrl, true);
+                xhr.setRequestHeader('X-Amz-Content-Sha256', 'UNSIGNED-PAYLOAD');
                 xhr.upload.onprogress = e => { if (e.lengthComputable) progressBar.style.width = (e.loaded / e.total) * 100 + '%'; };
                 xhr.onload = () => {
                     if (xhr.status === 200 || xhr.status === 201) { alert(`Tải lên thành công!`); refreshDirectory(); }
