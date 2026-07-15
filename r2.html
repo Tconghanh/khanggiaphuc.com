@@ -263,7 +263,7 @@
                     } else {
                         // SỬA LỖI COPY LINK: Giữ nguyên cấu trúc phân tách gạch chéo / của thư mục con, không bị %2F làm hỏng
                         const pathParts = item.name.split('/').map(part => encodeURIComponent(part));
-                        const fileDownloadUrl = `${WORKER_API_URL}/${pathParts.join('/')}`;
+                        const fileDownloadUrl = `https://r2.khanggiaphuc.com/${pathParts.join('/')}`;
                         
                         actionHtml = `<button class="btn-action btn-copy" onclick="copyLinkToClipboard('${fileDownloadUrl}')" title="Sao chép liên kết tải xuống"><i class="fa-solid fa-copy"></i></button>`;
                         
