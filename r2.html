@@ -45,7 +45,35 @@
         
         .server-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; background: rgba(34, 197, 94, 0.1); color: var(--success); padding: 0.35rem 0.75rem; border-radius: 9999px; border: 1px solid var(--border-color); }
         .container { flex: 1; max-width: 1400px; width: 100%; margin: 2rem auto; padding: 0 1.5rem; }
-        .explorer-panel { background: var(--panel-bg); backdrop-filter: blur(16px); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); }
+        
+        /* Vùng kéo thả & Bảng điều khiển */
+        .explorer-panel { 
+            background: var(--panel-bg); 
+            backdrop-filter: blur(16px); 
+            border: 2px solid var(--border-color); 
+            border-radius: 16px; 
+            overflow: hidden; 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+            position: relative;
+        }
+        
+        /* Trạng thái khi kéo file rê vào panel */
+        .explorer-panel.drag-over {
+            border-color: var(--primary) !important;
+            background-color: rgba(37, 99, 235, 0.15) !important;
+        }
+
+        /* Overlay hiển thị chữ kéo thả */
+        .drag-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 10; gap: 1rem; color: var(--primary); font-size: 1.5rem; font-weight: 600;
+            pointer-events: none; /* Cho phép sự kiện kéo thả xuyên qua lớp phủ */
+        }
+        .explorer-panel.drag-over .drag-overlay { display: flex; }
+
         .toolbar { padding: 1.25rem; background: rgba(15, 23, 42, 0.2); border-bottom: 1px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; }
         
         .path-navigation { display: flex; align-items: center; gap: 0.5rem; background: rgba(0, 0, 0, 0.2); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); flex: 1; min-width: 250px; overflow-x: auto; }
@@ -67,8 +95,28 @@
 
         .admin-control { display: none; }
 
-        .progress-container { width: 100%; background: rgba(0, 0, 0, 0.3); height: 6px; display: none; position: relative; }
-        .progress-bar { height: 100%; background: linear-gradient(to right, #38bdf8, #22c55e); width: 0%; transition: width 0.1s ease; }
+        /* Vùng hiển thị tiến trình tải lên của nhiều file song song */
+        .upload-queue-container {
+            background: rgba(15, 23, 42, 0.4);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .queue-item {
+            display: flex; flex-direction: column; gap: 0.35rem;
+            background: rgba(255, 255, 255, 0.03); padding: 0.75rem; border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .queue-item-info { display: flex; justify-content: space-between; font-size: 0.85rem; }
+        .queue-item-name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
+        .queue-item-status { font-weight: 600; font-size: 0.8rem; }
+        .queue-item-progress-bg { width: 100%; background: rgba(0, 0, 0, 0.3); height: 6px; border-radius: 3px; overflow: hidden; }
+        .queue-item-progress-bar { height: 100%; background: linear-gradient(to right, #38bdf8, var(--success)); width: 0%; transition: width 0.1s ease; }
+
         .file-table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th { background: rgba(15, 23, 42, 0.1); padding: 1rem 1.25rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-weight: 600; }
@@ -102,21 +150,31 @@
     </header>
 
     <div class="container">
-        <div class="explorer-panel">
+        <!-- Explorer Panel tích hợp kéo thả -->
+        <div class="explorer-panel" id="dropZone">
+            <!-- Lớp phủ khi kéo rê tệp vào vùng dropZone -->
+            <div class="drag-overlay">
+                <i class="fa-solid fa-cloud-arrow-up fa-2xl"></i>
+                <span>Thả các tập tin vào đây để tự động tải lên!</span>
+            </div>
+
             <div class="toolbar">
                 <div class="path-navigation" id="pathNav"></div>
                 <div class="actions">
                     <button class="btn admin-control" onclick="createNewFolder()"><i class="fa-solid fa-folder-plus" style="color:#eab308;"></i> Tạo thư mục</button>
                     <button class="btn" onclick="logoutSystem()"><i class="fa-solid fa-key"></i> Đăng xuất</button>
                     <button class="btn" onclick="refreshDirectory()"><i class="fa-solid fa-arrow-rotate-right"></i> Làm mới</button>
-                    <input type="file" id="fileChooser" style="display: none;" onchange="uploadLargeFile(this.files)">
+                    
+                    <!-- Sửa Input thành MULTIPLE để cho phép chọn cùng lúc nhiều file -->
+                    <input type="file" id="fileChooser" style="display: none;" multiple onchange="uploadMultipleFiles(this.files)">
                     <button class="btn btn-primary admin-control" id="uploadBtn" onclick="document.getElementById('fileChooser').click()">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Tải lên tại đây
                     </button>
                 </div>
             </div>
 
-            <div class="progress-container" id="progressContainer"><div class="progress-bar" id="progressBar"></div></div>
+            <!-- Hàng đợi hiển thị nhiều thanh tiến trình cùng lúc -->
+            <div class="upload-queue-container" id="uploadQueue"></div>
 
             <div class="file-table-container">
                 <table>
@@ -140,7 +198,7 @@
     </div>
 
     <script>
-        const WORKER_API_URL = 'https://db.khanggiaphuc.com'; // Sử dụng Custom Domain của Worker
+        const WORKER_API_URL = 'https://db.khanggiaphuc.com'; 
         let currentPath = ''; 
         let userRole = 'user'; 
 
@@ -148,6 +206,7 @@
             const savedTheme = localStorage.getItem('r2_theme') || 'dark';
             document.getElementById('themeSelect').value = savedTheme;
             changeTheme(savedTheme);
+            setupDragAndDrop(); // Kích hoạt bộ bắt sự kiện kéo thả
         });
 
         function changeTheme(themeName) {
@@ -261,7 +320,7 @@
                             <td class="file-size">--</td><td class="file-date">--</td><td style="text-align:center;">--</td>
                         `;
                     } else {
-                        // SỬA LỖI COPY LINK: Giữ nguyên cấu trúc phân tách gạch chéo / của thư mục con, không bị %2F làm hỏng
+                        // Link download trỏ trực tiếp sang tên miền R2 r2.khanggiaphuc.com
                         const pathParts = item.name.split('/').map(part => encodeURIComponent(part));
                         const fileDownloadUrl = `https://r2.khanggiaphuc.com/${pathParts.join('/')}`;
                         
@@ -320,7 +379,7 @@
 
         function copyLinkToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert("Đã sao chép liên kết tải xuống an toàn!");
+                alert("Đã sao chép liên kết tải xuống!");
             }).catch(err => {
                 const el = document.createElement('textarea');
                 el.value = text; document.body.appendChild(el);
@@ -366,46 +425,141 @@
             } catch (e) { alert("Lỗi kết nối."); }
         }
 
-        async function uploadLargeFile(files) {
-            if (files.length === 0) return;
-            const token = getAuthToken(); 
-            const file = files[0];
-            const uploadBtn = document.getElementById('uploadBtn');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressBar = document.getElementById('progressBar');
-            const fullTargetName = currentPath + file.name;
+        // =====================================================================
+        // CHỨC NĂNG MỚI: KÉO THẢ & TẢI ĐỒNG THỜI NHIỀU TẬP TIN (MULTI-UPLOAD)
+        // =====================================================================
+        function setupDragAndDrop() {
+            const dropZone = document.getElementById('dropZone');
 
-            const originalText = uploadBtn.innerHTML;
-            uploadBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Khởi tạo...`; uploadBtn.disabled = true;
+            // Khi rê file vào vùng bảng điều khiển
+            window.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+                if (userRole === 'admin') dropZone.classList.add('drag-over');
+            });
 
-            try {
-                let tokenResponse = await fetch(`${WORKER_API_URL}/get-upload-url`, {
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json', 'Authorization': token },
-                    body: JSON.stringify({ fileName: fullTargetName })
-                });
-                if (!tokenResponse.ok) throw new Error("Từ chối");
-                let tokenResult = await tokenResponse.json();
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
 
-                progressContainer.style.display = 'block';
-                const xhr = new XMLHttpRequest();
-                xhr.open('PUT', tokenResult.uploadUrl, true);
-                
-                // ĐỒNG BỘ CHỮ KÝ AWS V4: Khai báo cứng payload rỗng để R2 chấp nhận truyền thư mục con
-                xhr.setRequestHeader('X-Amz-Content-Sha256', 'UNSIGNED-PAYLOAD');
+            // Khi rê file ra ngoài vùng bảng điều khiển
+            dropZone.addEventListener('dragleave', (e) => {
+                // Chỉ xóa class nếu chuột thực sự di chuyển ra ngoài biên của dropZone
+                const rect = dropZone.getBoundingClientRect();
+                if (e.clientX < rect.left || e.clientX >= rect.right || e.clientY < rect.top || e.clientY >= rect.bottom) {
+                    dropZone.classList.remove('drag-over');
+                }
+            });
 
-                xhr.upload.onprogress = e => { if (e.lengthComputable) progressBar.style.width = (e.loaded / e.total) * 100 + '%'; };
-                xhr.onload = () => {
-                    if (xhr.status === 200 || xhr.status === 201) { alert(`Tải lên thành công!`); refreshDirectory(); }
-                    else { alert('Lỗi tải dữ liệu lên R2.'); }
-                    resetUploadStatus(uploadBtn, originalText, progressContainer, progressBar);
-                };
-                xhr.send(file);
-            } catch (e) { alert("Lỗi: " + e.message); resetUploadStatus(uploadBtn, originalText, progressContainer, progressBar); }
+            // Khi thả file ra
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                if (userRole !== 'admin') {
+                    alert("Quyền Khách (Chỉ đọc) không thể tải tập tin lên!");
+                    return;
+                }
+                const files = e.dataTransfer.files;
+                if (files && files.length > 0) {
+                    uploadMultipleFiles(files);
+                }
+            });
         }
 
-        function resetUploadStatus(btn, text, container, bar) {
-            btn.innerHTML = text; btn.disabled = false; container.style.display = 'none'; bar.style.width = '0%'; document.getElementById('fileChooser').value = '';
+        // HÀM XỬ LÝ CHẠY PARALLEL NHIỀU FILE CÙNG LÚC
+        async function uploadMultipleFiles(files) {
+            if (files.length === 0) return;
+            const token = getAuthToken();
+            const uploadQueue = document.getElementById('uploadQueue');
+            
+            // Hiển thị khung xếp hàng tiến trình
+            uploadQueue.style.style = 'none';
+            uploadQueue.style.display = 'flex';
+
+            // Tạo danh sách chạy bất đồng bộ cho tất cả các file
+            const uploadPromises = Array.from(files).map((file, index) => {
+                return new Promise((resolve) => {
+                    const itemId = 'upload_item_' + Date.now() + '_' + index;
+                    const fullTargetName = currentPath + file.name;
+
+                    // Vẽ một khối tiến trình nhỏ cho file này
+                    const queueItem = document.createElement('div');
+                    queueItem.className = 'queue-item';
+                    queueItem.id = itemId;
+                    queueItem.innerHTML = `
+                        <div class="queue-item-info">
+                            <span class="queue-item-name"><i class="fa-solid fa-file-arrow-up"></i> &nbsp;${file.name}</span>
+                            <span class="queue-item-status" id="${itemId}_pct">Khởi tạo...</span>
+                        </div>
+                        <div class="queue-item-progress-bg">
+                            <div class="queue-item-progress-bar" id="${itemId}_bar"></div>
+                        </div>
+                    `;
+                    uploadQueue.appendChild(queueItem);
+
+                    // Bắt đầu luồng kết nối S3 thông qua Worker của từng file
+                    fetch(`${WORKER_API_URL}/get-upload-url`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': token },
+                        body: JSON.stringify({ fileName: fullTargetName })
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Worker từ chối");
+                        return response.json();
+                    })
+                    .then(result => {
+                        const uploadUrl = result.uploadUrl;
+                        const xhr = new XMLHttpRequest();
+                        
+                        xhr.open('PUT', uploadUrl, true);
+                        xhr.setRequestHeader('X-Amz-Content-Sha256', 'UNSIGNED-PAYLOAD'); // Đồng bộ chữ ký v4 cho thư mục con
+
+                        // Cập nhật thanh tiến trình nhỏ của riêng file này
+                        xhr.upload.onprogress = (e) => {
+                            if (e.lengthComputable) {
+                                const percent = Math.round((e.loaded / e.total) * 100);
+                                document.getElementById(`${itemId}_bar`).style.width = percent + '%';
+                                document.getElementById(`${itemId}_pct`).innerText = percent + '%';
+                            }
+                        };
+
+                        xhr.onload = () => {
+                            if (xhr.status === 200 || xhr.status === 201) {
+                                document.getElementById(`${itemId}_pct`).innerHTML = '<span style="color:var(--success);"><i class="fa-solid fa-circle-check"></i> Xong</span>';
+                                setTimeout(() => queueItem.remove(), 2500); // Tự biến mất sau 2.5s khi thành công để gọn giao diện
+                                resolve(true);
+                            } else {
+                                document.getElementById(`${itemId}_pct`).innerHTML = '<span style="color:var(--danger);">Thất bại</span>';
+                                resolve(false);
+                            }
+                        };
+
+                        xhr.onerror = () => {
+                            document.getElementById(`${itemId}_pct`).innerHTML = '<span style="color:var(--danger);">Lỗi mạng</span>';
+                            resolve(false);
+                        };
+
+                        xhr.send(file);
+                    })
+                    .catch(err => {
+                        document.getElementById(`${itemId}_pct`).innerHTML = `<span style="color:var(--danger);">${err.message}</span>`;
+                        resolve(false);
+                    });
+                });
+            });
+
+            // Đợi toàn bộ danh sách tệp tin hoàn tất quá trình truyền tải
+            await Promise.all(uploadPromises);
+            
+            // Tự động đóng khung hàng đợi sau khi hoàn thành 4 giây
+            setTimeout(() => {
+                if (uploadQueue.children.length === 0) {
+                    uploadQueue.style.display = 'none';
+                }
+            }, 4000);
+
+            // Làm mới lại bảng thư mục để hiện các file mới
+            refreshDirectory();
+            document.getElementById('fileChooser').value = ''; // Reset input để cho phép chọn lại tệp vừa tải
         }
 
         window.onload = refreshDirectory;
