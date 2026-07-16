@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khang Gia Phúc - Hệ Thống Quản Trị & Đồng Bộ R2</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- AWS SDK for Browser (S3 Compatibility for R2) -->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1400.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800">
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-slate-900 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-600 p-2 rounded-lg text-white">
+                        <i class="fa-solid fa-cloud-bolt text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg tracking-wide">KHANG GIA PHÚC</span>
+                        <span class="text-xs block text-slate-400">Serverless Control Center</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm bg-slate-800 px-3 py-1.5 rounded-full text-green-400 border border-green-500/30 flex items-center gap-1.5">
+                        <span class="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
+                        Hệ thống hoạt động
+                    </span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-slate-900">Bảng Điều Khiển Quản Trị</h1>
+            <p class="text-slate-500 text-sm mt-1">Đồng bộ tự động dữ liệu từ Google Sheets sang Cloudflare R2 dưới dạng file JSON tĩnh và quản lý tệp tin.</p>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Column: Settings & Sync -->
+            <div class="lg:col-span-1 space-y-6">
+                
+                <!-- Google Sheets Config -->
+                <div class="glass-panel p-6 rounded-2xl shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="font-semibold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-table text-green-600"></i> Google Sheets
+                        </h2>
+                        <span class="text-xs text-slate-400">Read-only API</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Spreadsheet ID</label>
+                            <input type="text" id="sheetId" value="1PLstalfd5KuPjWHgiyQwn47I1EbfuETC" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-mono" placeholder="Nhập Google Sheet ID">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Google API Key</label>
+                            <input type="password" id="apiKey" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" placeholder="Nhập Google API Key của bạn">
+                            <span class="text-[11px] text-slate-400 mt-1 block leading-relaxed">
+                                <i class="fa-solid fa-circle-info"></i> Hãy chắc chắn Google Sheet đã được chia sẻ công khai "Bất kỳ ai có liên kết đều xem được".
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cloudflare R2 Credentials -->
+                <div class="glass-panel p-6 rounded-2xl shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="font-semibold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-hard-drive text-blue-600"></i> Cấu hình R2 Storage
+                        </h2>
+                        <span class="text-xs text-slate-400">S3 Compliant API</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">R2 Endpoint / Account ID</label>
+                            <input type="text" id="r2AccountId" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-mono" placeholder="Ví dụ: a1b2c3d4e5f6g7h8...">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">R2 Access Key ID</label>
+                            <input type="text" id="r2AccessKeyId" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-mono" placeholder="Nhập Access Key ID">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">R2 Secret Access Key</label>
+                            <input type="password" id="r2SecretAccessKey" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-mono" placeholder="Nhập Secret Access Key">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Tên Bucket R2</label>
+                            <input type="text" id="r2BucketName" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" placeholder="Nhập tên bucket (ví dụ: khanggiaphuc)">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Domain liên kết R2</label>
+                            <input type="text" id="r2CustomDomain" value="https://r2.khanggiaphuc.com" class="w-full px-3.5 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" placeholder="https://r2.khanggiaphuc.com">
+                        </div>
+                        
+                        <button onclick="saveCredentials()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs rounded-lg transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu cấu hình trình duyệt
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sync Action Box -->
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-2xl shadow-md text-white text-center">
+                    <i class="fa-solid fa-rotate-double text-3xl mb-3 opacity-90"></i>
+                    <h3 class="font-bold text-lg mb-1">Đồng Bộ Toàn Diện</h3>
+                    <p class="text-xs text-blue-100 mb-5">Đọc tất cả các Tab từ Google Sheets, biên dịch cấu trúc JSON mẫu chuẩn và đẩy trực tiếp lên Cloudflare R2.</p>
+                    <button onclick="triggerSync()" id="btnSync" class="w-full py-3 bg-white hover:bg-slate-50 text-blue-700 font-bold text-sm rounded-xl transition-all shadow flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> BẮT ĐẦU ĐỒNG BỘ
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Right Column: R2 File Manager & Status Console -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Status Console -->
+                <div class="glass-panel p-6 rounded-2xl shadow-sm">
+                    <h2 class="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-terminal text-slate-700"></i> Trạng thái & Tiến trình hệ thống
+                    </h2>
+                    <div id="consoleLog" class="bg-slate-950 text-emerald-400 p-4 rounded-xl font-mono text-xs h-36 overflow-y-auto leading-relaxed border border-slate-800">
+                        [Hệ thống] Sẵn sàng hoạt động. Vui lòng điền API Key và bấm "BẮT ĐẦU ĐỒNG BỘ"...
+                    </div>
+                </div>
+
+                <!-- File Manager Header -->
+                <div class="glass-panel p-6 rounded-2xl shadow-sm">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h2 class="font-semibold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-folder-open text-amber-500"></i> Quản Lý File Cloudflare R2
+                            </h2>
+                            <p class="text-xs text-slate-400 mt-1">Duyệt, tải lên, xóa và sửa tên tệp tin của bạn trực tiếp tại R2 bucket.</p>
+                        </div>
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <input type="file" id="fileUpload" class="hidden" onchange="uploadFileToR2()">
+                            <button onclick="document.getElementById('fileUpload').click()" class="flex-1 sm:flex-initial px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-file-arrow-up"></i> Tải File Lên R2
+                            </button>
+                            <button onclick="loadR2Files()" class="p-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg transition-all" title="Làm mới danh sách">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- File Table -->
+                    <div class="overflow-x-auto border border-slate-100 rounded-xl">
+                        <table class="min-w-full divide-y divide-slate-100 text-sm">
+                            <thead class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
+                                <tr>
+                                    <th class="px-6 py-3.5 text-left">Tên tệp tin</th>
+                                    <th class="px-6 py-3.5 text-left">Ngày sửa đổi</th>
+                                    <th class="px-6 py-3.5 text-right">Dung lượng</th>
+                                    <th class="px-6 py-3.5 text-center">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="r2FileList" class="divide-y divide-slate-100 text-slate-700">
+                                <tr>
+                                    <td colspan="4" class="px-6 py-8 text-center text-slate-400">
+                                        <i class="fa-solid fa-spinner animate-spin text-2xl mb-2 text-slate-300 block"></i>
+                                        Vui lòng nhập cấu hình và bấm "Lưu cấu hình" để tải danh sách tệp tin R2.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function log(msg, type = 'info') {
+            const consoleLog = document.getElementById('consoleLog');
+            const color = type === 'success' ? '#34d399' : (type === 'error' ? '#f87171' : '#60a5fa');
+            const icon = type === 'success' ? '✔' : (type === 'error' ? '✘' : 'ℹ');
+            
+            consoleLog.innerHTML += `\n<span style="color: ${color}">[${icon} ${new Date().toLocaleTimeString()}] ${msg}</span>`;
+            consoleLog.scrollTop = consoleLog.scrollHeight;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const keys = ['sheetId', 'apiKey', 'r2AccountId', 'r2AccessKeyId', 'r2SecretAccessKey', 'r2BucketName', 'r2CustomDomain'];
+            keys.forEach(k => {
+                const val = localStorage.getItem(k);
+                if (val) document.getElementById(k).value = val;
+            });
+            if (localStorage.getItem('r2AccessKeyId')) {
+                loadR2Files();
+            }
+        });
+
+        function saveCredentials() {
+            const keys = ['sheetId', 'apiKey', 'r2AccountId', 'r2AccessKeyId', 'r2SecretAccessKey', 'r2BucketName', 'r2CustomDomain'];
+            keys.forEach(k => {
+                localStorage.setItem(k, document.getElementById(k).value);
+            });
+            log('Cấu hình đã lưu thành công vào trình duyệt!', 'success');
+            loadR2Files();
+        }
+
+        function getS3Client() {
+            const accountId = document.getElementById('r2AccountId').value.trim();
+            const accessKeyId = document.getElementById('r2AccessKeyId').value.trim();
+            const secretAccessKey = document.getElementById('r2SecretAccessKey').value.trim();
+
+            if (!accountId || !accessKeyId || !secretAccessKey) {
+                log('Lỗi: Cấu hình R2 bị thiếu thông tin xác thực!', 'error');
+                return null;
+            }
+
+            return new AWS.S3({
+                endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+                accessKeyId: accessKeyId,
+                secretAccessKey: secretAccessKey,
+                signatureVersion: 'v4',
+                region: 'auto'
+            });
+        }
+
+        function loadR2Files() {
+            const s3 = getS3Client();
+            if (!s3) return;
+
+            const bucketName = document.getElementById('r2BucketName').value.trim();
+            if (!bucketName) {
+                log('Vui lòng điền tên Bucket R2 để xem danh sách file.', 'info');
+                return;
+            }
+
+            const r2FileList = document.getElementById('r2FileList');
+            r2FileList.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400"><i class="fa-solid fa-spinner animate-spin mr-2"></i> Đang tải dữ liệu R2...</td></tr>`;
+
+            s3.listObjectsV2({ Bucket: bucketName }, (err, data) => {
+                if (err) {
+                    log(`Lỗi tải danh sách file: ${err.message}`, 'error');
+                    r2FileList.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-red-500 font-medium">Không kết nối được R2. Hãy kiểm tra cài đặt CORS hoặc thông tin Key.</td></tr>`;
+                    return;
+                }
+
+                if (!data.Contents || data.Contents.length === 0) {
+                    r2FileList.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400">Chưa có tệp tin nào trong bucket này.</td></tr>`;
+                    return;
+                }
+
+                const customDomain = document.getElementById('r2CustomDomain').value.trim() || `https://${bucketName}.${document.getElementById('r2AccountId').value}.r2.dev`;
+
+                r2FileList.innerHTML = '';
+                data.Contents.forEach(file => {
+                    const fileSizeKB = (file.Size / 1024).toFixed(2);
+                    const fileUrl = `${customDomain}/${file.Key}`;
+                    const row = `
+                        <tr class="hover:bg-slate-50/80 transition-all">
+                            <td class="px-6 py-4 font-medium text-slate-900 max-w-xs truncate">
+                                <a href="${fileUrl}" target="_blank" class="hover:text-blue-600 hover:underline flex items-center gap-2">
+                                    <i class="fa-solid ${getFileIcon(file.Key)} text-slate-400"></i> ${file.Key}
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 text-xs text-slate-500">${new Date(file.LastModified).toLocaleString('vi-VN')}</td>
+                            <td class="px-6 py-4 text-right text-slate-600 font-mono text-xs">${fileSizeKB} KB</td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <button onclick="deleteR2File('${file.Key}')" class="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded transition-all" title="Xoá file">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    r2FileList.innerHTML += row;
+                });
+                log(`Đã tải thành công danh sách ${data.Contents.length} tệp tin từ R2.`, 'success');
+            });
+        }
+
+        function getFileIcon(key) {
+            const ext = key.split('.').pop().toLowerCase();
+            if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) return 'fa-file-image text-emerald-500';
+            if (ext === 'json') return 'fa-file-code text-blue-500';
+            return 'fa-file';
+        }
+
+        function uploadFileToR2() {
+            const fileInput = document.getElementById('fileUpload');
+            if (fileInput.files.length === 0) return;
+
+            const file = fileInput.files[0];
+            const s3 = getS3Client();
+            const bucketName = document.getElementById('r2BucketName').value.trim();
+
+            if (!s3 || !bucketName) return;
+
+            log(`Đang tải lên: ${file.name} (${(file.size/1024).toFixed(2)} KB)...`);
+
+            s3.putObject({
+                Bucket: bucketName,
+                Key: file.name,
+                Body: file,
+                ContentType: file.type
+            }, (err, data) => {
+                if (err) {
+                    log(`Lỗi tải file lên: ${err.message}`, 'error');
+                } else {
+                    log(`Tải file "${file.name}" lên R2 thành công!`, 'success');
+                    loadR2Files();
+                }
+            });
+        }
+
+        function deleteR2File(key) {
+            if (!confirm(`Bạn có chắc chắn muốn xóa file "${key}" trên R2 không?`)) return;
+
+            const s3 = getS3Client();
+            const bucketName = document.getElementById('r2BucketName').value.trim();
+            if (!s3 || !bucketName) return;
+
+            log(`Đang xoá tệp tin "${key}" trên R2...`);
+
+            s3.deleteObject({
+                Bucket: bucketName,
+                Key: key
+            }, (err, data) => {
+                if (err) {
+                    log(`Lỗi khi xoá: ${err.message}`, 'error');
+                } else {
+                    log(`Đã xoá tệp tin "${key}" thành công!`, 'success');
+                    loadR2Files();
+                }
+            });
+        }
+
+        async function triggerSync() {
+            const sheetId = document.getElementById('sheetId').value.trim();
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const s3 = getS3Client();
+            const bucketName = document.getElementById('r2BucketName').value.trim();
+
+            if (!sheetId || !apiKey) {
+                log('Lỗi: Cần nhập đầy đủ Spreadsheet ID và Google API Key!', 'error');
+                alert('Vui lòng điền đủ Spreadsheet ID và API Key để đọc dữ liệu.');
+                return;
+            }
+
+            if (!s3 || !bucketName) {
+                alert('Vui lòng cấu hình chuẩn thông tin R2 để tiến hành đồng bộ.');
+                return;
+            }
+
+            const btnSync = document.getElementById('btnSync');
+            btnSync.disabled = true;
+            btnSync.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> ĐANG XỬ LÝ...`;
+
+            try {
+                log('Bắt đầu quy trình biên dịch dữ liệu từ Google Sheet...');
+                
+                const tabs = [
+                    { name: 'Themes (Giao diện)', key: 'themes' },
+                    { name: 'Menu (Thanh điều hướng)', key: 'menu' },
+                    { name: 'Pages (Trang con tĩnh)', key: 'pages' },
+                    { name: 'Products (Sản phẩm)', key: 'products' },
+                    { name: 'Posts (Bài viết)', key: 'posts' },
+                    { name: 'Projects (Dự án)', key: 'projects' }
+                ];
+
+                let finalDatabase = {};
+
+                for (const tab of tabs) {
+                    log(`Đang kéo dữ liệu từ Tab: [${tab.name}]...`);
+                    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(tab.name)}?key=${apiKey}`;
+                    
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Không thể kết nối đến tab "${tab.name}". Hãy kiểm tra lại tên Tab.`);
+                    }
+                    
+                    const data = await response.json();
+                    if (!data.values || data.values.length === 0) {
+                        finalDatabase[tab.key] = [];
+                        log(`Cảnh báo: Tab "${tab.name}" trống hoặc không có dữ liệu.`, 'info');
+                        continue;
+                    }
+
+                    const headers = data.values[0];
+                    const rows = data.values.slice(1);
+                    
+                    const formattedRows = rows.map(row => {
+                        let item = {};
+                        headers.forEach((header, index) => {
+                            item[header] = row[index] !== undefined ? row[index] : "";
+                        });
+                        return item;
+                    });
+
+                    finalDatabase[tab.key] = formattedRows;
+                    log(`Đồng bộ thành công ${formattedRows.length} dòng dữ liệu từ Tab [${tab.name}].`, 'success');
+                }
+
+                finalDatabase["meta"] = {
+                    last_updated: new Date().toISOString(),
+                    engine: "Khang Gia Phúc Jamstack Sync",
+                    status: "Active"
+                };
+
+                const jsonContent = JSON.stringify(finalDatabase, null, 2);
+                log('Biên dịch file dữ liệu "data.json" thành công!', 'success');
+
+                log('Đang thực hiện tải file "data.json" trực tiếp lên Cloudflare R2...');
+                
+                s3.putObject({
+                    Bucket: bucketName,
+                    Key: 'data.json',
+                    Body: jsonContent,
+                    ContentType: 'application/json',
+                    CacheControl: 'max-age=10' // Cache ngắn 10 giây tại các edge để cập nhật nhanh nhất
+                }, (err, data) => {
+                    if (err) {
+                        log(`Lỗi khi upload data.json lên R2: ${err.message}`, 'error');
+                        alert('Lỗi đồng bộ lên R2. Xem chi tiết trong Console log.');
+                    } else {
+                        log('ĐỒNG BỘ THÀNH CÔNG! File "data.json" hiện đã hoạt động trên R2.', 'success');
+                        alert('Chúc mừng! Hệ thống của bạn đã đồng bộ dữ liệu Google Sheet lên R2 thành công.');
+                        loadR2Files();
+                    }
+                    btnSync.disabled = false;
+                    btnSync.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> BẮT ĐẦU ĐỒNG BỘ`;
+                });
+
+            } catch (error) {
+                log(`Lỗi trong quá trình đồng bộ: ${error.message}`, 'error');
+                alert('Có lỗi xảy ra trong quá trình kết nối Google Sheet API.');
+                btnSync.disabled = false;
+                btnSync.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> BẮT ĐẦU ĐỒNG BỘ`;
+            }
+        }
+    </script>
+</body>
+</html>
