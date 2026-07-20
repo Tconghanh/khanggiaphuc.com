@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* ĐỊNH NGHĨA CÁC BỘ THEME GIAO DIỆN */
         :root {
             --primary: #2563eb; --primary-hover: #1d4ed8;
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -37,8 +36,17 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background: var(--bg-gradient); min-height: 100vh; color: var(--text-main); display: flex; flex-direction: column; transition: all 0.3s ease; }
         header { background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .brand { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 700; }
         
+        /* Nút về trang chủ thiết kế nổi bật */
+        .btn-home {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.08); color: var(--text-main);
+            border: 1px solid var(--border-color); padding: 0.5rem 1rem;
+            border-radius: 8px; text-decoration: none; font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-home:hover { background: var(--primary); border-color: var(--primary); transform: translateY(-1px); }
+
         .header-right { display: flex; align-items: center; gap: 1rem; }
         .theme-select { background: rgba(0, 0, 0, 0.2); color: var(--text-main); border: 1px solid var(--border-color); padding: 0.35rem 0.75rem; border-radius: 6px; outline: none; font-size: 0.85rem; cursor: pointer; }
         .theme-select option { background: #0f172a; color: #fff; }
@@ -46,36 +54,22 @@
         .server-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; background: rgba(34, 197, 94, 0.1); color: var(--success); padding: 0.35rem 0.75rem; border-radius: 9999px; border: 1px solid var(--border-color); }
         .container { flex: 1; max-width: 1400px; width: 100%; margin: 2rem auto; padding: 0 1.5rem; }
         
-        /* Vùng kéo thả & Bảng điều khiển */
         .explorer-panel { 
-            background: var(--panel-bg); 
-            backdrop-filter: blur(16px); 
-            border: 2px solid var(--border-color); 
-            border-radius: 16px; 
-            overflow: hidden; 
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
-            transition: border-color 0.2s ease, background-color 0.2s ease;
-            position: relative;
+            background: var(--panel-bg); backdrop-filter: blur(16px); 
+            border: 2px solid var(--border-color); border-radius: 16px; 
+            overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); 
+            transition: border-color 0.2s ease, background-color 0.2s ease; position: relative;
         }
-        
-        /* Trạng thái khi kéo file rê vào panel */
-        .explorer-panel.drag-over {
-            border-color: var(--primary) !important;
-            background-color: rgba(37, 99, 235, 0.15) !important;
-        }
-
-        /* Overlay hiển thị chữ kéo thả */
+        .explorer-panel.drag-over { border-color: var(--primary) !important; background-color: rgba(37, 99, 235, 0.15) !important; }
         .drag-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.85);
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 10; gap: 1rem; color: var(--primary); font-size: 1.5rem; font-weight: 600;
-            pointer-events: none; /* Cho phép sự kiện kéo thả xuyên qua lớp phủ */
+            background: rgba(15, 23, 42, 0.85); display: none; flex-direction: column; 
+            justify-content: center; align-items: center; z-index: 10; gap: 1rem; 
+            color: var(--primary); font-size: 1.5rem; font-weight: 600; pointer-events: none;
         }
         .explorer-panel.drag-over .drag-overlay { display: flex; }
 
         .toolbar { padding: 1.25rem; background: rgba(15, 23, 42, 0.2); border-bottom: 1px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; }
-        
         .path-navigation { display: flex; align-items: center; gap: 0.5rem; background: rgba(0, 0, 0, 0.2); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); flex: 1; min-width: 250px; overflow-x: auto; }
         .path-item { color: var(--text-muted); cursor: pointer; transition: color 0.2s; white-space: nowrap; }
         .path-item:hover { color: var(--text-main); }
@@ -88,29 +82,19 @@
         .btn-primary { background: var(--primary); border: none; }
         .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
         
-        .btn-action { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.25rem 0.5rem; font-size: 1rem; transition: color 0.2s; }
+        .btn-action { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0.25rem 0.4rem; font-size: 1rem; transition: color 0.2s; }
+        .btn-action.btn-edit-text:hover { color: #38bdf8; }
         .btn-action.btn-copy:hover { color: var(--primary); }
         .btn-action.btn-rename:hover { color: var(--warning); }
         .btn-action.btn-delete:hover { color: var(--danger); }
 
         .admin-control { display: none; }
 
-        /* Vùng hiển thị tiến trình tải lên của nhiều file song song */
         .upload-queue-container {
-            background: rgba(15, 23, 42, 0.4);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem;
-            display: none;
-            flex-direction: column;
-            gap: 0.75rem;
-            max-height: 250px;
-            overflow-y: auto;
+            background: rgba(15, 23, 42, 0.4); border-bottom: 1px solid var(--border-color);
+            padding: 1rem; display: none; flex-direction: column; gap: 0.75rem; max-height: 250px; overflow-y: auto;
         }
-        .queue-item {
-            display: flex; flex-direction: column; gap: 0.35rem;
-            background: rgba(255, 255, 255, 0.03); padding: 0.75rem; border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
+        .queue-item { display: flex; flex-direction: column; gap: 0.35rem; background: rgba(255, 255, 255, 0.03); padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05); }
         .queue-item-info { display: flex; justify-content: space-between; font-size: 0.85rem; }
         .queue-item-name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70%; }
         .queue-item-status { font-weight: 600; font-size: 0.8rem; }
@@ -132,12 +116,45 @@
         .file-link:hover { color: var(--primary); text-decoration: underline; }
         .file-size, .file-date { color: var(--text-muted); }
         .empty-state { padding: 4rem 2rem; text-align: center; color: var(--text-muted); display: none; }
+
+        /* GIAO DIỆN CỬA SỔ CHỈNH SỬA TEXT (TEXT EDITOR MODAL) */
+        .editor-modal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .editor-container {
+            width: 90%; max-width: 900px; height: 80vh;
+            background: var(--panel-bg); border: 1px solid var(--border-color);
+            border-radius: 16px; display: flex; flex-direction: column;
+            overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .editor-header {
+            padding: 1rem 1.5rem; background: rgba(15, 23, 42, 0.4);
+            border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .editor-title { font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .editor-textarea {
+            flex: 1; padding: 1.25rem; background: rgba(0, 0, 0, 0.3); color: #38bdf8;
+            border: none; outline: none; font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.95rem; line-height: 1.5; resize: none;
+        }
+        .editor-footer {
+            padding: 1rem 1.5rem; background: rgba(15, 23, 42, 0.4);
+            border-top: 1px solid var(--border-color);
+            display: flex; justify-content: flex-end; gap: 0.75rem;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand"><i class="fa-solid fa-folder-tree"></i> &nbsp;<span>R2 EXPLORER ULTIMATE</span></div>
+        <!-- Thay chữ tiêu đề thành Nút Về Trang Chủ index.html -->
+        <a href="index.html" class="btn-home" title="Đường dẫn quay về trang chủ chính">
+            <i class="fa-solid fa-house"></i> <span>Về trang chủ</span>
+        </a>
+
         <div class="header-right">
             <select class="theme-select" id="themeSelect" onchange="changeTheme(this.value)">
                 <option value="dark">🌙 Giao diện Tối</option>
@@ -150,9 +167,7 @@
     </header>
 
     <div class="container">
-        <!-- Explorer Panel tích hợp kéo thả -->
         <div class="explorer-panel" id="dropZone">
-            <!-- Lớp phủ khi kéo rê tệp vào vùng dropZone -->
             <div class="drag-overlay">
                 <i class="fa-solid fa-cloud-arrow-up fa-2xl"></i>
                 <span>Thả các tập tin vào đây để tự động tải lên!</span>
@@ -164,8 +179,6 @@
                     <button class="btn admin-control" onclick="createNewFolder()"><i class="fa-solid fa-folder-plus" style="color:#eab308;"></i> Tạo thư mục</button>
                     <button class="btn" onclick="logoutSystem()"><i class="fa-solid fa-key"></i> Đăng xuất</button>
                     <button class="btn" onclick="refreshDirectory()"><i class="fa-solid fa-arrow-rotate-right"></i> Làm mới</button>
-                    
-                    <!-- Sửa Input thành MULTIPLE để cho phép chọn cùng lúc nhiều file -->
                     <input type="file" id="fileChooser" style="display: none;" multiple onchange="uploadMultipleFiles(this.files)">
                     <button class="btn btn-primary admin-control" id="uploadBtn" onclick="document.getElementById('fileChooser').click()">
                         <i class="fa-solid fa-cloud-arrow-up"></i> Tải lên tại đây
@@ -173,7 +186,6 @@
                 </div>
             </div>
 
-            <!-- Hàng đợi hiển thị nhiều thanh tiến trình cùng lúc -->
             <div class="upload-queue-container" id="uploadQueue"></div>
 
             <div class="file-table-container">
@@ -197,16 +209,32 @@
         </div>
     </div>
 
+    <!-- CỬA SỔ MODAL SOẠN THẢO VĂN BẢN (TEXT EDITOR) -->
+    <div class="editor-modal" id="editorModal">
+        <div class="editor-container">
+            <div class="editor-header">
+                <div class="editor-title"><i class="fa-solid fa-file-code" style="color: #38bdf8;"></i> <span id="editorFileName">File.txt</span></div>
+                <button class="btn-action" onclick="closeEditor()" style="font-size: 1.25rem;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <textarea class="editor-textarea" id="editorTextarea" placeholder="Đang nạp dữ liệu văn bản..."></textarea>
+            <div class="editor-footer">
+                <button class="btn" onclick="closeEditor()">Hủy bỏ</button>
+                <button class="btn btn-primary" id="saveTextBtn" onclick="saveTextContent()"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const WORKER_API_URL = 'https://db.khanggiaphuc.com'; 
         let currentPath = ''; 
         let userRole = 'user'; 
+        let currentEditingFileKey = ''; // Biến ghi nhớ file đang chỉnh sửa
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('r2_theme') || 'dark';
             document.getElementById('themeSelect').value = savedTheme;
             changeTheme(savedTheme);
-            setupDragAndDrop(); // Kích hoạt bộ bắt sự kiện kéo thả
+            setupDragAndDrop();
         });
 
         function changeTheme(themeName) {
@@ -217,7 +245,7 @@
         function getAuthToken() {
             let token = localStorage.getItem('r2_access_token');
             if (!token) {
-                token = prompt("Mời nhập Mật khẩu truy cập hệ thống R2 (Quyết định quyền Admin/User):");
+                token = prompt("Mời nhập Mật khẩu truy cập hệ thống R2:");
                 if (token && token.trim() !== "") {
                     localStorage.setItem('r2_access_token', token.trim());
                     return token.trim();
@@ -229,6 +257,11 @@
         function logoutSystem() {
             localStorage.removeItem('r2_access_token');
             location.reload();
+        }
+
+        function isEditableTextFile(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            return ['txt', 'html', 'htm', 'css', 'js', 'json', 'md', 'py', 'php', 'xml', 'log', 'env', 'sh', 'csv'].includes(ext);
         }
 
         function getIcon(name, isDir) {
@@ -320,11 +353,15 @@
                             <td class="file-size">--</td><td class="file-date">--</td><td style="text-align:center;">--</td>
                         `;
                     } else {
-                        // Link download trỏ trực tiếp sang tên miền R2 r2.khanggiaphuc.com
                         const pathParts = item.name.split('/').map(part => encodeURIComponent(part));
                         const fileDownloadUrl = `https://r2.khanggiaphuc.com/${pathParts.join('/')}`;
                         
-                        actionHtml = `<button class="btn-action btn-copy" onclick="copyLinkToClipboard('${fileDownloadUrl}')" title="Sao chép liên kết tải xuống"><i class="fa-solid fa-copy"></i></button>`;
+                        // NÚT CHỈNH SỬA VĂN BẢN TRỰC TIẾP (Chỉ dành cho Admin & File dạng Text)
+                        if (userRole === 'admin' && isEditableTextFile(displayName)) {
+                            actionHtml += `<button class="btn-action btn-edit-text" onclick="openTextEditor('${item.name}', '${displayName}')" title="Chỉnh sửa văn bản trực tiếp"><i class="fa-solid fa-file-pen"></i></button>`;
+                        }
+
+                        actionHtml += `<button class="btn-action btn-copy" onclick="copyLinkToClipboard('${fileDownloadUrl}')" title="Sao chép liên kết tải xuống"><i class="fa-solid fa-copy"></i></button>`;
                         
                         if (userRole === 'admin') {
                             actionHtml += `
@@ -353,6 +390,64 @@
             parts.pop();
             currentPath = parts.length > 0 ? parts.join('/') + '/' : '';
             refreshDirectory();
+        }
+
+        // =====================================================================
+        // CHỨC NĂNG MỚI: MỞ VÀ CHỈNH SỬA FILE VĂN BẢN TRỰC TIẾP
+        // =====================================================================
+        async function openTextEditor(fileKey, fileName) {
+            const token = getAuthToken();
+            currentEditingFileKey = fileKey;
+            
+            document.getElementById('editorFileName').innerText = fileName;
+            document.getElementById('editorTextarea').value = "Đang tải dữ liệu văn bản từ Cloudflare R2...";
+            document.getElementById('editorModal').style.display = 'flex';
+
+            try {
+                let response = await fetch(`${WORKER_API_URL}/${encodeURIComponent(fileKey)}`, {
+                    headers: { 'Authorization': token }
+                });
+                if (!response.ok) throw new Error("Không thể nạp file");
+                let textContent = await response.text();
+                document.getElementById('editorTextarea').value = textContent;
+            } catch (e) {
+                document.getElementById('editorTextarea').value = "Lỗi khi đọc file: " + e.message;
+            }
+        }
+
+        async function saveTextContent() {
+            const token = getAuthToken();
+            const content = document.getElementById('editorTextarea').value;
+            const saveBtn = document.getElementById('saveTextBtn');
+
+            saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...`;
+            saveBtn.disabled = true;
+
+            try {
+                let response = await fetch(`${WORKER_API_URL}/save-text`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': token },
+                    body: JSON.stringify({ fileKey: currentEditingFileKey, content: content })
+                });
+
+                if (response.ok) {
+                    alert("Đã lưu thay đổi vào tập tin thành công!");
+                    closeEditor();
+                    refreshDirectory();
+                } else {
+                    alert("Lỗi khi lưu tập tin.");
+                }
+            } catch (e) {
+                alert("Lỗi kết nối: " + e.message);
+            } finally {
+                saveBtn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi`;
+                saveBtn.disabled = false;
+            }
+        }
+
+        function closeEditor() {
+            document.getElementById('editorModal').style.display = 'none';
+            currentEditingFileKey = '';
         }
 
         async function createNewFolder() {
@@ -425,95 +520,61 @@
             } catch (e) { alert("Lỗi kết nối."); }
         }
 
-        // =====================================================================
-        // CHỨC NĂNG MỚI: KÉO THẢ & TẢI ĐỒNG THỜI NHIỀU TẬP TIN (MULTI-UPLOAD)
-        // =====================================================================
         function setupDragAndDrop() {
             const dropZone = document.getElementById('dropZone');
-
-            // Khi rê file vào vùng bảng điều khiển
             window.addEventListener('dragenter', (e) => {
                 e.preventDefault();
                 if (userRole === 'admin') dropZone.classList.add('drag-over');
             });
-
-            dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-            });
-
-            // Khi rê file ra ngoài vùng bảng điều khiển
+            dropZone.addEventListener('dragover', (e) => { e.preventDefault(); });
             dropZone.addEventListener('dragleave', (e) => {
-                // Chỉ xóa class nếu chuột thực sự di chuyển ra ngoài biên của dropZone
                 const rect = dropZone.getBoundingClientRect();
                 if (e.clientX < rect.left || e.clientX >= rect.right || e.clientY < rect.top || e.clientY >= rect.bottom) {
                     dropZone.classList.remove('drag-over');
                 }
             });
-
-            // Khi thả file ra
             dropZone.addEventListener('drop', (e) => {
                 e.preventDefault();
                 dropZone.classList.remove('drag-over');
-                if (userRole !== 'admin') {
-                    alert("Quyền Khách (Chỉ đọc) không thể tải tập tin lên!");
-                    return;
-                }
+                if (userRole !== 'admin') { alert("Quyền Khách không thể tải tập tin lên!"); return; }
                 const files = e.dataTransfer.files;
-                if (files && files.length > 0) {
-                    uploadMultipleFiles(files);
-                }
+                if (files && files.length > 0) uploadMultipleFiles(files);
             });
         }
 
-        // HÀM XỬ LÝ CHẠY PARALLEL NHIỀU FILE CÙNG LÚC
         async function uploadMultipleFiles(files) {
             if (files.length === 0) return;
             const token = getAuthToken();
             const uploadQueue = document.getElementById('uploadQueue');
-            
-            // Hiển thị khung xếp hàng tiến trình
-            uploadQueue.style.style = 'none';
             uploadQueue.style.display = 'flex';
 
-            // Tạo danh sách chạy bất đồng bộ cho tất cả các file
             const uploadPromises = Array.from(files).map((file, index) => {
                 return new Promise((resolve) => {
                     const itemId = 'upload_item_' + Date.now() + '_' + index;
                     const fullTargetName = currentPath + file.name;
 
-                    // Vẽ một khối tiến trình nhỏ cho file này
                     const queueItem = document.createElement('div');
-                    queueItem.className = 'queue-item';
-                    queueItem.id = itemId;
+                    queueItem.className = 'queue-item'; queueItem.id = itemId;
                     queueItem.innerHTML = `
                         <div class="queue-item-info">
                             <span class="queue-item-name"><i class="fa-solid fa-file-arrow-up"></i> &nbsp;${file.name}</span>
                             <span class="queue-item-status" id="${itemId}_pct">Khởi tạo...</span>
                         </div>
-                        <div class="queue-item-progress-bg">
-                            <div class="queue-item-progress-bar" id="${itemId}_bar"></div>
-                        </div>
+                        <div class="queue-item-progress-bg"><div class="queue-item-progress-bar" id="${itemId}_bar"></div></div>
                     `;
                     uploadQueue.appendChild(queueItem);
 
-                    // Bắt đầu luồng kết nối S3 thông qua Worker của từng file
                     fetch(`${WORKER_API_URL}/get-upload-url`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': token },
                         body: JSON.stringify({ fileName: fullTargetName })
                     })
-                    .then(response => {
-                        if (!response.ok) throw new Error("Worker từ chối");
-                        return response.json();
-                    })
+                    .then(res => res.json())
                     .then(result => {
-                        const uploadUrl = result.uploadUrl;
                         const xhr = new XMLHttpRequest();
-                        
-                        xhr.open('PUT', uploadUrl, true);
-                        xhr.setRequestHeader('X-Amz-Content-Sha256', 'UNSIGNED-PAYLOAD'); // Đồng bộ chữ ký v4 cho thư mục con
+                        xhr.open('PUT', result.uploadUrl, true);
+                        xhr.setRequestHeader('X-Amz-Content-Sha256', 'UNSIGNED-PAYLOAD');
 
-                        // Cập nhật thanh tiến trình nhỏ của riêng file này
                         xhr.upload.onprogress = (e) => {
                             if (e.lengthComputable) {
                                 const percent = Math.round((e.loaded / e.total) * 100);
@@ -525,19 +586,17 @@
                         xhr.onload = () => {
                             if (xhr.status === 200 || xhr.status === 201) {
                                 document.getElementById(`${itemId}_pct`).innerHTML = '<span style="color:var(--success);"><i class="fa-solid fa-circle-check"></i> Xong</span>';
-                                setTimeout(() => queueItem.remove(), 2500); // Tự biến mất sau 2.5s khi thành công để gọn giao diện
+                                setTimeout(() => queueItem.remove(), 2500);
                                 resolve(true);
                             } else {
                                 document.getElementById(`${itemId}_pct`).innerHTML = '<span style="color:var(--danger);">Thất bại</span>';
                                 resolve(false);
                             }
                         };
-
                         xhr.onerror = () => {
                             document.getElementById(`${itemId}_pct`).innerHTML = '<span style="color:var(--danger);">Lỗi mạng</span>';
                             resolve(false);
                         };
-
                         xhr.send(file);
                     })
                     .catch(err => {
@@ -547,19 +606,10 @@
                 });
             });
 
-            // Đợi toàn bộ danh sách tệp tin hoàn tất quá trình truyền tải
             await Promise.all(uploadPromises);
-            
-            // Tự động đóng khung hàng đợi sau khi hoàn thành 4 giây
-            setTimeout(() => {
-                if (uploadQueue.children.length === 0) {
-                    uploadQueue.style.display = 'none';
-                }
-            }, 4000);
-
-            // Làm mới lại bảng thư mục để hiện các file mới
+            setTimeout(() => { if (uploadQueue.children.length === 0) uploadQueue.style.display = 'none'; }, 4000);
             refreshDirectory();
-            document.getElementById('fileChooser').value = ''; // Reset input để cho phép chọn lại tệp vừa tải
+            document.getElementById('fileChooser').value = '';
         }
 
         window.onload = refreshDirectory;
