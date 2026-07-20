@@ -309,7 +309,6 @@
                         const pathParts = item.name.split('/').map(part => encodeURIComponent(part));
                         const fileDownloadUrl = `https://r2.khanggiaphuc.com/${pathParts.join('/')}`;
                         
-                        // NÚT SỬA VĂN BẢN TRÊN TAB MỚI HOÀN TOÀN
                         if (userRole === 'admin' && isEditableTextFile(displayName)) {
                             actionHtml += `<button class="btn-action btn-edit-text" onclick="openEditorInNewTab('${item.name}', '${displayName}')" title="Mở trang chỉnh sửa văn bản trên Tab mới"><i class="fa-solid fa-file-pen"></i></button>`;
                         }
@@ -346,15 +345,17 @@
         }
 
         // =====================================================================
-        // CHỨC NĂNG NÂNG CẤP: MỞ TRÌNH CẢI TIẾN TRÊN TAB MỚI ĐỘC LẬP HOÀN TOÀN
+        // SỬA LỖI MÃ HÓA BASE64: GIẢI QUYẾT TRIỆT ĐỂ LỖI CHỒNG LẤN MÃ HTML
         // =====================================================================
+        function utf8ToBase64(str) {
+            return window.btoa(unescape(encodeURIComponent(str)));
+        }
+
         async function openEditorInNewTab(fileKey, fileName) {
             const token = getAuthToken();
-            
-            // 1. Mở ngay một Tab trống để chống bị trình duyệt chặn Pop-up
             const newTab = window.open('', '_blank');
             if (!newTab) {
-                alert("Vui lòng cho phép trình duyệt mở cửa sổ Bật lên (Pop-up) để chỉnh sửa file!");
+                alert("Vui lòng cho phép trình duyệt mở Pop-up để chỉnh sửa!");
                 return;
             }
 
@@ -366,28 +367,21 @@
             `);
 
             try {
-                // 2. Lấy nội dung file từ Worker
                 let response = await fetch(`${WORKER_API_URL}/${encodeURIComponent(fileKey)}`, {
                     headers: { 'Authorization': token }
                 });
                 if (!response.ok) throw new Error("Không thể tải file");
                 let textContent = await response.text();
 
-                // Escape chuỗi an toàn khi truyền vào JavaScript
-                const safeContent = JSON.stringify(textContent);
-                const safeKey = JSON.stringify(fileKey);
-                const safeFileName = JSON.stringify(fileName);
-                const safeApiUrl = JSON.stringify(WORKER_API_URL);
-                const safeToken = JSON.stringify(token);
+                // Mã hóa toàn bộ nội dung file sang Base64 để chống vỡ HTML
+                const base64Content = utf8ToBase64(textContent);
 
-                // 3. Render giao diện Trình soạn thảo chuyên nghiệp ở Tab mới
-                newTab.document.open();
-                newTab.document.write(`
+                const editorPageHtml = `
                     <!DOCTYPE html>
                     <html lang="vi">
                     <head>
                         <meta charset="UTF-8">
-                        <title>Đang chỉnh sửa: ${fileName}</title>
+                        <title>Chỉnh sửa: ${fileName}</title>
                         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
                         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
                         <style>
@@ -395,7 +389,7 @@
                             body { background: #0f172a; color: #f8fafc; height: 100vh; display: flex; flex-direction: column; }
                             .editor-bar { background: rgba(30, 41, 59, 0.8); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
                             .file-info { font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; color: #38bdf8; }
-                            .editor-box { flex: 1; padding: 1.5rem; background: #020617; color: #38bdf8; border: none; outline: none; font-family: 'Consolas', 'Monaco', monospace; font-size: 1rem; line-height: 1.6; resize: none; }
+                            .editor-box { flex: 1; padding: 1.5rem; background: #020617; color: #38bdf8; border: none; outline: none; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.95rem; line-height: 1.6; resize: none; }
                             .btn-save { background: #2563eb; color: #fff; border: none; padding: 0.6rem 1.25rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s; }
                             .btn-save:hover { background: #1d4ed8; }
                             .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -403,16 +397,22 @@
                     </head>
                     <body>
                         <div class="editor-bar">
-                            <div class="file-info"><i class="fa-solid fa-code"></i> SOẠN THẢO: ${fileName}</div>
+                            <div class="file-info"><i class="fa-solid fa-code"></i> CHỈNH SỬA TẬP TIN: ${fileName}</div>
                             <button class="btn-save" id="btnSave" onclick="saveData()"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>
                         </div>
                         <textarea class="editor-box" id="codeContent" spellcheck="false"></textarea>
 
                         <script>
-                            const fileKey = ${safeKey};
-                            const WORKER_API_URL = ${safeApiUrl};
-                            const token = ${safeToken};
-                            document.getElementById('codeContent').value = ${safeContent};
+                            function base64ToUtf8(str) {
+                                return decodeURIComponent(escape(window.atob(str)));
+                            }
+
+                            const fileKey = "${fileKey}";
+                            const WORKER_API_URL = "${WORKER_API_URL}";
+                            const token = "${token}";
+                            const rawBase64 = "${base64Content}";
+
+                            document.getElementById('codeContent').value = base64ToUtf8(rawBase64);
 
                             async function saveData() {
                                 const btn = document.getElementById('btnSave');
@@ -428,7 +428,7 @@
                                     });
 
                                     if (res.ok) {
-                                        alert("Đã lưu nội dung thành công vào R2!");
+                                        alert("Đã lưu mã nguồn thành công vào R2!");
                                     } else {
                                         alert("Lỗi khi lưu dữ liệu.");
                                     }
@@ -442,10 +442,13 @@
                         <\/script>
                     </body>
                     </html>
-                `);
+                `;
+
+                newTab.document.open();
+                newTab.document.write(editorPageHtml);
                 newTab.document.close();
             } catch (e) {
-                newTab.document.body.innerHTML = "<h3 style='color:#ef4444;'>Lỗi khi nạp file: " + e.message + "</h3>";
+                newTab.document.body.innerHTML = "<h3 style='color:#ef4444;'>Lỗi nạp file: " + e.message + "</h3>";
             }
         }
 
