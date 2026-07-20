@@ -37,7 +37,6 @@
         body { background: var(--bg-gradient); min-height: 100vh; color: var(--text-main); display: flex; flex-direction: column; transition: all 0.3s ease; }
         header { background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         
-        /* Nút về trang chủ thiết kế nổi bật */
         .btn-home {
             display: flex; align-items: center; gap: 0.5rem;
             background: rgba(255, 255, 255, 0.08); color: var(--text-main);
@@ -116,41 +115,11 @@
         .file-link:hover { color: var(--primary); text-decoration: underline; }
         .file-size, .file-date { color: var(--text-muted); }
         .empty-state { padding: 4rem 2rem; text-align: center; color: var(--text-muted); display: none; }
-
-        /* GIAO DIỆN CỬA SỔ CHỈNH SỬA TEXT (TEXT EDITOR MODAL) */
-        .editor-modal {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);
-            display: none; justify-content: center; align-items: center; z-index: 1000;
-        }
-        .editor-container {
-            width: 90%; max-width: 900px; height: 80vh;
-            background: var(--panel-bg); border: 1px solid var(--border-color);
-            border-radius: 16px; display: flex; flex-direction: column;
-            overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-        .editor-header {
-            padding: 1rem 1.5rem; background: rgba(15, 23, 42, 0.4);
-            border-bottom: 1px solid var(--border-color);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .editor-title { font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
-        .editor-textarea {
-            flex: 1; padding: 1.25rem; background: rgba(0, 0, 0, 0.3); color: #38bdf8;
-            border: none; outline: none; font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 0.95rem; line-height: 1.5; resize: none;
-        }
-        .editor-footer {
-            padding: 1rem 1.5rem; background: rgba(15, 23, 42, 0.4);
-            border-top: 1px solid var(--border-color);
-            display: flex; justify-content: flex-end; gap: 0.75rem;
-        }
     </style>
 </head>
 <body>
 
     <header>
-        <!-- Thay chữ tiêu đề thành Nút Về Trang Chủ index.html -->
         <a href="index.html" class="btn-home" title="Đường dẫn quay về trang chủ chính">
             <i class="fa-solid fa-house"></i> <span>Về trang chủ</span>
         </a>
@@ -209,26 +178,10 @@
         </div>
     </div>
 
-    <!-- CỬA SỔ MODAL SOẠN THẢO VĂN BẢN (TEXT EDITOR) -->
-    <div class="editor-modal" id="editorModal">
-        <div class="editor-container">
-            <div class="editor-header">
-                <div class="editor-title"><i class="fa-solid fa-file-code" style="color: #38bdf8;"></i> <span id="editorFileName">File.txt</span></div>
-                <button class="btn-action" onclick="closeEditor()" style="font-size: 1.25rem;"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <textarea class="editor-textarea" id="editorTextarea" placeholder="Đang nạp dữ liệu văn bản..."></textarea>
-            <div class="editor-footer">
-                <button class="btn" onclick="closeEditor()">Hủy bỏ</button>
-                <button class="btn btn-primary" id="saveTextBtn" onclick="saveTextContent()"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>
-            </div>
-        </div>
-    </div>
-
     <script>
         const WORKER_API_URL = 'https://db.khanggiaphuc.com'; 
         let currentPath = ''; 
         let userRole = 'user'; 
-        let currentEditingFileKey = ''; // Biến ghi nhớ file đang chỉnh sửa
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('r2_theme') || 'dark';
@@ -356,9 +309,9 @@
                         const pathParts = item.name.split('/').map(part => encodeURIComponent(part));
                         const fileDownloadUrl = `https://r2.khanggiaphuc.com/${pathParts.join('/')}`;
                         
-                        // NÚT CHỈNH SỬA VĂN BẢN TRỰC TIẾP (Chỉ dành cho Admin & File dạng Text)
+                        // NÚT SỬA VĂN BẢN TRÊN TAB MỚI HOÀN TOÀN
                         if (userRole === 'admin' && isEditableTextFile(displayName)) {
-                            actionHtml += `<button class="btn-action btn-edit-text" onclick="openTextEditor('${item.name}', '${displayName}')" title="Chỉnh sửa văn bản trực tiếp"><i class="fa-solid fa-file-pen"></i></button>`;
+                            actionHtml += `<button class="btn-action btn-edit-text" onclick="openEditorInNewTab('${item.name}', '${displayName}')" title="Mở trang chỉnh sửa văn bản trên Tab mới"><i class="fa-solid fa-file-pen"></i></button>`;
                         }
 
                         actionHtml += `<button class="btn-action btn-copy" onclick="copyLinkToClipboard('${fileDownloadUrl}')" title="Sao chép liên kết tải xuống"><i class="fa-solid fa-copy"></i></button>`;
@@ -393,61 +346,107 @@
         }
 
         // =====================================================================
-        // CHỨC NĂNG MỚI: MỞ VÀ CHỈNH SỬA FILE VĂN BẢN TRỰC TIẾP
+        // CHỨC NĂNG NÂNG CẤP: MỞ TRÌNH CẢI TIẾN TRÊN TAB MỚI ĐỘC LẬP HOÀN TOÀN
         // =====================================================================
-        async function openTextEditor(fileKey, fileName) {
+        async function openEditorInNewTab(fileKey, fileName) {
             const token = getAuthToken();
-            currentEditingFileKey = fileKey;
             
-            document.getElementById('editorFileName').innerText = fileName;
-            document.getElementById('editorTextarea').value = "Đang tải dữ liệu văn bản từ Cloudflare R2...";
-            document.getElementById('editorModal').style.display = 'flex';
+            // 1. Mở ngay một Tab trống để chống bị trình duyệt chặn Pop-up
+            const newTab = window.open('', '_blank');
+            if (!newTab) {
+                alert("Vui lòng cho phép trình duyệt mở cửa sổ Bật lên (Pop-up) để chỉnh sửa file!");
+                return;
+            }
+
+            newTab.document.write(`
+                <!DOCTYPE html>
+                <html><head><title>Đang tải ${fileName}...</title>
+                <style>body{background:#0f172a;color:#f8fafc;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}</style>
+                </head><body><h2>Đang nạp dữ liệu từ Cloudflare R2...</h2></body></html>
+            `);
 
             try {
+                // 2. Lấy nội dung file từ Worker
                 let response = await fetch(`${WORKER_API_URL}/${encodeURIComponent(fileKey)}`, {
                     headers: { 'Authorization': token }
                 });
-                if (!response.ok) throw new Error("Không thể nạp file");
+                if (!response.ok) throw new Error("Không thể tải file");
                 let textContent = await response.text();
-                document.getElementById('editorTextarea').value = textContent;
+
+                // Escape chuỗi an toàn khi truyền vào JavaScript
+                const safeContent = JSON.stringify(textContent);
+                const safeKey = JSON.stringify(fileKey);
+                const safeFileName = JSON.stringify(fileName);
+                const safeApiUrl = JSON.stringify(WORKER_API_URL);
+                const safeToken = JSON.stringify(token);
+
+                // 3. Render giao diện Trình soạn thảo chuyên nghiệp ở Tab mới
+                newTab.document.open();
+                newTab.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="vi">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Đang chỉnh sửa: ${fileName}</title>
+                        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                        <style>
+                            * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+                            body { background: #0f172a; color: #f8fafc; height: 100vh; display: flex; flex-direction: column; }
+                            .editor-bar { background: rgba(30, 41, 59, 0.8); border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+                            .file-info { font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; color: #38bdf8; }
+                            .editor-box { flex: 1; padding: 1.5rem; background: #020617; color: #38bdf8; border: none; outline: none; font-family: 'Consolas', 'Monaco', monospace; font-size: 1rem; line-height: 1.6; resize: none; }
+                            .btn-save { background: #2563eb; color: #fff; border: none; padding: 0.6rem 1.25rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s; }
+                            .btn-save:hover { background: #1d4ed8; }
+                            .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="editor-bar">
+                            <div class="file-info"><i class="fa-solid fa-code"></i> SOẠN THẢO: ${fileName}</div>
+                            <button class="btn-save" id="btnSave" onclick="saveData()"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>
+                        </div>
+                        <textarea class="editor-box" id="codeContent" spellcheck="false"></textarea>
+
+                        <script>
+                            const fileKey = ${safeKey};
+                            const WORKER_API_URL = ${safeApiUrl};
+                            const token = ${safeToken};
+                            document.getElementById('codeContent').value = ${safeContent};
+
+                            async function saveData() {
+                                const btn = document.getElementById('btnSave');
+                                const val = document.getElementById('codeContent').value;
+                                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+                                btn.disabled = true;
+
+                                try {
+                                    let res = await fetch(WORKER_API_URL + '/save-text', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json', 'Authorization': token },
+                                        body: JSON.stringify({ fileKey: fileKey, content: val })
+                                    });
+
+                                    if (res.ok) {
+                                        alert("Đã lưu nội dung thành công vào R2!");
+                                    } else {
+                                        alert("Lỗi khi lưu dữ liệu.");
+                                    }
+                                } catch (e) {
+                                    alert("Lỗi kết nối: " + e.message);
+                                } finally {
+                                    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi';
+                                    btn.disabled = false;
+                                }
+                            }
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+                newTab.document.close();
             } catch (e) {
-                document.getElementById('editorTextarea').value = "Lỗi khi đọc file: " + e.message;
+                newTab.document.body.innerHTML = "<h3 style='color:#ef4444;'>Lỗi khi nạp file: " + e.message + "</h3>";
             }
-        }
-
-        async function saveTextContent() {
-            const token = getAuthToken();
-            const content = document.getElementById('editorTextarea').value;
-            const saveBtn = document.getElementById('saveTextBtn');
-
-            saveBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...`;
-            saveBtn.disabled = true;
-
-            try {
-                let response = await fetch(`${WORKER_API_URL}/save-text`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': token },
-                    body: JSON.stringify({ fileKey: currentEditingFileKey, content: content })
-                });
-
-                if (response.ok) {
-                    alert("Đã lưu thay đổi vào tập tin thành công!");
-                    closeEditor();
-                    refreshDirectory();
-                } else {
-                    alert("Lỗi khi lưu tập tin.");
-                }
-            } catch (e) {
-                alert("Lỗi kết nối: " + e.message);
-            } finally {
-                saveBtn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi`;
-                saveBtn.disabled = false;
-            }
-        }
-
-        function closeEditor() {
-            document.getElementById('editorModal').style.display = 'none';
-            currentEditingFileKey = '';
         }
 
         async function createNewFolder() {
